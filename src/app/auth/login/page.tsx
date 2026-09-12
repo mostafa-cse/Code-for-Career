@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Terminal, Mail, Loader2, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Mail, Loader2, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/components/providers/language-provider";
 import { SITE_NAME } from "@/lib/constants";
@@ -48,10 +48,28 @@ export default function LoginPage() {
   const { t } = useLanguage();
   const [view, setView] = useState<LoginView>("options");
   const [email, setEmail] = useState("");
+  const [otpCode, setOtpCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const supabase = createClient();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const err = params.get("error");
+      if (err === "link_expired") {
+        setError(
+          t(
+            "Your email link has expired or was already consumed by an email scanner. Please enter the 6-digit code from the email below, or sign in with Google/GitHub.",
+            "ইমেইল লিংকটির মেয়াদ শেষ বা ব্যবহৃত হয়েছে। অনুগ্রহ করে ইমেইলের ৬ ডিজিটের কোডটি ব্যবহার করুন, অথবা Google/GitHub দিয়ে লগইন করুন।"
+          )
+        );
+      } else if (err) {
+        setError(err);
+      }
+    }
+  }, [t]);
 
   async function handleGoogleLogin() {
     setLoading(true);
@@ -66,7 +84,6 @@ export default function LoginPage() {
       setError(err.message);
       setLoading(false);
     }
-    // On success, browser will redirect — loading stays true
   }
 
   async function handleGithubLogin() {
@@ -103,6 +120,24 @@ export default function LoginPage() {
     }
   }
 
+  async function handleVerifyOtp(e: React.FormEvent) {
+    e.preventDefault();
+    if (!otpCode.trim() || !email.trim()) return;
+    setLoading(true);
+    setError(null);
+    const { error: err } = await supabase.auth.verifyOtp({
+      email: email.trim(),
+      token: otpCode.trim(),
+      type: "email",
+    });
+    if (err) {
+      setError(err.message);
+      setLoading(false);
+    } else {
+      window.location.href = "/dashboard";
+    }
+  }
+
   return (
     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4">
       <div className="w-full max-w-sm">
@@ -127,22 +162,66 @@ export default function LoginPage() {
         {/* Card */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
           {view === "magic-link-sent" ? (
-            /* Success state */
-            <div className="flex flex-col items-center gap-3 py-4 text-center">
-              <CheckCircle2 className="h-10 w-10 text-emerald-500" />
-              <h2 className="text-base font-bold text-foreground">
-                {t("Check your email", "আপনার ইমেইল চেক করুন")}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {t(
-                  `We sent a magic link to ${email}. Click it to sign in.`,
-                  `${email} এ একটি ম্যাজিক লিংক পাঠানো হয়েছে। সাইন ইন করতে সেটিতে ক্লিক করুন।`
+            /* Success state with 6-digit OTP verification fallback */
+            <div className="flex flex-col gap-4 text-center">
+              <div className="flex flex-col items-center gap-2">
+                <CheckCircle2 className="h-9 w-9 text-emerald-500" />
+                <h2 className="text-base font-bold text-foreground">
+                  {t("Check your email", "আপনার ইমেইল চেক করুন")}
+                </h2>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {t(
+                    `We sent an email to ${email}. You can either click the magic link or enter the 6-digit code below:`,
+                    `${email} এ একটি ইমেইল পাঠানো হয়েছে। লিংকে ক্লিক করুন অথবা নিচের ৬ ডিজিটের কোডটি লিখুন:`
+                  )}
+                </p>
+              </div>
+
+              <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3 text-left">
+                <div>
+                  <label
+                    htmlFor="otp"
+                    className="mb-1 block text-xs font-semibold text-foreground"
+                  >
+                    {t("6-Digit Code (from email)", "৬ ডিজিটের কোড (ইমেইল থেকে)")}
+                  </label>
+                  <input
+                    id="otp"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    autoFocus
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                    placeholder="123456"
+                    className="w-full text-center tracking-widest font-mono text-lg rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+
+                {error && (
+                  <p className="text-xs text-rose-500 text-center leading-relaxed">
+                    {error}
+                  </p>
                 )}
-              </p>
+
+                <button
+                  type="submit"
+                  disabled={loading || otpCode.length < 6}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background shadow-xs transition-opacity hover:opacity-90 disabled:opacity-50"
+                >
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                  {t("Verify Code & Sign In", "কোড যাচাই করে প্রবেশ করুন")}
+                </button>
+              </form>
+
               <button
                 type="button"
-                onClick={() => setView("options")}
-                className="mt-2 text-xs font-medium text-muted-foreground underline hover:text-foreground"
+                onClick={() => {
+                  setView("options");
+                  setError(null);
+                  setOtpCode("");
+                }}
+                className="text-xs font-medium text-muted-foreground underline hover:text-foreground"
               >
                 {t("Use a different method", "অন্য পদ্ধতি ব্যবহার করুন")}
               </button>
@@ -170,7 +249,7 @@ export default function LoginPage() {
               </div>
 
               {error && (
-                <p className="text-xs text-rose-500">{error}</p>
+                <p className="text-xs text-rose-500 leading-relaxed">{error}</p>
               )}
 
               <button
@@ -183,12 +262,15 @@ export default function LoginPage() {
                 ) : (
                   <Mail className="h-4 w-4" />
                 )}
-                {t("Send Magic Link", "ম্যাজিক লিংক পাঠান")}
+                {t("Send Magic Link & Code", "ম্যাজিক লিংক ও কোড পাঠান")}
               </button>
 
               <button
                 type="button"
-                onClick={() => { setView("options"); setError(null); }}
+                onClick={() => {
+                  setView("options");
+                  setError(null);
+                }}
                 className="text-xs font-medium text-muted-foreground hover:text-foreground"
               >
                 ← {t("Back", "ফিরে যান")}
@@ -239,7 +321,10 @@ export default function LoginPage() {
               {/* Magic Link */}
               <button
                 type="button"
-                onClick={() => { setView("magic-link"); setError(null); }}
+                onClick={() => {
+                  setView("magic-link");
+                  setError(null);
+                }}
                 disabled={loading}
                 className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-60"
               >
@@ -248,7 +333,9 @@ export default function LoginPage() {
               </button>
 
               {error && (
-                <p className="text-center text-xs text-rose-500">{error}</p>
+                <p className="text-center text-xs text-rose-500 leading-relaxed">
+                  {error}
+                </p>
               )}
             </div>
           )}
