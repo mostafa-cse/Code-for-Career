@@ -1,30 +1,18 @@
 "use client";
 
-import { useLanguage } from "@/components/providers/language-provider";
 import { DashboardHeader } from "./dashboard-header";
-import { StatsGrid } from "./stats-grid";
 import { SectionLayout } from "./section-layout";
 
 export function DashboardView() {
-  const { t } = useLanguage();
-
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
-      {/* Overview header + stats */}
+    <div className="w-full min-h-screen flex flex-col bg-background text-foreground">
+      {/* 1. Full-bleed edge-to-edge Header Banner with metrics strip */}
       <DashboardHeader />
-      <StatsGrid />
 
-      {/* Section divider */}
-      <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-border" />
-        <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-          {t("Curriculum", "পাঠ্যক্রম")}
-        </span>
-        <div className="h-px flex-1 bg-border" />
+      {/* 2. Full-bleed edge-to-edge Workspace: Left rail attached to 0, Right content attached to 100% */}
+      <div className="flex-1 w-full min-h-0 flex flex-col">
+        <SectionLayout />
       </div>
-
-      {/* USACO-style section layout */}
-      <SectionLayout />
     </div>
   );
 }

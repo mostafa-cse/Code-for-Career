@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import {
   CheckCircle2,
   Circle,
@@ -10,6 +10,13 @@ import {
   ChevronDown,
   ChevronsUpDown,
   ExternalLink,
+  Search,
+  SlidersHorizontal,
+  X,
+  Eye,
+  EyeOff,
+  Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
@@ -33,12 +40,19 @@ export function SectionLayout() {
   const [activeId, setActiveId] = useState<string>("");
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
-  // Expand / collapse state for subjects (first/in-progress subject expanded by default)
+  // Search & Filter state
+  const [lessonSearch, setLessonSearch] = useState("");
+  const [subjectFilter, setSubjectFilter] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("ALL");
+  const [selectedStatus, setSelectedStatus] = useState<string>("ALL"); // ALL, COMPLETED, IN_PROGRESS, NOT_STARTED
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
+  // Expand / collapse state for subjects (all expanded or specific expanded)
   const [expandedSubjects, setExpandedSubjects] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     CURRICULUM_SUBJECTS.forEach((s, idx) => {
-      // expand the first subject (csharp) by default, keep others collapsed
-      initial[s.slug] = idx === 0;
+      // Expand the first two subjects by default
+      initial[s.slug] = idx < 2;
     });
     return initial;
   });
@@ -62,11 +76,15 @@ export function SectionLayout() {
   }
 
   function handleSidebarClick(slug: string) {
-    // ensure the subject is expanded when clicked from the sidebar
+    // Ensure the subject is expanded when clicked from the sidebar
     setExpandedSubjects((prev) => ({
       ...prev,
       [slug]: true,
     }));
+    const target = sectionRefs.current[slug];
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 
   // Intersection observer to highlight active sidebar item
@@ -94,280 +112,463 @@ export function SectionLayout() {
     return "NOT_STARTED";
   }
 
-  return (
-    <div className="flex gap-0">
-      {/* ── Sticky Left Sidebar ── */}
-      <aside className="hidden w-56 shrink-0 xl:block">
-        <div className="sticky top-20 rounded-xl border border-border bg-card shadow-xs">
-          <div className="border-b border-border px-4 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-              {t("Subjects", "বিষয়সমূহ")}
-            </p>
-          </div>
-          <nav className="p-2">
-            {CURRICULUM_SUBJECTS.map((subject) => {
-              const stats = subjectStats[subject.slug];
-              const isActive = activeId === `section-${subject.slug}`;
-              const isExpanded = !!expandedSubjects[subject.slug];
+  // Filter subjects for the sidebar search
+  const filteredSubjects = useMemo(() => {
+    if (!subjectFilter.trim()) return CURRICULUM_SUBJECTS;
+    const query = subjectFilter.toLowerCase();
+    return CURRICULUM_SUBJECTS.filter(
+      (s) =>
+        s.nameEn.toLowerCase().includes(query) ||
+        s.nameBn.toLowerCase().includes(query) ||
+        s.slug.toLowerCase().includes(query)
+    );
+  }, [subjectFilter]);
 
-              return (
-                <a
-                  key={subject.slug}
-                  href={`#section-${subject.slug}`}
-                  onClick={() => handleSidebarClick(subject.slug)}
-                  className={`group flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs transition-colors ${
+  // Total lessons count
+  const totalLessonsCount = useMemo(() => {
+    return CURRICULUM_SUBJECTS.reduce(
+      (acc, s) => acc + (LOCAL_CURRICULUM[s.slug]?.lessons.length ?? 0),
+      0
+    );
+  }, []);
+
+  return (
+    <div className="flex flex-1 w-full min-h-0 items-stretch">
+      {/* ── 1. LEFT SIDEBAR: Attached to the leftmost side (left: 0, no outer card) ── */}
+      <aside
+        className={`shrink-0 border-r border-border bg-card/40 backdrop-blur-xs flex flex-col sticky top-16 h-[calc(100vh-4rem)] overflow-hidden transition-all duration-300 z-20 ${
+          isSidebarVisible ? "w-64 sm:w-72 lg:w-80 block" : "w-0 hidden"
+        }`}
+      >
+        {/* Sidebar Header */}
+        <div className="border-b border-border p-4 bg-muted/20">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <BookOpen className="h-3.5 w-3.5 text-blue-500" />
+              {t("Subjects", "বিষয়সমূহ")} ({CURRICULUM_SUBJECTS.length})
+            </span>
+            <span className="text-[10px] font-mono text-muted-foreground/80 bg-muted px-1.5 py-0.5 rounded">
+              {totalLessonsCount} {t("lessons", "পাঠ")}
+            </span>
+          </div>
+
+          {/* Quick subject filter */}
+          <div className="relative mt-2.5">
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <input
+              type="text"
+              value={subjectFilter}
+              onChange={(e) => setSubjectFilter(e.target.value)}
+              placeholder={t("Filter subjects...", "বিষয় খুঁজুন...")}
+              className="w-full rounded-md border border-border bg-background py-1.5 pl-8 pr-7 text-xs text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            {subjectFilter && (
+              <button
+                type="button"
+                onClick={() => setSubjectFilter("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Scrollable Navigation List attached to the edges */}
+        <nav className="flex-1 overflow-y-auto p-2 divide-y divide-border/20">
+          {filteredSubjects.map((subject) => {
+            const stats = subjectStats[subject.slug];
+            const isActive = activeId === `section-${subject.slug}`;
+            const isExpanded = !!expandedSubjects[subject.slug];
+            const curriculum = LOCAL_CURRICULUM[subject.slug];
+            const lessonsCount = curriculum?.lessons.length ?? 0;
+
+            return (
+              <a
+                key={subject.slug}
+                href={`#section-${subject.slug}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSidebarClick(subject.slug);
+                }}
+                className={`group flex items-center gap-2.5 px-3 py-2.5 text-xs transition-colors rounded-lg ${
+                  isActive
+                    ? "bg-blue-500/10 font-semibold text-blue-600 dark:text-blue-400 border-l-2 border-blue-600"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                }`}
+              >
+                {/* Subject Icon */}
+                <span
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border text-[11px] transition-colors ${
                     isActive
-                      ? "bg-muted font-semibold text-foreground"
-                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                      ? "border-blue-500/40 bg-blue-500/20 text-blue-600 dark:text-blue-400"
+                      : "border-border bg-muted/50 text-muted-foreground group-hover:border-foreground/20 group-hover:text-foreground"
                   }`}
                 >
-                  <span
-                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[11px] transition-colors ${
-                      isActive
-                        ? "border-foreground/40 bg-foreground text-background"
-                        : "border-border bg-muted/60 text-muted-foreground group-hover:border-foreground/20 group-hover:text-foreground"
-                    }`}
-                  >
-                    <SubjectIcon name={subject.icon} className="h-3 w-3" />
-                  </span>
-                  <span className="truncate leading-tight">
+                  <SubjectIcon name={subject.icon} className="h-3.5 w-3.5" />
+                </span>
+
+                {/* Name & lesson count */}
+                <div className="min-w-0 flex-1">
+                  <p className="truncate leading-tight font-medium text-foreground">
                     {language === "bn" ? subject.nameBn : subject.nameEn}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/70 truncate">
+                    {stats ? `${stats.completed}/${stats.total}` : `0/${lessonsCount}`} {t("done", "সম্পন্ন")}
+                  </p>
+                </div>
+
+                {/* Status indicator */}
+                {stats && stats.percentage === 100 ? (
+                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
+                ) : (
+                  <span className="text-[10px] text-muted-foreground/50 font-mono">
+                    {isExpanded ? "▾" : "▸"}
                   </span>
-                  {stats && stats.percentage === 100 ? (
-                    <CheckCircle2 className="ml-auto h-3 w-3 shrink-0 text-emerald-500" />
-                  ) : (
-                    <span className="ml-auto text-[10px] text-muted-foreground/60 font-mono">
-                      {isExpanded ? "▾" : "▸"}
-                    </span>
-                  )}
-                </a>
-              );
-            })}
-          </nav>
+                )}
+              </a>
+            );
+          })}
+        </nav>
+
+        {/* Sidebar Footer Link */}
+        <div className="border-t border-border p-3 bg-muted/10">
+          <Link
+            href="/problems"
+            className="flex items-center justify-between text-xs font-semibold text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1"
+          >
+            <span>{t("Practice Problems →", "প্র্যাকটিস সমস্যা →")}</span>
+            <ExternalLink className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </aside>
 
-      {/* ── Main section list ── */}
-      <div className="min-w-0 flex-1 space-y-4 xl:pl-6">
-        {/* Top Control Bar: Expand/Collapse All */}
-        <div className="flex items-center justify-between rounded-xl border border-border bg-card px-5 py-3 shadow-xs">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-foreground/60" />
-            <span className="text-xs font-medium text-muted-foreground">
-              {t(
-                `12 Core Subjects • ${CURRICULUM_SUBJECTS.reduce((acc, s) => acc + (LOCAL_CURRICULUM[s.slug]?.lessons.length ?? 0), 0)} Total Lessons`,
-                `১২টি মূল বিষয় • মোট ${CURRICULUM_SUBJECTS.reduce((acc, s) => acc + (LOCAL_CURRICULUM[s.slug]?.lessons.length ?? 0), 0)}টি পাঠ`
+      {/* ── 2. RIGHT MAIN AREA: Attached to the rightmost side (flex-1, edge-to-edge) ── */}
+      <div className="min-w-0 flex-1 px-6 sm:px-8 lg:px-10 py-6 overflow-y-auto">
+        {/* Full-width Top Action Bar: Search, Filters, and Expand/Collapse All */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 mb-6 border-b border-border">
+          {/* Left: Instant Lesson Search & Sidebar Toggle */}
+          <div className="flex items-center gap-3 flex-1 max-w-xl">
+            <button
+              type="button"
+              onClick={() => setIsSidebarVisible(!isSidebarVisible)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted transition shrink-0"
+              title={isSidebarVisible ? t("Hide sidebar", "সাইডবার লুকান") : t("Show sidebar", "সাইডবার দেখান")}
+            >
+              {isSidebarVisible ? (
+                <>
+                  <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="hidden sm:inline">{t("Hide Rail", "লুকান")}</span>
+                </>
+              ) : (
+                <>
+                  <Eye className="h-3.5 w-3.5 text-blue-500" />
+                  <span className="hidden sm:inline">{t("Show Rail", "দেখান")}</span>
+                </>
               )}
-            </span>
+            </button>
+
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                value={lessonSearch}
+                onChange={(e) => setLessonSearch(e.target.value)}
+                placeholder={t(
+                  "Filter lessons across all 12 subjects by title...",
+                  "সকল বিষয়ের পাঠের শিরোনাম দিয়ে খুঁজুন..."
+                )}
+                className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-8 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+              />
+              {lessonSearch && (
+                <button
+                  type="button"
+                  onClick={() => setLessonSearch("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={toggleAll}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/50 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-muted hover:border-foreground/20 cursor-pointer"
-          >
-            <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
-            <span>
-              {allExpanded
-                ? t("Collapse All", "সবগুলো বন্ধ করুন")
-                : t("Expand All", "সবগুলো খুলুন")}
-            </span>
-          </button>
+
+          {/* Right: Difficulty Filter + Expand All */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Difficulty Pills */}
+            <div className="inline-flex rounded-lg border border-border bg-muted/30 p-0.5 text-xs font-semibold">
+              {["ALL", "EASY", "MEDIUM", "HARD"].map((diff) => (
+                <button
+                  key={diff}
+                  type="button"
+                  onClick={() => setSelectedDifficulty(diff)}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${
+                    selectedDifficulty === diff
+                      ? "bg-foreground text-background shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {diff === "ALL" ? t("All", "সব") : diff}
+                </button>
+              ))}
+            </div>
+
+            {/* Expand / Collapse All Button */}
+            <button
+              type="button"
+              onClick={toggleAll}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted hover:border-foreground/20 cursor-pointer"
+            >
+              <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+              <span>
+                {allExpanded
+                  ? t("Collapse All", "সবগুলো বন্ধ করুন")
+                  : t("Expand All", "সবগুলো খুলুন")}
+              </span>
+            </button>
+          </div>
         </div>
 
-        {CURRICULUM_SUBJECTS.map((subject) => {
-          const stats = subjectStats[subject.slug];
-          const curriculum = LOCAL_CURRICULUM[subject.slug];
-          const lessons = curriculum?.lessons ?? [];
-          const diffBadge = DIFFICULTY_BADGE[subject.difficulty] ?? DIFFICULTY_BADGE.EASY;
-          const isExpanded = !!expandedSubjects[subject.slug];
+        {/* ── CURRICULUM SECTIONS: Clean Full-Width Flat Modules (NO CARD VIEW) ── */}
+        <div className="space-y-8">
+          {CURRICULUM_SUBJECTS.map((subject) => {
+            const stats = subjectStats[subject.slug];
+            const curriculum = LOCAL_CURRICULUM[subject.slug];
+            const allLessons = curriculum?.lessons ?? [];
 
-          return (
-            <section
-              key={subject.slug}
-              id={`section-${subject.slug}`}
-              ref={(el) => {
-                sectionRefs.current[subject.slug] = el;
-              }}
-              className="rounded-xl border border-border bg-card shadow-xs transition-all hover:border-foreground/20"
-            >
-              {/* Section header (Clickable Accordion Trigger) */}
-              <div
-                role="button"
-                tabIndex={0}
-                aria-expanded={isExpanded}
-                onClick={() => toggleSubject(subject.slug)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    toggleSubject(subject.slug);
-                  }
+            // Filter lessons by search query and difficulty
+            const filteredLessons = allLessons.filter((lesson) => {
+              const matchesSearch =
+                !lessonSearch.trim() ||
+                lesson.titleEn.toLowerCase().includes(lessonSearch.toLowerCase()) ||
+                lesson.titleBn.toLowerCase().includes(lessonSearch.toLowerCase()) ||
+                lesson.slug.toLowerCase().includes(lessonSearch.toLowerCase());
+
+              const matchesDiff =
+                selectedDifficulty === "ALL" || lesson.difficulty === selectedDifficulty;
+
+              const status = getLessonStatus(subject.slug, lesson.slug);
+              const matchesStatus =
+                selectedStatus === "ALL" ||
+                (selectedStatus === "COMPLETED" && status === "COMPLETED") ||
+                (selectedStatus === "IN_PROGRESS" && status === "IN_PROGRESS") ||
+                (selectedStatus === "NOT_STARTED" && status === "NOT_STARTED");
+
+              return matchesSearch && matchesDiff && matchesStatus;
+            });
+
+            const diffBadge = DIFFICULTY_BADGE[subject.difficulty] ?? DIFFICULTY_BADGE.EASY;
+            const isExpanded = !!expandedSubjects[subject.slug];
+
+            // If user searches and subject has matching lessons, automatically expand
+            const shouldForceExpand = lessonSearch.trim() !== "" && filteredLessons.length > 0;
+            const expanded = isExpanded || shouldForceExpand;
+
+            // If user searched and there are no matching lessons in this subject, skip rendering it
+            if (lessonSearch.trim() !== "" && filteredLessons.length === 0) {
+              return null;
+            }
+
+            return (
+              <section
+                key={subject.slug}
+                id={`section-${subject.slug}`}
+                ref={(el) => {
+                  sectionRefs.current[subject.slug] = el;
                 }}
-                className="group flex cursor-pointer select-none items-center gap-4 px-5 py-4 transition-colors hover:bg-muted/30"
+                className="border-b border-border/80 pb-6"
               >
-                {/* Unified neutral icon container */}
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-muted/50 text-foreground transition-colors group-hover:border-foreground/20 group-hover:bg-muted">
-                  <SubjectIcon name={subject.icon} className="h-4.5 w-4.5" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-sm font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {language === "bn" ? subject.nameBn : subject.nameEn}
-                    </h2>
-                    <span
-                      className={`rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${diffBadge.cls}`}
-                    >
-                      {diffBadge.label}
-                    </span>
-                    <span className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
-                      {language === "bn" ? subject.trackNameBn : subject.trackNameEn}
-                    </span>
+                {/* Full-width Section Header (Accordion trigger) */}
+                <div
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={expanded}
+                  onClick={() => toggleSubject(subject.slug)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleSubject(subject.slug);
+                    }
+                  }}
+                  className="group flex cursor-pointer select-none items-center gap-4 py-3 px-2 rounded-lg transition-colors hover:bg-muted/40"
+                >
+                  {/* Subject Icon container */}
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-muted/50 text-foreground transition-colors group-hover:border-foreground/20 group-hover:bg-muted">
+                    <SubjectIcon name={subject.icon} className="h-5 w-5" />
                   </div>
 
-                  {/* Topic tags (subtle pills) */}
-                  <div className="mt-1.5 flex flex-wrap gap-1">
-                    {(language === "bn" ? subject.topicsBn : subject.topicsEn).map((tag) => (
+                  {/* Title & metadata */}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h2 className="text-base font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {language === "bn" ? subject.nameBn : subject.nameEn}
+                      </h2>
                       <span
-                        key={tag}
-                        className="rounded border border-border/50 bg-muted/30 px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                        className={`rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${diffBadge.cls}`}
                       >
-                        {tag}
+                        {diffBadge.label}
                       </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right: progress + chevron toggle */}
-                <div className="flex shrink-0 items-center gap-4">
-                  <div className="hidden flex-col items-end gap-1 sm:flex">
-                    {stats && (
-                      <>
-                        <span className="font-mono text-xs font-semibold text-foreground">
-                          {stats.completed} / {stats.total}{" "}
-                          <span className="font-sans font-normal text-muted-foreground">
-                            {t("lessons", "পাঠ")}
-                          </span>
-                        </span>
-                        <div className="h-1.5 w-28 overflow-hidden rounded-full bg-muted">
-                          <div
-                            className={`h-full rounded-full transition-all duration-500 ${
-                              stats.status === "COMPLETED"
-                                ? "bg-emerald-500"
-                                : "bg-blue-500"
-                            }`}
-                            style={{ width: `${stats.percentage}%` }}
-                          />
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Direct link button to full subject */}
-                  <Link
-                    href={`/subjects/${subject.slug}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="hidden rounded-lg border border-border bg-muted/40 p-1.5 text-muted-foreground transition hover:border-foreground/20 hover:bg-muted hover:text-foreground md:inline-flex"
-                    title={t("Open subject overview", "বিষয় বিবরণী খুলুন")}
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </Link>
-
-                  {/* Chevron indicator */}
-                  <div
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-muted/40 text-muted-foreground transition-colors group-hover:border-foreground/20 group-hover:text-foreground"
-                    aria-hidden="true"
-                  >
-                    <ChevronDown
-                      className={`h-4 w-4 transition-transform duration-200 ${
-                        isExpanded ? "rotate-180 text-foreground" : ""
-                      }`}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Collapsible Content */}
-              {isExpanded && (
-                <div className="border-t border-border">
-                  {/* Lesson rows — USACO guide table style */}
-                  {lessons.length === 0 ? (
-                    <div className="flex items-center gap-2 px-5 py-6 text-xs text-muted-foreground">
-                      <BookOpen className="h-4 w-4" />
-                      <span>{t("No lessons available yet.", "এখনও কোনো পাঠ যোগ করা হয়নি।")}</span>
+                      <span className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                        {language === "bn" ? subject.trackNameBn : subject.trackNameEn}
+                      </span>
                     </div>
-                  ) : (
-                    <ul className="divide-y divide-border">
-                      {lessons
-                        .slice()
-                        .sort((a, b) => a.displayOrder - b.displayOrder)
-                        .map((lesson) => {
-                          const lessonStatus = getLessonStatus(subject.slug, lesson.slug);
-                          const lessonDiff = DIFFICULTY_BADGE[lesson.difficulty] ?? DIFFICULTY_BADGE.EASY;
 
-                          return (
-                            <li key={lesson.slug}>
-                              <Link
-                                href={`/subjects/${subject.slug}/${lesson.slug}`}
-                                className="group/lesson flex items-center gap-4 px-5 py-3 transition-colors hover:bg-muted/40"
-                              >
-                                {/* Status indicator */}
-                                <div className="shrink-0">
-                                  {lessonStatus === "COMPLETED" ? (
-                                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                                  ) : lessonStatus === "IN_PROGRESS" ? (
-                                    <div className="h-4 w-4 rounded-full border-2 border-blue-500 bg-blue-100 dark:bg-blue-950/40" />
-                                  ) : (
-                                    <Circle className="h-4 w-4 text-muted-foreground/40" />
-                                  )}
-                                </div>
+                    {/* Topic Tags */}
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {(language === "bn" ? subject.topicsBn : subject.topicsEn).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded border border-border/60 bg-muted/20 px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
 
-                                {/* Lesson title */}
-                                <span className="flex-1 text-sm font-medium text-foreground group-hover/lesson:text-blue-600 dark:group-hover/lesson:text-blue-400 transition-colors">
-                                  {language === "bn" ? lesson.titleBn : lesson.titleEn}
-                                </span>
+                  {/* Right: Progress bar + Expand Chevron */}
+                  <div className="flex shrink-0 items-center gap-4">
+                    <div className="hidden flex-col items-end gap-1 sm:flex">
+                      {stats && (
+                        <>
+                          <span className="font-mono text-xs font-semibold text-foreground">
+                            {stats.completed} / {stats.total}{" "}
+                            <span className="font-sans font-normal text-muted-foreground">
+                              {t("lessons", "পাঠ")}
+                            </span>
+                          </span>
+                          <div className="h-1.5 w-32 overflow-hidden rounded-full bg-muted">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                stats.status === "COMPLETED"
+                                  ? "bg-emerald-500"
+                                  : "bg-blue-500"
+                              }`}
+                              style={{ width: `${stats.percentage}%` }}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
 
-                                {/* Difficulty */}
-                                <span
-                                  className={`hidden shrink-0 rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider sm:inline-flex ${lessonDiff.cls}`}
-                                >
-                                  {lessonDiff.label}
-                                </span>
-
-                                {/* Time estimate */}
-                                <span className="hidden shrink-0 items-center gap-1 text-[11px] text-muted-foreground sm:flex">
-                                  <Clock className="h-3 w-3" />
-                                  {lesson.estimatedMinutes} min
-                                </span>
-
-                                {/* Order number */}
-                                <span className="shrink-0 font-mono text-[11px] text-muted-foreground/60">
-                                  #{String(lesson.displayOrder).padStart(2, "0")}
-                                </span>
-                              </Link>
-                            </li>
-                          );
-                        })}
-                    </ul>
-                  )}
-
-                  {/* Section footer: Start / Continue button */}
-                  <div className="border-t border-border bg-muted/20 px-5 py-3">
+                    {/* External Link to Subject Overview */}
                     <Link
                       href={`/subjects/${subject.slug}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+                      onClick={(e) => e.stopPropagation()}
+                      className="hidden rounded-lg border border-border bg-muted/40 p-2 text-muted-foreground transition hover:border-foreground/20 hover:bg-muted hover:text-foreground md:inline-flex"
+                      title={t("Open subject overview", "বিষয় বিবরণী খুলুন")}
                     >
-                      {stats?.status === "COMPLETED"
-                        ? t("Review all lessons →", "সকল পাঠ পুনর্বার পড়ুন →")
-                        : stats?.status === "IN_PROGRESS"
-                        ? t("Continue subject →", "এই বিষয়ে পড়া চালিয়ে যান →")
-                        : t("Start subject →", "এই বিষয় অধ্যয়ন শুরু করুন →")}
+                      <ExternalLink className="h-4 w-4" />
                     </Link>
+
+                    {/* Chevron Indicator */}
+                    <div
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-muted/40 text-muted-foreground transition-colors group-hover:border-foreground/20 group-hover:text-foreground"
+                      aria-hidden="true"
+                    >
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform duration-200 ${
+                          expanded ? "rotate-180 text-foreground" : ""
+                        }`}
+                      />
+                    </div>
                   </div>
                 </div>
-              )}
-            </section>
-          );
-        })}
+
+                {/* Collapsible Lesson List: Flat Table/List Layout (USACO Guide Style) */}
+                {expanded && (
+                  <div className="mt-2 border-t border-border">
+                    {filteredLessons.length === 0 ? (
+                      <div className="flex items-center gap-2 py-6 px-4 text-xs text-muted-foreground">
+                        <BookOpen className="h-4 w-4" />
+                        <span>
+                          {lessonSearch
+                            ? t("No lessons match the search filter.", "খোঁজা শব্দের সাথে কোনো পাঠ মেলেনি।")
+                            : t("No lessons available yet.", "এখনও কোনো পাঠ যোগ করা হয়নি।")}
+                        </span>
+                      </div>
+                    ) : (
+                      <ul className="divide-y divide-border/60">
+                        {filteredLessons
+                          .slice()
+                          .sort((a, b) => a.displayOrder - b.displayOrder)
+                          .map((lesson) => {
+                            const lessonStatus = getLessonStatus(subject.slug, lesson.slug);
+                            const lessonDiff = DIFFICULTY_BADGE[lesson.difficulty] ?? DIFFICULTY_BADGE.EASY;
+
+                            return (
+                              <li key={lesson.slug}>
+                                <Link
+                                  href={`/subjects/${subject.slug}/${lesson.slug}`}
+                                  className="group/lesson flex items-center gap-4 py-3 px-3 transition-colors hover:bg-muted/40 rounded-md"
+                                >
+                                  {/* Status Icon */}
+                                  <div className="shrink-0">
+                                    {lessonStatus === "COMPLETED" ? (
+                                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                    ) : lessonStatus === "IN_PROGRESS" ? (
+                                      <div className="h-4 w-4 rounded-full border-2 border-blue-500 bg-blue-100 dark:bg-blue-950/40" />
+                                    ) : (
+                                      <Circle className="h-4 w-4 text-muted-foreground/30" />
+                                    )}
+                                  </div>
+
+                                  {/* Lesson Title & Module */}
+                                  <div className="flex-1 min-w-0">
+                                    <span className="text-sm font-medium text-foreground group-hover/lesson:text-blue-600 dark:group-hover/lesson:text-blue-400 transition-colors">
+                                      {language === "bn" ? lesson.titleBn : lesson.titleEn}
+                                    </span>
+                                  </div>
+
+                                  {/* Difficulty */}
+                                  <span
+                                    className={`hidden shrink-0 rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider sm:inline-flex ${lessonDiff.cls}`}
+                                  >
+                                    {lessonDiff.label}
+                                  </span>
+
+                                  {/* Estimated Duration */}
+                                  <span className="hidden shrink-0 items-center gap-1 text-[11px] text-muted-foreground sm:flex font-mono">
+                                    <Clock className="h-3 w-3" />
+                                    {lesson.estimatedMinutes} min
+                                  </span>
+
+                                  {/* Order Number */}
+                                  <span className="shrink-0 font-mono text-[11px] text-muted-foreground/60">
+                                    #{String(lesson.displayOrder).padStart(2, "0")}
+                                  </span>
+
+                                  {/* Arrow link */}
+                                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover/lesson:text-blue-600 group-hover/lesson:translate-x-0.5 transition-all" />
+                                </Link>
+                              </li>
+                            );
+                          })}
+                      </ul>
+                    )}
+
+                    {/* Section Footer: Continue Subject link */}
+                    <div className="mt-2 pt-3 flex items-center justify-between text-xs">
+                      <Link
+                        href={`/subjects/${subject.slug}`}
+                        className="inline-flex items-center gap-1.5 font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        {stats?.status === "COMPLETED"
+                          ? t("Review all lessons for this subject →", "এই বিষয়ের সকল পাঠ পুনর্বার পড়ুন →")
+                          : stats?.status === "IN_PROGRESS"
+                          ? t("Continue this subject →", "এই বিষয় অধ্যয়ন চালিয়ে যান →")
+                          : t("Start studying this subject →", "এই বিষয় অধ্যয়ন শুরু করুন →")}
+                      </Link>
+
+                      <span className="text-muted-foreground font-mono text-[11px]">
+                        {filteredLessons.length} {t("lessons", "টি পাঠ")}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </section>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <main className="flex-1 pb-16">
+    <main className="flex-1 flex flex-col w-full min-h-0 bg-background">
       <DashboardView />
     </main>
   );
