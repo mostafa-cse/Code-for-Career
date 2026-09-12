@@ -60,12 +60,51 @@ function stripDuplicateProblemSection(source: string): string {
   );
 }
 
+/**
+ * Escapes unescaped C# generic type parameters (e.g. List<T>, Queue<T>, PriorityQueue<TElement, TPriority>,
+ * Func<T, bool>) and comparison operators (<, (<)) outside code blocks so MDXRemote doesn't mistakenly
+ * parse them as unclosed JSX components or invalid JSX names.
+ */
+function escapeMdxGenerics(source: string): string {
+  if (!source) return "";
+  // 1. Split on code fences (```...```) or inline code (`...`) so we never modify code blocks
+  return source
+    .replace(
+      /(```[\s\S]*?```|`[^`\n]*?`)|<(\/?)([A-Za-z0-9_-]+)?([^>]*)>/g,
+      (match, codeBlock, slash, tagName, rest) => {
+        if (codeBlock) return codeBlock;
+
+        if (tagName) {
+          const lower = tagName.toLowerCase();
+          const isKnown =
+            /^(callout|div|span|p|a|b|i|strong|em|pre|code|table|tr|td|th|thead|tbody|ul|ol|li|h[1-6]|hr|br|img|svg|path|blockquote)$/.test(
+              lower
+            );
+          if (isKnown) {
+            return match;
+          }
+        }
+
+        // Everything else: <T>, <TKey, TValue>, <string, int>, etc.
+        return `&lt;${slash || ""}${tagName || ""}${rest || ""}&gt;`;
+      }
+    )
+    .replace(
+      // 2. Also catch bare "<" not closed with ">" on the same line, like "(<)" or "i < n"
+      /(```[\s\S]*?```|`[^`\n]*?`)|<(?![a-zA-Z/])/g,
+      (match, codeBlock) => {
+        if (codeBlock) return codeBlock;
+        return "&lt;";
+      }
+    );
+}
+
 interface MdxRendererProps {
   source: string;
 }
 
 export async function MdxRenderer({ source }: MdxRendererProps) {
-  const cleanSource = stripDuplicateProblemSection(source);
+  const cleanSource = escapeMdxGenerics(stripDuplicateProblemSection(source));
   return (
     <MDXRemote
       source={cleanSource}
