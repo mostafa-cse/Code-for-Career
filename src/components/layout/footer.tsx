@@ -10,8 +10,8 @@ export function Footer() {
   const { language, t } = useLanguage();
   const pathname = usePathname();
 
-  // Hide footer on Section pages (/subjects/[slug]) and Subsection pages (/subjects/[slug]/[lessonSlug])
-  if (pathname && pathname.startsWith("/subjects")) {
+  // Hide footer on Section pages (/subjects) and the interactive Roadmap page (/roadmap)
+  if (pathname && (pathname.startsWith("/subjects") || pathname.startsWith("/roadmap"))) {
     return null;
   }
 
