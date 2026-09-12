@@ -1,0 +1,408 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+@plugin "@tailwindcss/typography";
+
+/* ------------------------------------------------------------------ */
+/* Tailwind CSS v4 Class-Based Dark Mode Variant                      */
+/* ------------------------------------------------------------------ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* CSS Variables: Light theme                                         */
+/* ------------------------------------------------------------------ */
+:root {
+  --font-geist-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --background: #ffffff;
+  --foreground: #090d16;
+  --muted: #f3f4f6;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --ring: #3b82f6;
+  --card: #ffffff;
+  --card-foreground: #090d16;
+}
+
+/* ------------------------------------------------------------------ */
+/* CSS Variables: Dark theme                                          */
+/* ------------------------------------------------------------------ */
+.dark {
+  --background: #090d16;
+  --foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --border: #1e293b;
+  --ring: #3b82f6;
+  --card: #0f172a;
+  --card-foreground: #f8fafc;
+}
+
+/* ------------------------------------------------------------------ */
+/* Tailwind theme inline tokens                                       */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base styles                                                        */
+/* ------------------------------------------------------------------ */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+/* ------------------------------------------------------------------ */
+/* Scrollbar: thin custom scrollbar                                   */
+/* ------------------------------------------------------------------ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 3px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Typography (.prose) Light and Dark Theme Variables                 */
+/* ------------------------------------------------------------------ */
+.prose {
+  --tw-prose-body: #334155;
+  --tw-prose-headings: #0f172a;
+  --tw-prose-lead: #475569;
+  --tw-prose-links: #2563eb;
+  --tw-prose-bold: #0f172a;
+  --tw-prose-counters: #64748b;
+  --tw-prose-bullets: #94a3b8;
+  --tw-prose-hr: #e2e8f0;
+  --tw-prose-quotes: #0f172a;
+  --tw-prose-quote-borders: #3b82f6;
+  --tw-prose-captions: #64748b;
+  --tw-prose-code: #0f172a;
+  --tw-prose-pre-code: #e2e8f0;
+  --tw-prose-pre-bg: #0d1117;
+  --tw-prose-th-borders: #e2e8f0;
+  --tw-prose-td-borders: #e2e8f0;
+  color: var(--tw-prose-body);
+}
+
+.dark .prose {
+  --tw-prose-body: #e2e8f0;
+  --tw-prose-headings: #f8fafc;
+  --tw-prose-lead: #94a3b8;
+  --tw-prose-links: #60a5fa;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: #94a3b8;
+  --tw-prose-bullets: #475569;
+  --tw-prose-hr: #1e293b;
+  --tw-prose-quotes: #f1f5f9;
+  --tw-prose-quote-borders: #60a5fa;
+  --tw-prose-captions: #94a3b8;
+  --tw-prose-code: #93c5fd;
+  --tw-prose-pre-code: #e2e8f0;
+  --tw-prose-pre-bg: #0d1117;
+  --tw-prose-th-borders: #334155;
+  --tw-prose-td-borders: #1e293b;
+  color: var(--tw-prose-body);
+}
+
+/* ------------------------------------------------------------------ */
+/* Explicit Headings & Text Contrast Rules                            */
+/* ------------------------------------------------------------------ */
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  color: #0f172a !important;
+  font-weight: 700;
+}
+
+.dark .prose :is(h1, h2, h3, h4, h5, h6) {
+  color: #f8fafc !important;
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6) a,
+.prose :is(h1, h2, h3, h4, h5, h6) a:hover,
+.prose :is(h1, h2, h3, h4, h5, h6) a:focus {
+  text-decoration: none !important;
+  color: inherit !important;
+  border-bottom: none !important;
+}
+
+.prose :is(p, ul, ol, li) {
+  color: #334155;
+  line-height: 1.75;
+}
+
+.dark .prose :is(p, ul, ol, li) {
+  color: #e2e8f0 !important;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #0f172a !important;
+}
+
+.dark .prose strong {
+  color: #ffffff !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Links in prose                                                     */
+/* ------------------------------------------------------------------ */
+.prose p a,
+.prose li a,
+.prose td a {
+  color: #2563eb !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.dark .prose p a,
+.dark .prose li a,
+.dark .prose td a {
+  color: #60a5fa !important;
+}
+
+.prose p a:hover,
+.prose li a:hover,
+.prose td a:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Inline Code Badges                                                 */
+/* ------------------------------------------------------------------ */
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.375rem;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
+
+.dark .prose :not(pre) > code {
+  background-color: #1e293b !important;
+  color: #93c5fd !important;
+  border: 1px solid #334155 !important;
+}
+
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Blockquotes (Callouts / Notes)                                     */
+/* ------------------------------------------------------------------ */
+.prose blockquote {
+  font-style: normal;
+  border-left-width: 4px;
+  border-left-color: #3b82f6 !important;
+  background-color: #eff6ff;
+  color: #1e3a8a;
+  border-radius: 0.5rem;
+  padding: 0.875rem 1.125rem;
+  margin: 1.5rem 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.dark .prose blockquote {
+  border-left-color: #60a5fa !important;
+  background-color: rgba(30, 58, 138, 0.25) !important;
+  color: #dbeafe !important;
+}
+
+.prose blockquote p,
+.prose blockquote strong,
+.prose blockquote li {
+  color: inherit !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Markdown Tables (Clean, high contrast for light & dark)            */
+/* ------------------------------------------------------------------ */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.dark .prose table {
+  border: 1px solid #334155 !important;
+}
+
+.prose thead {
+  background-color: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.dark .prose thead {
+  background-color: #1e293b !important;
+  border-bottom: 2px solid #334155 !important;
+}
+
+.prose th {
+  padding: 0.625rem 0.875rem;
+  font-weight: 600;
+  text-align: left;
+  color: #0f172a !important;
+  border-right: 1px solid #e2e8f0;
+}
+
+.dark .prose th {
+  color: #f8fafc !important;
+  border-right: 1px solid #334155 !important;
+}
+
+.prose th:last-child {
+  border-right: none;
+}
+
+.prose td {
+  padding: 0.625rem 0.875rem;
+  color: #334155 !important;
+  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.dark .prose td {
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid #334155 !important;
+  border-right: 1px solid #334155 !important;
+}
+
+.prose td:last-child {
+  border-right: none;
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.dark .prose tbody tr:nth-child(even) {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+}
+
+.prose tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.dark .prose tbody tr:hover {
+  background-color: #1e293b !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* KaTeX Math Equations Light & Dark Contrast                         */
+/* ------------------------------------------------------------------ */
+.katex {
+  color: #0f172a;
+}
+
+.katex * {
+  border-color: #0f172a;
+}
+
+.dark .katex,
+.dark .katex-display,
+.dark .katex .base,
+.dark .katex .mord,
+.dark .katex .mbin,
+.dark .katex .mrel,
+.dark .katex .mopen,
+.dark .katex .mclose,
+.dark .katex .mpunct,
+.dark .katex .minner,
+.dark .katex .msupsub,
+.dark .katex text {
+  color: #f8fafc !important;
+}
+
+.dark .katex .frac-line,
+.dark .katex .sqrt-line,
+.dark .katex * {
+  border-color: #f8fafc !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* USACO Guide CodeBlock Styling                                      */
+/* ------------------------------------------------------------------ */
+
+.cb-lines .shiki,
+.cb-lines pre,
+.cb-lines code {
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: inherit !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+.cb-lines pre {
+  counter-reset: cb-line;
+  overflow-x: auto;
+  padding: 0 1.25rem 0 0;
+}
+
+.cb-lines code {
+  display: block;
+  min-width: 100%;
+  width: max-content;
+}
+
+.cb-lines .line {
+  display: block;
+  min-height: 1.35em;
+  line-height: 1.35;
+  counter-increment: cb-line;
+  white-space: pre;
+}
+
+/* USACO line numbers: right-aligned clean muted numbers, NO vertical pipe line */
+.cb-lines .line::before {
+  content: counter(cb-line);
+  display: inline-block;
+  width: 2.25rem;
+  padding-right: 1.1rem;
+  text-align: right;
+  font-size: 12px;
+  line-height: inherit;
+  color: #64748b;
+  user-select: none;
+  pointer-events: none;
+}
+
+.cb-lines .line span {
+  line-height: inherit;
+}
+
+
