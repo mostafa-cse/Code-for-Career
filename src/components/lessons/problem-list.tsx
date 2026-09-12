@@ -97,9 +97,9 @@ export function ProblemList({ problems, displayLang }: ProblemListProps) {
       {/* ── Section Title & Progress Bar (USACO Style) ── */}
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+          <h2 id="practice-problems" className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <Code2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            <span>{isBn ? "প্র্যাকটিস প্রবলেম টেবিল" : "Practice Problems"}</span>
+            <span>{isBn ? "অনুশীলনের সমস্যা" : "Practice Problems"}</span>
           </h2>
           <p className="mt-0.5 text-xs text-muted-foreground">
             {isBn

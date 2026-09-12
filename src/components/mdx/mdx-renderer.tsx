@@ -48,14 +48,27 @@ const MDX_COMPONENTS = {
   },
 };
 
+/**
+ * Strips duplicate static markdown problem tables (e.g. "## Recommended Practice Problems"
+ * or "## অনুশীলনের জন্য নির্বাচিত সমস্যা") so only the interactive ProblemList component is rendered.
+ */
+function stripDuplicateProblemSection(source: string): string {
+  if (!source) return "";
+  return source.replace(
+    /(?:\n\s*---\s*)?\n##\s+(?:[0-9০-৯]+\.\s+)?(?:Recommended Practice Problems|Practice Problems|অনুশীলনের জন্য নির্বাচিত সমস্যা|অনুশীলনী)[\s\S]*?(?=(?:\n##\s)|$)/gi,
+    ""
+  );
+}
+
 interface MdxRendererProps {
   source: string;
 }
 
 export async function MdxRenderer({ source }: MdxRendererProps) {
+  const cleanSource = stripDuplicateProblemSection(source);
   return (
     <MDXRemote
-      source={source}
+      source={cleanSource}
       components={MDX_COMPONENTS}
       options={{
         mdxOptions: {
