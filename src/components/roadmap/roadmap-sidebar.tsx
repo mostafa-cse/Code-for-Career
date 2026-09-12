@@ -12,12 +12,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { RoadmapTrack } from "@/lib/roadmap-data";
-import { ALL_ROADMAPS } from "@/lib/roadmap-data";
 import { useLanguage } from "@/components/providers/language-provider";
 
 interface RoadmapSidebarProps {
   currentTrack: RoadmapTrack;
-  onSelectTrack: (trackId: string) => void;
   completedProblemIds: Set<string>;
   onRandomTopic: () => void;
   onResetProgress: () => void;
@@ -25,13 +23,11 @@ interface RoadmapSidebarProps {
 
 export function RoadmapSidebar({
   currentTrack,
-  onSelectTrack,
   completedProblemIds,
   onRandomTopic,
   onResetProgress,
 }: RoadmapSidebarProps) {
   const { language, t } = useLanguage();
-  const [trackDropdownOpen, setTrackDropdownOpen] = useState(false);
 
   // Calculate difficulty stats
   let easyTotal = 0;
@@ -144,52 +140,17 @@ export function RoadmapSidebar({
           </div>
         </div>
 
-        {/* Track Dropdown Selector (NeetCode Style) */}
-        <div className="relative mt-5">
-          <button
-            type="button"
-            onClick={() => setTrackDropdownOpen(!trackDropdownOpen)}
-            className="flex w-full items-center justify-between rounded-xl border border-border/70 bg-[#1b2234] px-3.5 py-2.5 text-xs font-bold text-white transition hover:bg-[#222b42] hover:border-foreground/30"
-          >
-            <span className="flex items-center gap-2 truncate">
-              <Sparkles className="h-4 w-4 text-blue-400 shrink-0" />
-              <span className="truncate">
-                {language === "bn" ? currentTrack.titleBn : currentTrack.titleEn}
-              </span>
+        {/* Track Title Card */}
+        <div className="mt-5 flex items-center justify-between rounded-xl border border-border/70 bg-[#1b2234] px-3.5 py-2.5 text-xs font-bold text-white">
+          <span className="flex items-center gap-2 truncate">
+            <Sparkles className="h-4 w-4 text-blue-400 shrink-0" />
+            <span className="truncate">
+              {language === "bn" ? currentTrack.titleBn : currentTrack.titleEn}
             </span>
-            <ChevronDown
-              className={`h-4 w-4 shrink-0 text-slate-400 transition-transform ${
-                trackDropdownOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-
-          {trackDropdownOpen && (
-            <div className="absolute left-0 right-0 top-full z-30 mt-1.5 overflow-hidden rounded-xl border border-border/80 bg-[#141926] shadow-xl">
-              {ALL_ROADMAPS.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => {
-                    onSelectTrack(t.id);
-                    setTrackDropdownOpen(false);
-                  }}
-                  className={`flex w-full items-center justify-between px-3.5 py-2.5 text-left text-xs transition ${
-                    t.id === currentTrack.id
-                      ? "bg-blue-600/20 text-blue-300 font-bold"
-                      : "text-slate-300 hover:bg-[#1c2234] hover:text-white"
-                  }`}
-                >
-                  <span className="truncate">
-                    {language === "bn" ? t.titleBn : t.titleEn}
-                  </span>
-                  {t.id === currentTrack.id && (
-                    <span className="ml-2 h-1.5 w-1.5 rounded-full bg-blue-400" />
-                  )}
-                </button>
-              ))}
-            </div>
-          )}
+          </span>
+          <span className="rounded-md bg-blue-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-blue-300">
+            {currentTrack.nodes.length} {t("Subjects", "বিষয়")}
+          </span>
         </div>
 
         {/* Quick Toolbar */}

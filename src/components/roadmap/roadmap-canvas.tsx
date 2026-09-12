@@ -232,7 +232,7 @@ export function RoadmapCanvas({
           ))}
         </svg>
 
-        {/* Node Buttons (NeetCode Style Pills) */}
+        {/* Node Buttons (Interactive Pills) */}
         {track.nodes.map((node) => {
           const width = node.width ?? 180;
           const height = node.height ?? 50;

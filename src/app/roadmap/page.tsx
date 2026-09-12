@@ -3,9 +3,9 @@ import { SITE_NAME } from "@/lib/constants";
 import { RoadmapView } from "@/components/roadmap/roadmap-view";
 
 export const metadata: Metadata = {
-  title: `Interactive Career & DSA Roadmap — ${SITE_NAME}`,
+  title: `Interactive Career Roadmap — ${SITE_NAME}`,
   description:
-    "Interactive dependency roadmap for Bangladesh software engineering interviews and NeetCode 150 DSA preparation. Visual DAG with topics, prerequisites, and practice problems.",
+    "Interactive dependency roadmap for Bangladesh software engineering interviews. Visual DAG covering 12 core subjects, prerequisites, and preparation topics.",
 };
 
 export default function RoadmapPage() {

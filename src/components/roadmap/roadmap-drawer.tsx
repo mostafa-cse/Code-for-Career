@@ -155,7 +155,7 @@ export function RoadmapDrawer({
             </div>
           )}
 
-          {/* Problems / Lessons Table (NeetCode Style) */}
+          {/* Problems / Lessons Table */}
           <div>
             <div className="flex items-center justify-between pb-2">
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400">

@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from "react";
 import {
   BD_SWE_ROADMAP,
-  NEETCODE_DSA_ROADMAP,
-  ALL_ROADMAPS,
   type RoadmapTrack,
   type RoadmapNode,
 } from "@/lib/roadmap-data";
@@ -12,25 +10,23 @@ import { RoadmapCanvas } from "./roadmap-canvas";
 import { RoadmapDrawer } from "./roadmap-drawer";
 import { RoadmapSidebar } from "./roadmap-sidebar";
 import { useLanguage } from "@/components/providers/language-provider";
-import { LayoutGrid, Network } from "lucide-react";
+import { Network } from "lucide-react";
 
 export function RoadmapView() {
   const { language, t } = useLanguage();
 
-  // Track selection state
-  const [selectedTrackId, setSelectedTrackId] = useState<string>("bd-swe");
-  const currentTrack: RoadmapTrack =
-    ALL_ROADMAPS.find((t) => t.id === selectedTrackId) ?? BD_SWE_ROADMAP;
+  // The website's flagship career roadmap
+  const currentTrack: RoadmapTrack = BD_SWE_ROADMAP;
 
   // Selected node (opens side drawer)
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   // Completed and Starred problem IDs (persisted to localStorage)
   const [completedProblemIds, setCompletedProblemIds] = useState<Set<string>>(
-    () => new Set(["cs-1", "cs-2", "nc-1", "nc-2", "nc-3"])
+    () => new Set(["cs-1", "cs-2", "oop-1"])
   );
   const [starredProblemIds, setStarredProblemIds] = useState<Set<string>>(
-    () => new Set(["cs-6", "nc-4", "nc-14"])
+    () => new Set(["cs-6", "oop-4", "net-1"])
   );
 
   // Load saved state from localStorage on client mount
@@ -160,38 +156,10 @@ export function RoadmapView() {
           </span>
         </div>
 
-        {/* Track switch buttons on header for fast switching */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center rounded-xl border border-border/70 bg-[#161a26] p-1">
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedTrackId("bd-swe");
-                setSelectedNodeId(null);
-              }}
-              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
-                selectedTrackId === "bd-swe"
-                  ? "bg-blue-600 text-white shadow-xs"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              {t("🇧🇩 BD Career", "🇧🇩 বিডি ক্যারিয়ার")}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedTrackId("dsa-neetcode");
-                setSelectedNodeId(null);
-              }}
-              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
-                selectedTrackId === "dsa-neetcode"
-                  ? "bg-blue-600 text-white shadow-xs"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              {t("⚡ NeetCode 150", "⚡ নিটকড ১৫০")}
-            </button>
-          </div>
+          <span className="inline-flex items-center rounded-lg border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-xs font-semibold text-blue-400">
+            {t("12 Core Subjects", "১২টি মূল বিষয়")}
+          </span>
         </div>
       </header>
 
@@ -210,10 +178,6 @@ export function RoadmapView() {
         {/* Gamified Sidebar (hidden on mobile, visible on lg screens) */}
         <RoadmapSidebar
           currentTrack={currentTrack}
-          onSelectTrack={(id) => {
-            setSelectedTrackId(id);
-            setSelectedNodeId(null);
-          }}
           completedProblemIds={completedProblemIds}
           onRandomTopic={handleRandomTopic}
           onResetProgress={handleResetProgress}
