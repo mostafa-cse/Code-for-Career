@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Code2,
   GitBranch,
@@ -22,6 +22,9 @@ import {
   BookOpen,
   ChevronRight,
   Award,
+  Search,
+  X,
+  Flame,
 } from "lucide-react";
 import type { RoadmapTrack, RoadmapNode } from "@/lib/roadmap-data";
 import { BD_SWE_STAGES } from "@/lib/roadmap-data";
@@ -58,63 +61,171 @@ export function RoadmapStepsView({
   nodeProgressMap,
 }: RoadmapStepsViewProps) {
   const { language, t } = useLanguage();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const nodeMap = new Map<string, RoadmapNode>(track.nodes.map((n) => [n.id, n]));
 
+  // Calculate overall career track progress
+  const totalCurriculumProblems = track.nodes.reduce(
+    (acc, n) => acc + (nodeProgressMap[n.id]?.total ?? n.problems.length),
+    0
+  );
+  const totalCurriculumSolved = track.nodes.reduce(
+    (acc, n) => acc + (nodeProgressMap[n.id]?.completed ?? 0),
+    0
+  );
+  const totalCurriculumPct =
+    totalCurriculumProblems > 0
+      ? Math.round((totalCurriculumSolved / totalCurriculumProblems) * 100)
+      : 0;
+
+  function scrollToStage(stageId: string) {
+    const el = document.getElementById(`stage-section-${stageId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  const query = searchQuery.toLowerCase().trim();
+
   return (
-    <div className="h-[calc(100vh-4rem)] w-full overflow-y-auto bg-[#0d1017] px-4 py-8 sm:px-8 lg:px-12">
-      <div className="mx-auto max-w-5xl space-y-10">
-        {/* Intro banner */}
-        <div className="rounded-2xl border border-blue-500/20 bg-linear-to-r from-blue-950/40 via-indigo-950/20 to-transparent p-6 shadow-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
+    <div className="h-[calc(100vh-4rem)] w-full overflow-y-auto bg-[#0d1017] px-4 py-6 sm:px-6 lg:px-8 xl:px-10">
+      <div className="w-full space-y-8">
+        {/* ── 1. Full-Bleed Edge-to-Edge Hero Banner ── */}
+        <div className="rounded-2xl border border-blue-500/20 bg-linear-to-r from-blue-950/40 via-indigo-950/25 to-slate-900/40 p-6 sm:p-8 shadow-xl">
+          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
+            <div className="space-y-2 max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-400">
                 <Award className="h-3.5 w-3.5" />
                 {t("Structured Career Track", "পরিকল্পিত ক্যারিয়ার ট্র্যাকিং")}
               </div>
-              <h2 className="mt-2 text-xl font-extrabold text-white sm:text-2xl">
+              <h2 className="text-xl font-extrabold text-white sm:text-2xl lg:text-3xl">
                 {language === "bn"
-                  ? "৫টি ধাপে সফটওয়্যার ইঞ্জিনিয়ারিং প্রস্তুতি"
-                  : "5-Stage Software Engineering Mastery Path"}
+                  ? "৫টি ধাপে বাংলাদেশ সফটওয়্যার ক্যারিয়ার রোডম্যাপ"
+                  : "5-Stage Bangladesh SWE Career Mastery Path"}
               </h2>
-              <p className="mt-1 text-xs text-slate-400 sm:text-sm max-w-2xl">
+              <p className="text-xs text-slate-300 sm:text-sm leading-relaxed">
                 {language === "bn"
                   ? "বাংলাদেশের শীর্ষস্থানীয় সফটওয়্যার কোম্পানিতে টেকনিক্যাল ও ভাইভা সাক্ষাৎকারে সফল হওয়ার জন্য ধাপে ধাপে ১৪টি মূল বিষয়ের প্রস্তুতি নির্দেশিকা।"
                   : "Step-by-step roadmap across 14 essential subjects tailored for written tests, problem-solving rounds, and architecture vivas in Bangladesh tech companies."}
               </p>
             </div>
-            <div className="flex items-center gap-4 text-xs font-semibold text-slate-300">
-              <div className="rounded-xl border border-border/70 bg-[#141926] px-4 py-2.5 text-center">
-                <span className="block text-lg font-bold text-blue-400">5</span>
-                <span className="text-[11px] text-slate-400">{t("Stages", "ধাপ")}</span>
+
+            {/* Quick Metrics & Overall Completion */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 shrink-0">
+              <div className="rounded-xl border border-border/70 bg-[#141926]/90 px-4 py-3 text-center min-w-24">
+                <span className="block text-xl font-black text-blue-400">5</span>
+                <span className="text-[11px] font-semibold text-slate-400">{t("Stages", "ধাপ")}</span>
               </div>
-              <div className="rounded-xl border border-border/70 bg-[#141926] px-4 py-2.5 text-center">
-                <span className="block text-lg font-bold text-emerald-400">14</span>
-                <span className="text-[11px] text-slate-400">{t("Subjects", "বিষয়")}</span>
+              <div className="rounded-xl border border-border/70 bg-[#141926]/90 px-4 py-3 text-center min-w-24">
+                <span className="block text-xl font-black text-indigo-400">14</span>
+                <span className="text-[11px] font-semibold text-slate-400">{t("Subjects", "বিষয়")}</span>
               </div>
+              <div className="rounded-xl border border-border/70 bg-[#141926]/90 px-5 py-3 text-center min-w-32">
+                <div className="flex items-center justify-center gap-1.5">
+                  <span className="text-xl font-black text-emerald-400">
+                    {totalCurriculumSolved}/{totalCurriculumProblems}
+                  </span>
+                </div>
+                <span className="text-[11px] font-semibold text-slate-400">{t("Solved", "সম্পন্ন")} ({totalCurriculumPct}%)</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Overall Progress Bar */}
+          <div className="mt-6 pt-4 border-t border-blue-500/20">
+            <div className="flex items-center justify-between text-xs mb-2">
+              <span className="text-slate-300 font-medium">
+                {t("Curriculum Mastery Progress", "কারিকুলাম সম্পন্ন করার অগ্রগতি")}
+              </span>
+              <span className="font-mono text-emerald-400 font-bold">
+                {totalCurriculumPct}%
+              </span>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800/80">
+              <div
+                className="h-full rounded-full bg-linear-to-r from-blue-500 via-indigo-500 to-emerald-400 transition-all duration-700"
+                style={{ width: `${Math.max(totalCurriculumPct, totalCurriculumPct > 0 ? 3 : 0)}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Stage Fast Jump Navigation & Subject Search */}
+          <div className="mt-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            {/* Stage Quick Chips */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold text-slate-400 mr-1 hidden sm:inline">
+                {t("Jump to Stage:", "ধাপে যান:")}
+              </span>
+              {BD_SWE_STAGES.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => scrollToStage(s.id)}
+                  className="rounded-lg border border-border/70 bg-[#131724] px-2.5 py-1 text-xs font-semibold text-slate-300 hover:border-blue-500/50 hover:bg-blue-600/15 hover:text-white transition cursor-pointer"
+                >
+                  0{s.number}: {language === "bn" ? s.titleBn.split(":")[1]?.trim() || s.titleBn : s.titleEn.split(":")[1]?.trim() || s.titleEn}
+                </button>
+              ))}
+            </div>
+
+            {/* Live Filter Search */}
+            <div className="relative w-full md:w-72">
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t("Filter 14 subjects...", "১৪টি বিষয়ে খুঁজুন...")}
+                className="w-full rounded-xl border border-border/70 bg-[#121624] py-1.5 pl-9 pr-8 text-xs text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-2.5 text-slate-400 hover:text-white"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* 5 Stages Curriculum */}
+        {/* ── 2. Full-Bleed 5 Stages Curriculum ── */}
         <div className="space-y-12">
           {BD_SWE_STAGES.map((stage) => {
-            const stageNodes = stage.nodeIds
+            const allStageNodes = stage.nodeIds
               .map((id) => nodeMap.get(id))
               .filter((n): n is RoadmapNode => Boolean(n));
 
-            const totalProblems = stageNodes.reduce(
+            const stageNodes = allStageNodes.filter((n) => {
+              if (!query) return true;
+              return (
+                n.labelEn.toLowerCase().includes(query) ||
+                n.labelBn.toLowerCase().includes(query) ||
+                (n.subtitleEn && n.subtitleEn.toLowerCase().includes(query)) ||
+                (n.subtitleBn && n.subtitleBn.toLowerCase().includes(query)) ||
+                (n.badge && n.badge.toLowerCase().includes(query))
+              );
+            });
+
+            if (stageNodes.length === 0 && query) {
+              return null;
+            }
+
+            const totalProblems = allStageNodes.reduce(
               (acc, n) => acc + (nodeProgressMap[n.id]?.total ?? n.problems.length),
               0
             );
-            const solvedProblems = stageNodes.reduce(
+            const solvedProblems = allStageNodes.reduce(
               (acc, n) => acc + (nodeProgressMap[n.id]?.completed ?? 0),
               0
             );
             const isStageDone = totalProblems > 0 && solvedProblems === totalProblems;
 
             return (
-              <div key={stage.id} className="relative space-y-4">
+              <section key={stage.id} id={`stage-section-${stage.id}`} className="relative space-y-4 scroll-mt-20">
                 {/* Stage Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border/60 pb-3">
                   <div className="flex items-center gap-3">
@@ -142,8 +253,8 @@ export function RoadmapStepsView({
                   </div>
                 </div>
 
-                {/* Grid of Subject Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Grid of Subject Cards — Full Width Multi-Column */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                   {stageNodes.map((node) => {
                     const stats = nodeProgressMap[node.id] ?? {
                       completed: 0,
@@ -281,7 +392,7 @@ export function RoadmapStepsView({
                     );
                   })}
                 </div>
-              </div>
+              </section>
             );
           })}
         </div>

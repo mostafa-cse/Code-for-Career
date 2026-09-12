@@ -19,6 +19,7 @@ interface RoadmapSidebarProps {
   completedProblemIds: Set<string>;
   onRandomTopic: () => void;
   onResetProgress: () => void;
+  onClose?: () => void;
 }
 
 export function RoadmapSidebar({
@@ -26,6 +27,7 @@ export function RoadmapSidebar({
   completedProblemIds,
   onRandomTopic,
   onResetProgress,
+  onClose,
 }: RoadmapSidebarProps) {
   const { language, t } = useLanguage();
 
@@ -80,7 +82,27 @@ export function RoadmapSidebar({
   }, []);
 
   return (
-    <aside className="w-84 shrink-0 flex-col gap-4 overflow-y-auto border-l border-border/70 bg-[#10141f] p-4 text-white lg:flex">
+    <aside className="w-84 shrink-0 flex-col gap-4 overflow-y-auto border-l border-border/70 bg-[#10141f] p-4 text-white flex">
+      {/* ── Sidebar Header with Close Button ── */}
+      <div className="flex items-center justify-between pb-2 border-b border-border/50">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-blue-400" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+            {t("Roadmap Stats", "রোডম্যাপ পরিসংখ্যান")}
+          </h3>
+        </div>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            title={t("Collapse Sidebar", "সাইডবার লুকান")}
+            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border/60 bg-muted/20 text-slate-400 hover:bg-muted/50 hover:text-white transition cursor-pointer"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
       {/* ── Widget 1: Progress Circle & Difficulty Breakdown ── */}
       <div className="rounded-2xl border border-border/60 bg-[#161a27] p-5 shadow-sm">
         <div className="flex items-center justify-between">

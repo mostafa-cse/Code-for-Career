@@ -5,6 +5,8 @@ import {
   Plus,
   Minus,
   Maximize2,
+  Scan,
+  RotateCcw,
   Code2,
   GitBranch,
   Boxes,
@@ -61,23 +63,55 @@ export function RoadmapCanvas({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Transform state for pan and zoom
-  const [zoom, setZoom] = useState<number>(0.92);
-  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 30 });
+  const [zoom, setZoom] = useState<number>(0.7);
+  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 20 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  // Center the canvas on initial mount or track change
-  const resetView = useCallback(() => {
+  // Intelligent auto-fit that calculates scale so all stages (1 to 5) fit cleanly on screen
+  const fitView = useCallback(() => {
     if (!containerRef.current) return;
-    const containerWidth = containerRef.current.clientWidth;
-    const initialX = Math.max(20, (containerWidth - track.canvasWidth * 0.92) / 2);
-    setPan({ x: initialX, y: 30 });
-    setZoom(0.92);
+    const { clientWidth, clientHeight } = containerRef.current;
+    if (clientWidth <= 0 || clientHeight <= 0) return;
+
+    const padX = 48;
+    const padY = 36;
+    const scaleX = (clientWidth - padX * 2) / track.canvasWidth;
+    const scaleY = (clientHeight - padY * 2) / track.canvasHeight;
+    const fitScale = Math.min(scaleX, scaleY);
+    const targetZoom = Math.min(Math.max(+fitScale.toFixed(2), 0.45), 1.15);
+    const targetX = Math.round((clientWidth - track.canvasWidth * targetZoom) / 2);
+    const targetY = Math.round(Math.max(16, (clientHeight - track.canvasHeight * targetZoom) / 2));
+
+    setZoom(targetZoom);
+    setPan({ x: targetX, y: targetY });
+  }, [track.canvasWidth, track.canvasHeight]);
+
+  // Center the canvas at 100% (1:1) scale
+  const resetTo100 = useCallback(() => {
+    if (!containerRef.current) return;
+    const { clientWidth } = containerRef.current;
+    const targetX = Math.max(20, Math.round((clientWidth - track.canvasWidth) / 2));
+    setPan({ x: targetX, y: 24 });
+    setZoom(1.0);
   }, [track.canvasWidth]);
 
+  // Run fitView on mount and container resize
   useEffect(() => {
-    resetView();
-  }, [track.id, resetView]);
+    const timer = setTimeout(() => {
+      fitView();
+    }, 50);
+
+    const handleResize = () => {
+      fitView();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [track.id, fitView]);
 
   // Mouse pan handlers
   function handleMouseDown(e: React.MouseEvent) {
@@ -179,6 +213,14 @@ export function RoadmapCanvas({
     });
   });
 
+  function handleWheel(e: React.WheelEvent) {
+    // Zoom toward center when scrolling wheel on canvas
+    if ((e.target as HTMLElement).closest(".roadmap-interactive")) return;
+    e.preventDefault();
+    const zoomDelta = e.deltaY < 0 ? 0.07 : -0.07;
+    setZoom((prev) => Math.min(1.8, Math.max(0.4, +(prev + zoomDelta).toFixed(2))));
+  }
+
   return (
     <div
       ref={containerRef}
@@ -189,38 +231,65 @@ export function RoadmapCanvas({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onWheel={handleWheel}
       className="relative h-[calc(100vh-4rem)] w-full overflow-hidden select-none cursor-grab active:cursor-grabbing bg-[#0b0e14] text-foreground"
       style={{
         backgroundImage: `radial-gradient(circle, rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px)`,
         backgroundSize: "24px 24px",
       }}
     >
-      {/* Floating Canvas Controls (Zoom & Reset) */}
+      {/* Floating Canvas Controls (Zoom, Fit, 1:1, Reset) */}
       <div className="roadmap-interactive absolute bottom-6 left-6 z-20 flex flex-col items-center gap-1.5 rounded-2xl border border-border/70 bg-[#121622]/90 p-1.5 shadow-xl backdrop-blur-md">
         <button
           type="button"
           onClick={handleZoomIn}
-          title="Zoom In"
-          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white"
+          title={t("Zoom In (+)", "জুম ইন")}
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white cursor-pointer"
         >
           <Plus className="h-4 w-4" />
         </button>
+
+        {/* Zoom level pill */}
+        <span className="font-mono text-[10px] font-bold text-blue-400 select-none px-1">
+          {Math.round(zoom * 100)}%
+        </span>
+
         <button
           type="button"
           onClick={handleZoomOut}
-          title="Zoom Out"
-          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white"
+          title={t("Zoom Out (-)", "জুম আউট")}
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white cursor-pointer"
         >
           <Minus className="h-4 w-4" />
         </button>
-        <div className="h-px w-5 bg-border my-0.5" />
+
+        <div className="h-px w-5 bg-border/60 my-0.5" />
+
         <button
           type="button"
-          onClick={resetView}
-          title="Reset View"
-          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white"
+          onClick={fitView}
+          title={t("Fit All Stages to Screen", "পুরো রোডম্যাপ স্ক্রিনে ফিট করুন")}
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-blue-400 transition hover:bg-blue-500/20 hover:text-blue-300 cursor-pointer"
         >
           <Maximize2 className="h-3.5 w-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onClick={resetTo100}
+          title={t("1:1 Actual Size (100%)", "আসল আকার (১০০%)")}
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white cursor-pointer"
+        >
+          <Scan className="h-3.5 w-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onClick={fitView}
+          title={t("Reset Alignment", "রিসেট করুন")}
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-white cursor-pointer"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
         </button>
       </div>
 

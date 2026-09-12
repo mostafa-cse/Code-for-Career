@@ -11,7 +11,15 @@ import { RoadmapStepsView } from "./roadmap-steps-view";
 import { RoadmapDrawer } from "./roadmap-drawer";
 import { RoadmapSidebar } from "./roadmap-sidebar";
 import { useLanguage } from "@/components/providers/language-provider";
-import { Network, ListOrdered } from "lucide-react";
+import {
+  Network,
+  ListOrdered,
+  PanelRightClose,
+  PanelRightOpen,
+  Maximize,
+  Minimize,
+  Sparkles,
+} from "lucide-react";
 
 export function RoadmapView() {
   const { language, t } = useLanguage();
@@ -24,6 +32,12 @@ export function RoadmapView() {
 
   // Selected node (opens side drawer)
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  // Sidebar collapsed/expanded state (persisted to localStorage)
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+
+  // Fullscreen state
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   // Completed and Starred problem IDs (persisted to localStorage)
   const [completedProblemIds, setCompletedProblemIds] = useState<Set<string>>(
@@ -48,10 +62,46 @@ export function RoadmapView() {
       if (savedView === "graph" || savedView === "steps") {
         setViewMode(savedView);
       }
+      const savedSidebar = localStorage.getItem("roadmap_sidebar_open");
+      if (savedSidebar !== null) {
+        setIsSidebarOpen(savedSidebar === "true");
+      }
     } catch {
       // ignore
     }
   }, []);
+
+  useEffect(() => {
+    function onFsChange() {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    }
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
+  }, []);
+
+  function handleToggleSidebar() {
+    setIsSidebarOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("roadmap_sidebar_open", String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  }
+
+  function handleToggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+      setIsFullscreen(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+        setIsFullscreen(false);
+      }
+    }
+  }
 
   function handleToggleProblem(problemId: string) {
     setCompletedProblemIds((prev) => {
@@ -173,17 +223,18 @@ export function RoadmapView() {
           </span>
         </div>
 
-        {/* View Mode Toggle: Graph vs Steps */}
+        {/* View Mode Toggle: Graph vs Steps + Sidebar Toggle + Fullscreen */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <span className="hidden lg:inline-flex items-center rounded-lg border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-xs font-semibold text-blue-400">
-            {currentTrack.nodes.length} {t("Core Subjects", "টি মূল বিষয়")}
+          <span className="hidden xl:inline-flex items-center rounded-lg border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-xs font-semibold text-blue-400">
+            {currentTrack.nodes.length} {t("Core Subjects", "টি মূল বিষয়")} • 5 {t("Stages", "টি ধাপ")}
           </span>
 
+          {/* Mode Switcher */}
           <div className="flex items-center rounded-xl border border-border/70 bg-[#151926] p-0.5 sm:p-1">
             <button
               type="button"
               onClick={() => handleViewModeChange("graph")}
-              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition cursor-pointer ${
                 viewMode === "graph"
                   ? "bg-blue-600 text-white shadow-xs"
                   : "text-slate-400 hover:text-white"
@@ -195,7 +246,7 @@ export function RoadmapView() {
             <button
               type="button"
               onClick={() => handleViewModeChange("steps")}
-              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition cursor-pointer ${
                 viewMode === "steps"
                   ? "bg-blue-600 text-white shadow-xs"
                   : "text-slate-400 hover:text-white"
@@ -205,6 +256,50 @@ export function RoadmapView() {
               <span className="hidden xs:inline sm:inline">{t("Step-by-Step", "ধাপ অনুসারে")}</span>
             </button>
           </div>
+
+          {/* Sidebar Toggle (Only in Graph view) */}
+          {viewMode === "graph" && (
+            <button
+              type="button"
+              onClick={handleToggleSidebar}
+              title={
+                isSidebarOpen
+                  ? t("Hide Sidebar (Expand to Full Width)", "সাইডবার লুকান (ফুল স্ক্রিন)")
+                  : t("Show Stats Sidebar", "পরিসংখ্যান সাইডবার দেখুন")
+              }
+              className={`flex items-center gap-1.5 rounded-xl border px-2.5 py-1.5 text-xs font-semibold transition cursor-pointer ${
+                isSidebarOpen
+                  ? "border-blue-500/40 bg-blue-600/15 text-blue-300 hover:bg-blue-600/25"
+                  : "border-border/70 bg-[#151926] text-slate-300 hover:border-blue-500/40 hover:text-white"
+              }`}
+            >
+              {isSidebarOpen ? (
+                <>
+                  <PanelRightClose className="h-3.5 w-3.5 text-blue-400" />
+                  <span className="hidden sm:inline">{t("Full Width", "ফুল স্ক্রিন")}</span>
+                </>
+              ) : (
+                <>
+                  <PanelRightOpen className="h-3.5 w-3.5 text-slate-400" />
+                  <span className="hidden sm:inline">{t("Stats", "পরিসংখ্যান")}</span>
+                </>
+              )}
+            </button>
+          )}
+
+          {/* Fullscreen Mode Toggle */}
+          <button
+            type="button"
+            onClick={handleToggleFullscreen}
+            title={
+              isFullscreen
+                ? t("Exit Fullscreen", "ফুলস্ক্রিন থেকে বের হন")
+                : t("Full Page Screen", "সম্পূর্ণ স্ক্রিন মোড")
+            }
+            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl border border-border/70 bg-[#151926] text-slate-300 hover:border-blue-500/40 hover:text-white transition cursor-pointer"
+          >
+            {isFullscreen ? <Minimize className="h-3.5 w-3.5" /> : <Maximize className="h-3.5 w-3.5" />}
+          </button>
         </div>
       </header>
 
@@ -212,8 +307,8 @@ export function RoadmapView() {
       <div className="relative flex flex-1 overflow-hidden">
         {viewMode === "graph" ? (
           <>
-            {/* Interactive Graph Canvas */}
-            <div className="flex-1 overflow-hidden">
+            {/* Interactive Graph Canvas (Expands 100% width edge-to-edge when sidebar is collapsed) */}
+            <div className="flex-1 w-full overflow-hidden">
               <RoadmapCanvas
                 track={currentTrack}
                 selectedNodeId={selectedNodeId}
@@ -222,16 +317,19 @@ export function RoadmapView() {
               />
             </div>
 
-            {/* Gamified Sidebar (hidden on mobile, visible on lg screens) */}
-            <RoadmapSidebar
-              currentTrack={currentTrack}
-              completedProblemIds={completedProblemIds}
-              onRandomTopic={handleRandomTopic}
-              onResetProgress={handleResetProgress}
-            />
+            {/* Gamified Sidebar (collapsible for edge-to-edge canvas) */}
+            {isSidebarOpen && (
+              <RoadmapSidebar
+                currentTrack={currentTrack}
+                completedProblemIds={completedProblemIds}
+                onRandomTopic={handleRandomTopic}
+                onResetProgress={handleResetProgress}
+                onClose={() => setIsSidebarOpen(false)}
+              />
+            )}
           </>
         ) : (
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 w-full overflow-hidden">
             <RoadmapStepsView
               track={currentTrack}
               selectedNodeId={selectedNodeId}
