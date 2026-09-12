@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Terminal, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { SUBJECTS } from "@/lib/constants";
 import { useLanguage } from "@/components/providers/language-provider";
+import { LogoBrand } from "./logo";
 
 export function Footer() {
   const { language, t } = useLanguage();
@@ -35,14 +36,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Col 1: Brand & Mission */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background">
-                <Terminal className="h-4 w-4" />
-              </div>
-              <span className="text-base font-bold text-foreground">
-                BD Software Prep
-              </span>
-            </Link>
+            <LogoBrand size="sm" showSubtitle={false} />
             <p className="text-xs leading-relaxed text-muted-foreground">
               {t(
                 "A free, bilingual open-source platform tailored for software engineering candidates in Bangladesh. Master written exams, technical vivas, and system design rounds.",

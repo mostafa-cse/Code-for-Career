@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Terminal, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import { useSearchModal } from "@/components/providers/search-provider";
+import { LogoBrand } from "./logo";
 import { SubjectDropdown } from "./subject-dropdown";
 import { LanguageToggle } from "./language-toggle";
 import { ThemeToggle } from "./theme-toggle";
@@ -28,19 +29,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground text-background shadow-xs">
-              <Terminal className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold tracking-tight text-foreground sm:text-base">
-                BD Software Prep
-              </span>
-              <span className="hidden text-[10px] font-medium text-muted-foreground sm:inline-block">
-                {t("Job Preparation Platform", "চাকরি প্রস্তুতির প্ল্যাটফর্ম")}
-              </span>
-            </div>
-          </Link>
+          <LogoBrand size="sm" />
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 md:flex">

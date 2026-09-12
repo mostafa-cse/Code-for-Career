@@ -5,6 +5,7 @@ import { Terminal, Mail, Loader2, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/components/providers/language-provider";
 import { SITE_NAME } from "@/lib/constants";
+import { LogoIcon } from "@/components/layout/logo";
 
 type LoginView = "options" | "magic-link" | "magic-link-sent";
 
@@ -107,8 +108,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
-            <Terminal className="h-6 w-6" />
+          <div className="relative">
+            <LogoIcon size={48} />
           </div>
           <div>
             <h1 className="text-xl font-extrabold text-foreground">

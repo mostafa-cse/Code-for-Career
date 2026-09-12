@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { SUBJECTS } from "@/lib/constants";
 import { useLanguage } from "@/components/providers/language-provider";
+import { LogoIcon } from "./logo";
 import { SubjectIcon, SUBJECT_COLOR_STYLES } from "./icons";
 import { LanguageToggle } from "./language-toggle";
 import { ThemeToggle } from "./theme-toggle";
@@ -60,9 +61,12 @@ export function MobileNav() {
           <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-background p-5 shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border pb-4">
-              <span className="text-base font-bold text-foreground">
-                BD Software Prep
-              </span>
+              <div className="flex items-center gap-2">
+                <LogoIcon size={24} />
+                <span className="text-base font-bold bg-gradient-to-r from-green-500 via-emerald-400 to-green-600 bg-clip-text text-transparent">
+                  BD Software Prep
+                </span>
+              </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}

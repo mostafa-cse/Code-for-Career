@@ -20,7 +20,7 @@ export const linqIqueryableLesson: LocalLesson = {
   prerequisites: ["linq-ienumerable"],
   estimatedMinutes: 25,
   lastUpdated: "Recently updated",
-  contentEn: `# IQueryable<T> vs IEnumerable<T> in C#
+  contentEn: `# \`IQueryable<T>\` vs \`IEnumerable<T>\` in C#
 
 The distinction between **\`IEnumerable<T>\`** and **\`IQueryable<T>\`** is one of the most critical architectural concepts in .NET backend development. It dictates whether a query executes in local application memory or is translated into native SQL by an external database engine.
 
@@ -192,7 +192,7 @@ public class Program
 | ⚪ | Exercism C# | [House](https://exercism.org/tracks/csharp/exercises/house) | Medium | Recursive building, Expression composition |
 `,
 
-  contentBn: `# C# এ আই-কুয়েরিয়েবল (IQueryable<T>) বনাম IEnumerable<T>
+  contentBn: `# C# এ আই-কুয়েরিয়েবল (\`IQueryable<T>\`) বনাম \`IEnumerable<T>\`
 
 .NET ব্যাকএন্ড আর্কিটেকচারে **\`IEnumerable<T>\`** এবং **\`IQueryable<T>\`** এর পার্থক্য অন্যতম গুরুত্বপূর্ণ বিষয়। আপনার লেখা কুয়েরি কি অ্যাপ্লিকেশনের লোকাল মেমরিতে চলবে নাকি ডেটাবেস সার্ভারে গিয়ে নেটিভ SQL হিসেবে এক্সিকিউট হবে, তা এই ইন্টারফেসের ওপর নির্ভর করে।
 

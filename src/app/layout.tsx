@@ -16,6 +16,14 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
+  icons: {
+    icon: [
+      { url: "/favicon.ico?v=2" },
+      { url: "/logo.png?v=2", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico?v=2",
+    apple: "/logo.png?v=2",
+  },
   keywords: [
     "Bangladesh software job preparation",
     "C# programming",
