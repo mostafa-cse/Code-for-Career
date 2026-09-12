@@ -58,7 +58,7 @@ export function Navbar() {
               {t("Problems", "প্র্যাকটিস")}
             </Link>
             <Link
-              href="#tracks"
+              href="/roadmap"
               className="rounded-md px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
             >
               {t("Roadmaps", "রোডম্যাপ")}

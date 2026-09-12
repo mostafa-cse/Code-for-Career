@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, TrendingUp } from "lucide-react";
+import { ArrowRight, TrendingUp, Network } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
 
@@ -111,20 +111,29 @@ export function DashboardHeader() {
               style={{ width: `${inProgressPct}%` }}
             />
           </div>
-          <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
             <span>
               {overallStats.completedLessons}{" "}
               {t("of", "টির মধ্যে")}{" "}
               {overallStats.totalLessons}{" "}
               {t("lessons completed", "টি পাঠ সম্পন্ন")}
             </span>
-            <Link
-              href="/subjects/csharp"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-blue-600 dark:hover:text-blue-400"
-            >
-              {t("Continue Learning", "পড়াশোনা চালিয়ে যান")}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            <div className="flex items-center gap-2.5">
+              <Link
+                href="/roadmap"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-2.5 py-1 text-xs font-semibold text-foreground transition-colors hover:border-foreground/20 hover:bg-muted"
+              >
+                <Network className="h-3.5 w-3.5 text-blue-500" />
+                {t("Interactive Roadmap", "ইন্টারেক্টিভ রোডম্যাপ")}
+              </Link>
+              <Link
+                href="/subjects/csharp"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                {t("Continue Learning", "পড়াশোনা চালিয়ে যান")}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

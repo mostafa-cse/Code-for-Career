@@ -90,11 +90,11 @@ export function MobileNav() {
                 {t("Problems", "প্র্যাকটিস প্রবলেম")}
               </Link>
               <Link
-                href="#tracks"
+                href="/roadmap"
                 onClick={() => setIsOpen(false)}
                 className="rounded-lg px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted"
               >
-                {t("Curriculum Tracks", "লার্নিং ট্র্যাক")}
+                {t("Roadmaps", "ইন্টারেক্টিভ রোডম্যাপ")}
               </Link>
             </div>
 
