@@ -60,6 +60,14 @@ export function CodeBlock({
     }
   }
 
+  // Strip extraneous newlines between line spans that cause unwanted blank lines
+  const cleanHtml = highlightedHtml
+    ? highlightedHtml
+        .replace(/(<\/span>)\r?\n(?=<span class="line">)/g, "$1")
+        .replace(/<code>\r?\n(?=<span class="line">)/g, "<code>")
+        .replace(/(<\/span>)\r?\n(?=<\/code>)/g, "$1")
+    : "";
+
   return (
     <div className="group relative not-prose my-6 overflow-hidden rounded-lg border border-[#272c36] bg-[#141820] shadow-xl">
       {/* ── USACO-Style Top-Right Floating Badges ── */}
@@ -67,7 +75,7 @@ export function CodeBlock({
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1 rounded bg-[#e2e8f0] px-2.5 py-0.5 text-xs font-semibold text-slate-900 shadow-sm transition-all hover:bg-white active:scale-95"
+          className="flex items-center gap-1 rounded bg-[#e2e8f0] px-2.5 py-0.5 text-xs font-semibold text-slate-900 shadow-sm transition-all hover:bg-white active:scale-95 cursor-pointer"
           aria-label="Copy code to clipboard"
         >
           {copied ? (
@@ -87,8 +95,8 @@ export function CodeBlock({
 
       {/* ── Code Body (USACO Guide line numbers & styling) ── */}
       <div
-        className="cb-lines overflow-x-auto py-3 pl-1 pr-28 text-[13px] leading-[1.35]"
-        dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+        className="cb-lines overflow-x-auto py-3 pl-1 pr-28 text-[13px] leading-[1.4]"
+        dangerouslySetInnerHTML={{ __html: cleanHtml }}
       />
     </div>
   );

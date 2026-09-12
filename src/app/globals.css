@@ -365,6 +365,7 @@ body {
   margin: 0 !important;
   font-size: inherit !important;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  white-space: normal !important;
 }
 
 .cb-lines pre {
@@ -381,10 +382,10 @@ body {
 
 .cb-lines .line {
   display: block;
-  min-height: 1.35em;
-  line-height: 1.35;
+  min-height: 1.4em;
+  line-height: 1.45;
   counter-increment: cb-line;
-  white-space: pre;
+  white-space: pre !important;
 }
 
 /* USACO line numbers: right-aligned clean muted numbers, NO vertical pipe line */
