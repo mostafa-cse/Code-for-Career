@@ -1,8 +1,30 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { Plus, Minus, Maximize2 } from "lucide-react";
+import {
+  Plus,
+  Minus,
+  Maximize2,
+  Code2,
+  GitBranch,
+  Boxes,
+  Binary,
+  Zap,
+  Layers,
+  Database,
+  PenTool,
+  Puzzle,
+  Cpu,
+  Globe,
+  Server,
+  Sparkles,
+  Users,
+  BookOpen,
+  ArrowDown,
+  Compass,
+} from "lucide-react";
 import type { RoadmapTrack, RoadmapNode } from "@/lib/roadmap-data";
+import { BD_SWE_STAGES } from "@/lib/roadmap-data";
 import { useLanguage } from "@/components/providers/language-provider";
 
 interface RoadmapCanvasProps {
@@ -12,18 +34,35 @@ interface RoadmapCanvasProps {
   nodeProgressMap: Record<string, { completed: number; total: number; isCompleted: boolean }>;
 }
 
+const ICON_MAP: Record<string, React.ElementType> = {
+  Code2,
+  GitBranch,
+  Boxes,
+  Binary,
+  Zap,
+  Layers,
+  Database,
+  PenTool,
+  Puzzle,
+  Cpu,
+  Globe,
+  Server,
+  Sparkles,
+  Users,
+};
+
 export function RoadmapCanvas({
   track,
   selectedNodeId,
   onSelectNode,
   nodeProgressMap,
 }: RoadmapCanvasProps) {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Transform state for pan and zoom
-  const [zoom, setZoom] = useState<number>(1);
-  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 40 });
+  const [zoom, setZoom] = useState<number>(0.92);
+  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 30 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
@@ -31,10 +70,9 @@ export function RoadmapCanvas({
   const resetView = useCallback(() => {
     if (!containerRef.current) return;
     const containerWidth = containerRef.current.clientWidth;
-    // calculate initial pan to center the graph
-    const initialX = Math.max(0, (containerWidth - track.canvasWidth) / 2);
-    setPan({ x: initialX, y: 40 });
-    setZoom(1);
+    const initialX = Math.max(20, (containerWidth - track.canvasWidth * 0.92) / 2);
+    setPan({ x: initialX, y: 30 });
+    setZoom(0.92);
   }, [track.canvasWidth]);
 
   useEffect(() => {
@@ -101,7 +139,7 @@ export function RoadmapCanvas({
   const nodeMap = useRef<Map<string, RoadmapNode>>(new Map());
   nodeMap.current = new Map(track.nodes.map((n) => [n.id, n]));
 
-  // Calculate SVG curved paths between parents and children
+  // Calculate SVG curved paths with arrowheads between parents and children
   const edges: Array<{
     id: string;
     path: string;
@@ -110,8 +148,8 @@ export function RoadmapCanvas({
   }> = [];
 
   track.nodes.forEach((parent) => {
-    const pWidth = parent.width ?? 180;
-    const pHeight = parent.height ?? 50;
+    const pWidth = parent.width ?? 230;
+    const pHeight = parent.height ?? 68;
     const startX = parent.x + pWidth / 2;
     const startY = parent.y + pHeight;
 
@@ -119,13 +157,13 @@ export function RoadmapCanvas({
       const child = nodeMap.current.get(childId);
       if (!child) return;
 
-      const cWidth = child.width ?? 180;
+      const cWidth = child.width ?? 230;
       const endX = child.x + cWidth / 2;
-      const endY = child.y;
+      const endY = child.y - 6; // stop just before child top edge for arrowhead
 
       const deltaY = Math.max(endY - startY, 40);
-      const cpY1 = startY + deltaY * 0.5;
-      const cpY2 = endY - deltaY * 0.5;
+      const cpY1 = startY + deltaY * 0.45;
+      const cpY2 = endY - deltaY * 0.45;
 
       const parentStats = nodeProgressMap[parent.id];
       const childStats = nodeProgressMap[child.id];
@@ -151,19 +189,19 @@ export function RoadmapCanvas({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className={`relative h-[calc(100vh-4rem)] w-full overflow-hidden select-none cursor-grab active:cursor-grabbing bg-dot-matrix bg-[#0f1117] text-foreground`}
+      className="relative h-[calc(100vh-4rem)] w-full overflow-hidden select-none cursor-grab active:cursor-grabbing bg-[#0b0e14] text-foreground"
       style={{
-        backgroundImage: `radial-gradient(circle, rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px)`,
+        backgroundImage: `radial-gradient(circle, rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px)`,
         backgroundSize: "24px 24px",
       }}
     >
       {/* Floating Canvas Controls (Zoom & Reset) */}
-      <div className="roadmap-interactive absolute bottom-6 left-6 z-20 flex flex-col items-center gap-1.5 rounded-xl border border-border/70 bg-card/90 p-1.5 shadow-lg backdrop-blur-md">
+      <div className="roadmap-interactive absolute bottom-6 left-6 z-20 flex flex-col items-center gap-1.5 rounded-2xl border border-border/70 bg-[#121622]/90 p-1.5 shadow-xl backdrop-blur-md">
         <button
           type="button"
           onClick={handleZoomIn}
           title="Zoom In"
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white"
         >
           <Plus className="h-4 w-4" />
         </button>
@@ -171,7 +209,7 @@ export function RoadmapCanvas({
           type="button"
           onClick={handleZoomOut}
           title="Zoom Out"
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white"
         >
           <Minus className="h-4 w-4" />
         </button>
@@ -180,10 +218,26 @@ export function RoadmapCanvas({
           type="button"
           onClick={resetView}
           title="Reset View"
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-300 transition hover:bg-slate-800 hover:text-white"
         >
           <Maximize2 className="h-3.5 w-3.5" />
         </button>
+      </div>
+
+      {/* Floating Legend / Quick Guide */}
+      <div className="roadmap-interactive pointer-events-none absolute bottom-6 right-6 z-20 hidden md:flex items-center gap-4 rounded-xl border border-border/60 bg-[#121622]/90 px-3.5 py-2 text-[11px] text-slate-400 backdrop-blur-md">
+        <span className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-blue-400" />
+          {t("Core Path", "কোর পথ")}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <ArrowDown className="h-3 w-3 text-slate-400" />
+          {t("Prerequisite Flow", "ধারাবাহিক ধাপ")}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+          {t("Completed", "সম্পন্ন")}
+        </span>
       </div>
 
       {/* Transformable Canvas Layer */}
@@ -196,21 +250,86 @@ export function RoadmapCanvas({
         }}
         className="relative transition-transform duration-75 ease-out"
       >
-        {/* SVG Connectors */}
+        {/* Stage Lanes / Section Banners in Background */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          {BD_SWE_STAGES.map((stage) => (
+            <div
+              key={stage.id}
+              style={{
+                position: "absolute",
+                top: `${stage.y - 12}px`,
+                left: "40px",
+                width: `${track.canvasWidth - 80}px`,
+                height: `${stage.height}px`,
+              }}
+              className="rounded-3xl border border-dashed border-slate-800/80 bg-slate-900/15 p-4"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="rounded-md bg-blue-500/20 px-2 py-0.5 font-mono text-[10px] font-extrabold uppercase tracking-wider text-blue-400 border border-blue-500/30">
+                  STAGE 0{stage.number}
+                </span>
+                <span className="text-xs font-bold text-slate-300">
+                  {language === "bn" ? stage.titleBn : stage.titleEn}
+                </span>
+                <span className="hidden sm:inline-block text-[11px] text-slate-500">
+                  • {language === "bn" ? stage.subtitleBn : stage.subtitleEn}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* SVG Connectors with Directional Arrowheads */}
         <svg
-          className="pointer-events-none absolute inset-0 h-full w-full"
+          className="pointer-events-none absolute inset-0 z-10 h-full w-full"
           width={track.canvasWidth}
           height={track.canvasHeight}
         >
           <defs>
             <linearGradient id="edge-gradient-active" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.9" />
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.95" />
             </linearGradient>
             <linearGradient id="edge-gradient-completed" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#10b981" stopOpacity="0.8" />
+              <stop offset="0%" stopColor="#10b981" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#10b981" stopOpacity="0.9" />
             </linearGradient>
+
+            {/* Default Arrowhead Marker */}
+            <marker
+              id="arrow-default"
+              markerWidth="7"
+              markerHeight="7"
+              refX="5"
+              refY="3.5"
+              orient="auto"
+            >
+              <polygon points="0 1, 6 3.5, 0 6" fill="rgba(148, 163, 184, 0.55)" />
+            </marker>
+
+            {/* Active Highlight Arrowhead Marker */}
+            <marker
+              id="arrow-active"
+              markerWidth="8"
+              markerHeight="8"
+              refX="6"
+              refY="4"
+              orient="auto"
+            >
+              <polygon points="0 1, 7 4, 0 7" fill="#3b82f6" />
+            </marker>
+
+            {/* Completed Arrowhead Marker */}
+            <marker
+              id="arrow-completed"
+              markerWidth="7"
+              markerHeight="7"
+              refX="5"
+              refY="3.5"
+              orient="auto"
+            >
+              <polygon points="0 1, 6 3.5, 0 6" fill="#10b981" />
+            </marker>
           </defs>
 
           {edges.map((edge) => (
@@ -225,79 +344,104 @@ export function RoadmapCanvas({
                   ? "url(#edge-gradient-completed)"
                   : "rgba(148, 163, 184, 0.35)"
               }
-              strokeWidth={edge.isActive ? 2.5 : 2}
+              strokeWidth={edge.isActive ? 2.5 : 1.8}
               strokeLinecap="round"
+              markerEnd={`url(#${
+                edge.isActive ? "arrow-active" : edge.isCompleted ? "arrow-completed" : "arrow-default"
+              })`}
               className="transition-all duration-300"
             />
           ))}
         </svg>
 
-        {/* Node Buttons (Interactive Pills) */}
-        {track.nodes.map((node) => {
-          const width = node.width ?? 180;
-          const height = node.height ?? 50;
-          const isSelected = node.id === selectedNodeId;
-          const stats = nodeProgressMap[node.id] ?? {
-            completed: 0,
-            total: node.problems.length,
-            isCompleted: false,
-          };
-          const pct = stats.total > 0 ? (stats.completed / stats.total) * 100 : 0;
+        {/* Node Cards on Canvas */}
+        <div className="relative z-20">
+          {track.nodes.map((node) => {
+            const width = node.width ?? 230;
+            const height = node.height ?? 68;
+            const isSelected = node.id === selectedNodeId;
+            const stats = nodeProgressMap[node.id] ?? {
+              completed: 0,
+              total: node.problems.length,
+              isCompleted: false,
+            };
+            const pct = stats.total > 0 ? (stats.completed / stats.total) * 100 : 0;
+            const IconComponent = (node.icon && ICON_MAP[node.icon]) || BookOpen;
 
-          return (
-            <div
-              key={node.id}
-              style={{
-                position: "absolute",
-                left: `${node.x}px`,
-                top: `${node.y}px`,
-                width: `${width}px`,
-                height: `${height}px`,
-              }}
-              onClick={() => onSelectNode(node.id)}
-              className={`roadmap-interactive group flex flex-col justify-between rounded-xl border px-3.5 py-2.5 cursor-pointer shadow-md transition-all duration-200 select-none ${
-                isSelected
-                  ? "border-blue-500 bg-[#1e2235] ring-2 ring-blue-500/50 shadow-blue-500/10"
-                  : stats.isCompleted
-                  ? "border-emerald-500/50 bg-[#182623] hover:border-emerald-400 hover:bg-[#1b2c28]"
-                  : "border-[#2b3245] bg-[#161a26] hover:border-foreground/40 hover:bg-[#1c2233]"
-              }`}
-            >
-              {/* Top Row: Title + Optional Badge */}
-              <div className="flex items-center justify-between gap-1.5">
-                <span className="truncate text-xs font-bold tracking-tight text-white group-hover:text-blue-300 transition-colors">
-                  {language === "bn" ? node.labelBn : node.labelEn}
-                </span>
-                {node.badge && (
-                  <span className="shrink-0 rounded bg-blue-500/20 px-1 py-0.5 text-[9px] font-semibold text-blue-300 uppercase tracking-wider border border-blue-500/30">
-                    {node.badge}
-                  </span>
-                )}
-              </div>
-
-              {/* Bottom Row: Progress indicator line */}
-              <div className="mt-1.5 flex items-center gap-2">
-                <div className="h-1 w-full overflow-hidden rounded-full bg-slate-700/60">
+            return (
+              <div
+                key={node.id}
+                style={{
+                  position: "absolute",
+                  left: `${node.x}px`,
+                  top: `${node.y}px`,
+                  width: `${width}px`,
+                  height: `${height}px`,
+                }}
+                onClick={() => onSelectNode(node.id)}
+                className={`roadmap-interactive group flex flex-col justify-between rounded-2xl border px-3.5 py-2.5 cursor-pointer shadow-lg transition-all duration-200 select-none ${
+                  isSelected
+                    ? "border-blue-500 bg-[#1b233a] ring-2 ring-blue-500/50 shadow-blue-500/20 scale-[1.02]"
+                    : stats.isCompleted
+                    ? "border-emerald-500/50 bg-[#14231f] hover:border-emerald-400 hover:bg-[#172b26]"
+                    : "border-slate-800 bg-[#141824] hover:border-blue-400/60 hover:bg-[#181f32]"
+                }`}
+              >
+                {/* Header: Icon + Step + Title + Badge */}
+                <div className="flex items-center gap-2.5">
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
                       stats.isCompleted
-                        ? "bg-emerald-400"
-                        : pct > 0
-                        ? "bg-blue-400"
-                        : "bg-slate-600"
+                        ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                        : isSelected
+                        ? "bg-blue-600 text-white border-blue-500"
+                        : "bg-blue-600/15 text-blue-400 border-blue-500/25 group-hover:bg-blue-600/25 transition-colors"
                     }`}
-                    style={{ width: `${Math.max(pct, pct > 0 ? 8 : 0)}%` }}
-                  />
+                  >
+                    <IconComponent className="h-4 w-4" />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                        {t("Step", "ধাপ")} {String(node.stepNumber).padStart(2, "0")}
+                      </span>
+                      {node.badge && (
+                        <span className="shrink-0 rounded bg-blue-500/15 px-1.5 py-0.2 text-[8px] font-bold uppercase tracking-wider text-blue-300 border border-blue-500/30">
+                          {node.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p className="truncate text-xs font-bold text-white group-hover:text-blue-300 transition-colors">
+                      {language === "bn" ? node.labelBn : node.labelEn}
+                    </p>
+                  </div>
                 </div>
-                {stats.total > 0 && (
-                  <span className="shrink-0 font-mono text-[10px] text-slate-400">
-                    {stats.completed}/{stats.total}
-                  </span>
-                )}
+
+                {/* Footer: Progress indicator line + counter */}
+                <div className="flex items-center gap-2 pt-1 border-t border-border/40">
+                  <div className="h-1 w-full overflow-hidden rounded-full bg-slate-800">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        stats.isCompleted
+                          ? "bg-emerald-400"
+                          : pct > 0
+                          ? "bg-blue-400"
+                          : "bg-slate-700"
+                      }`}
+                      style={{ width: `${Math.max(pct, pct > 0 ? 8 : 0)}%` }}
+                    />
+                  </div>
+                  {stats.total > 0 && (
+                    <span className="shrink-0 font-mono text-[9px] font-bold text-slate-400">
+                      {stats.completed}/{stats.total}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
