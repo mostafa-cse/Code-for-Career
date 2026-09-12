@@ -1,10 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import {
   TrendingUp,
-  Network,
-  ArrowRight,
   BookOpen,
   CheckCircle2,
   Code2,
@@ -84,24 +81,7 @@ export function DashboardHeader() {
               </div>
             </div>
 
-            {/* Quick Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2.5">
-              <Link
-                href="/roadmap"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-4 py-2.5 text-xs font-bold text-white transition hover:bg-white/20 shadow-xs"
-              >
-                <Network className="h-4 w-4 text-blue-200" />
-                <span>{t("Interactive Roadmap", "ইন্টারেক্টিভ রোডম্যাপ")}</span>
-              </Link>
 
-              <Link
-                href="/subjects/csharp"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50 shadow-md shadow-blue-900/30"
-              >
-                <span>{t("Continue Learning", "পড়াশোনা চালিয়ে যান")}</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
           </div>
         </div>
 
