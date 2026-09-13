@@ -18,6 +18,7 @@ interface ModuleProgressSelectorProps {
   lessonSlug: string;
   className?: string;
   displayLang?: "en" | "bn";
+  onStatusChange?: (newStatus: LessonStatus, oldStatus: LessonStatus) => void;
 }
 
 const STATUS_CONFIG: Record<
@@ -68,6 +69,7 @@ export function ModuleProgressSelector({
   lessonSlug,
   className = "",
   displayLang,
+  onStatusChange,
 }: ModuleProgressSelectorProps) {
   const { language } = useLanguage();
   const activeLang = displayLang || language;
@@ -98,8 +100,12 @@ export function ModuleProgressSelector({
   }, [isOpen]);
 
   function handleSelect(status: LessonStatus) {
+    const oldStatus = currentStatus;
     markLesson(subjectSlug, lessonSlug, status);
     setIsOpen(false);
+    if (status !== oldStatus && onStatusChange) {
+      onStatusChange(status, oldStatus);
+    }
   }
 
   return (
