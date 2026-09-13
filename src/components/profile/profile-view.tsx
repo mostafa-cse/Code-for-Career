@@ -33,6 +33,7 @@ import { useLanguage } from "@/components/providers/language-provider";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
 import { CURRICULUM_TRACKS } from "@/lib/curriculum-data";
 import { CandidateSearchModal } from "@/components/profile/candidate-search-modal";
+import { UserAvatar } from "@/components/ui/user-avatar";
 
 interface ProfileViewProps {
   initialUser: {
@@ -266,18 +267,14 @@ export function ProfileView({ initialUser }: ProfileViewProps) {
               <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-4 pb-5 border-b border-border/70">
                 <div className="relative shrink-0">
                   <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-amber-500 via-blue-500 to-emerald-400 opacity-50 blur-xs" />
-                  {initialUser.avatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={initialUser.avatarUrl}
-                      alt={name || "User Avatar"}
-                      className="relative h-20 w-20 sm:h-22 sm:w-22 rounded-2xl object-cover ring-2 ring-background shadow-lg"
-                    />
-                  ) : (
-                    <div className="relative flex h-20 w-20 sm:h-22 sm:w-22 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-800 text-white text-2xl font-black ring-2 ring-background shadow-lg">
-                      {initials}
-                    </div>
-                  )}
+                  <UserAvatar
+                    src={initialUser.avatarUrl}
+                    name={name || username}
+                    shape="rounded"
+                    sizeClassName="relative h-20 w-20 sm:h-22 sm:w-22"
+                    className="ring-2 ring-background shadow-lg"
+                    textClassName="text-2xl"
+                  />
                   <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full border border-amber-400/40 bg-amber-500 px-2 py-0.5 text-[9px] font-black uppercase text-white shadow-xs">
                     PRO
                   </div>

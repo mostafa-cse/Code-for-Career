@@ -27,6 +27,7 @@ import {
 import { useLanguage } from "@/components/providers/language-provider";
 import { UserProfile } from "@/lib/user-profiles";
 import { CandidateSearchModal } from "@/components/profile/candidate-search-modal";
+import { UserAvatar } from "@/components/ui/user-avatar";
 
 interface PublicProfileViewProps {
   profile: UserProfile;
@@ -169,18 +170,14 @@ export function PublicProfileView({ profile, isOwner = false }: PublicProfileVie
                 <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-4 pb-5 border-b border-border/70">
                   <div className="relative shrink-0">
                     <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-amber-500 via-blue-500 to-emerald-400 opacity-60 blur-xs animate-pulse" />
-                    {profile.avatarUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={profile.avatarUrl}
-                        alt={profile.name}
-                        className="relative h-22 w-22 sm:h-24 sm:w-24 rounded-2xl object-cover ring-2 ring-background shadow-xl"
-                      />
-                    ) : (
-                      <div className="relative flex h-22 w-22 sm:h-24 sm:w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white font-black text-2xl ring-2 ring-background shadow-xl">
-                        {initials}
-                      </div>
-                    )}
+                    <UserAvatar
+                      src={profile.avatarUrl}
+                      name={profile.name || profile.username}
+                      shape="rounded"
+                      sizeClassName="relative h-22 w-22 sm:h-24 sm:w-24"
+                      className="ring-2 ring-background shadow-xl"
+                      textClassName="text-2xl"
+                    />
 
                     {/* Rank Pill */}
                     <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-amber-400/40 bg-gradient-to-r from-amber-600 to-yellow-500 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-md">

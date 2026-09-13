@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import { UserProfile, COMMUNITY_CANDIDATES } from "@/lib/user-profiles";
+import { UserAvatar } from "@/components/ui/user-avatar";
 
 interface CandidateSearchModalProps {
   isOpen: boolean;
@@ -218,18 +219,14 @@ export function CandidateSearchModal({
                     <div className="flex items-center gap-3.5 min-w-0">
                       {/* Avatar */}
                       <div className="relative shrink-0">
-                        {candidate.avatarUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={candidate.avatarUrl}
-                            alt={candidate.name}
-                            className="h-12 w-12 rounded-xl object-cover ring-1 ring-border shadow-xs group-hover:ring-blue-500/50 transition-all"
-                          />
-                        ) : (
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-700 text-white font-black text-sm shadow-xs">
-                            {initials}
-                          </div>
-                        )}
+                        <UserAvatar
+                          src={candidate.avatarUrl}
+                          name={candidate.name || candidate.username}
+                          shape="rounded"
+                          sizeClassName="h-12 w-12"
+                          className="ring-1 ring-border shadow-xs group-hover:ring-blue-500/50 transition-all"
+                          textClassName="text-sm font-black"
+                        />
                         {candidate.role === "ADMIN" && (
                           <div className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white shadow-xs">
                             <ShieldCheck className="h-2.5 w-2.5" />

@@ -8,28 +8,18 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useLanguage } from "@/components/providers/language-provider";
 
-function Avatar({ name, avatarUrl }: { name?: string | null; avatarUrl?: string | null }) {
-  const initials = (name ?? "?")
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+import { UserAvatar } from "@/components/ui/user-avatar";
 
-  if (avatarUrl) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={avatarUrl}
-        alt={name ?? "avatar"}
-        className="h-7 w-7 rounded-full object-cover ring-2 ring-border"
-      />
-    );
-  }
+function Avatar({ name, avatarUrl }: { name?: string | null; avatarUrl?: string | null }) {
   return (
-    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-background text-[10px] font-bold ring-2 ring-border">
-      {initials}
-    </div>
+    <UserAvatar
+      src={avatarUrl}
+      name={name}
+      shape="circle"
+      sizeClassName="h-7 w-7"
+      className="ring-2 ring-border"
+      textClassName="text-[10px]"
+    />
   );
 }
 
