@@ -526,7 +526,7 @@ export function LessonShell({
 
               {/* ── Topic Completion & Module Progress Card ── */}
               <div
-                className={`my-10 rounded-2xl border transition-all duration-500 backdrop-blur-sm overflow-hidden ${
+                className={`my-10 rounded-2xl border transition-all duration-500 backdrop-blur-sm ${
                   isBlinking
                     ? "border-emerald-500/70 bg-gradient-to-br from-emerald-500/[0.12] via-card to-emerald-500/[0.06] dark:from-emerald-950/[0.35] dark:via-card/70 dark:to-emerald-900/[0.15] ring-2 ring-emerald-500/60 shadow-[0_0_35px_rgba(16,185,129,0.3)] animate-pulse"
                     : isLessonDone
@@ -535,7 +535,7 @@ export function LessonShell({
                 }`}
               >
                 {/* Upper Section: Status Overview & Dropdown */}
-                <div className="p-5 sm:p-6 pb-4 border-b border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="relative z-20 p-5 sm:p-6 pb-4 border-b border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-t-2xl">
                   <div className="flex items-start sm:items-center gap-3.5 min-w-0">
                     <div
                       className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all ${
@@ -598,13 +598,14 @@ export function LessonShell({
                       lessonSlug={lesson.slug}
                       displayLang={displayLang}
                       size="sm"
+                      direction="auto"
                       onStatusChange={handleStatusChange}
                     />
                   </div>
                 </div>
 
                 {/* Lower Section: Progress Meter & Primary CTA */}
-                <div className="px-5 sm:px-6 py-3.5 bg-muted/[0.12] rounded-b-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="relative z-10 px-5 sm:px-6 py-3.5 bg-muted/[0.12] rounded-b-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   {/* Progress Meter */}
                   <div className="flex items-center gap-3 w-full sm:w-auto flex-1 max-w-xs">
                     <span className="text-[11px] font-medium text-muted-foreground shrink-0">

@@ -19,6 +19,7 @@ interface ModuleProgressSelectorProps {
   className?: string;
   displayLang?: "en" | "bn";
   size?: "sm" | "md";
+  direction?: "down" | "up" | "auto";
   onStatusChange?: (newStatus: LessonStatus, oldStatus: LessonStatus) => void;
 }
 
@@ -72,6 +73,7 @@ export function ModuleProgressSelector({
   className = "",
   displayLang,
   size = "md",
+  direction = "auto",
   onStatusChange,
 }: ModuleProgressSelectorProps) {
   const { language } = useLanguage();
@@ -79,6 +81,7 @@ export function ModuleProgressSelector({
   const isBn = activeLang === "bn";
   const { getLessonStatus, markLesson } = useUserProgress();
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const currentStatus: LessonStatus = getLessonStatus(subjectSlug, lessonSlug);
@@ -89,6 +92,21 @@ export function ModuleProgressSelector({
     size === "sm"
       ? "h-8 px-2.5 text-[11px] gap-1.5"
       : "h-9 px-3 text-xs gap-2";
+
+  // Check remaining viewport space on toggle to intelligently flip upward or downward
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      if (direction === "up") {
+        setOpenUpward(true);
+      } else if (direction === "down") {
+        setOpenUpward(false);
+      } else {
+        const rect = dropdownRef.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        setOpenUpward(spaceBelow < 230);
+      }
+    }
+  }, [isOpen, direction]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -129,11 +147,15 @@ export function ModuleProgressSelector({
         <span>
           {isBn ? currentConfig.labelBn : currentConfig.labelEn}
         </span>
-        <ChevronDown className="h-3 w-3 opacity-60 ml-0.5" />
+        <ChevronDown className={`h-3 w-3 opacity-60 ml-0.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-1.5 w-48 rounded-xl border border-border/80 bg-popover/95 p-1.5 shadow-xl backdrop-blur-md animate-in fade-in-80 zoom-in-95">
+        <div
+          className={`absolute right-0 z-50 w-48 rounded-xl border border-border/80 bg-popover/98 p-1.5 shadow-2xl backdrop-blur-md animate-in fade-in-80 zoom-in-95 ${
+            openUpward ? "bottom-full mb-1.5" : "top-full mt-1.5"
+          }`}
+        >
           <div className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground border-b border-border/60 mb-1">
             {isBn ? "মডিউল সমাপ্তি অবস্থা" : "Module Progress"}
           </div>
