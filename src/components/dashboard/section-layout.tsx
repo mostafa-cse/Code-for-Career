@@ -275,7 +275,7 @@ export function SectionLayout() {
                 value={lessonSearch}
                 onChange={(e) => setLessonSearch(e.target.value)}
                 placeholder={t(
-                  "Filter lessons across all 12 subjects by title...",
+                  "Filter lessons across all 13 subjects by title...",
                   "সকল বিষয়ের পাঠের শিরোনাম দিয়ে খুঁজুন..."
                 )}
                 className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-8 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-blue-500/30"

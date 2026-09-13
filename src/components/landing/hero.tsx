@@ -59,7 +59,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3.5 text-sm font-semibold text-card-foreground shadow-xs transition-colors hover:bg-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring sm:text-base"
           >
             <BookOpen className="h-4 w-4 text-muted-foreground" />
-            <span>{t("Explore 12 Subjects", "১২টি বিষয় দেখুন")}</span>
+            <span>{t("Explore 13 Subjects", "১৩টি বিষয় দেখুন")}</span>
           </a>
         </div>
 
@@ -68,7 +68,7 @@ export function Hero() {
           <div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card/60 p-3 backdrop-blur-xs">
             <CheckCircle2 className="h-4 w-4 text-emerald-500" />
             <span className="text-xs font-medium text-foreground">
-              {t("12 Core Modules", "১২টি পূর্ণাঙ্গ মডিউল")}
+              {t("13 Core Modules", "১৩টি পূর্ণাঙ্গ মডিউল")}
             </span>
           </div>
           <div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card/60 p-3 backdrop-blur-xs">

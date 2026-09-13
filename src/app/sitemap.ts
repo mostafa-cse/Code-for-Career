@@ -28,7 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // 12 Subjects
+  // 13 Subjects
   for (const subject of SUBJECTS) {
     routes.push({
       url: `${baseUrl}/subjects/${subject.slug}`,

@@ -272,7 +272,7 @@ export function UsacoShowcase() {
                   </div>
                   <div className="mt-2 text-right">
                     <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">
-                      {t("12 subjects total", "মোট ১২টি বিষয়")}
+                      {t("13 subjects total", "মোট ১৩টি বিষয়")}
                     </span>
                   </div>
                 </div>

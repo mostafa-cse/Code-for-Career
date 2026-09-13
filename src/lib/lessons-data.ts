@@ -1,5 +1,6 @@
 import type { DifficultyLevel } from "@/types/database";
 import { CSHARP_LESSONS } from "./csharp-content";
+import { GIT_LESSONS } from "./git-content";
 
 export interface LocalLesson {
   slug: string;
@@ -58,6 +59,10 @@ export interface LocalSubjectCurriculum {
 }
 
 export const LOCAL_CURRICULUM: Record<string, LocalSubjectCurriculum> = {
+  git: {
+    slug: "git",
+    lessons: GIT_LESSONS,
+  },
   csharp: {
     slug: "csharp",
     lessons: CSHARP_LESSONS,

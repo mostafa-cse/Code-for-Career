@@ -20,10 +20,10 @@ const TRACKS: Track[] = [
     titleEn: "Track 1: Object-Oriented Engineering",
     titleBn: "ট্র্যাক ১: অবজেক্ট-ওরিয়েন্টেড ইঞ্জিনিয়ারিং",
     descEn:
-      "Deep dive into modern C#, memory management, SOLID architecture, design patterns, and UML system modeling.",
+      "Master Git version control, modern C#, memory management, SOLID architecture, design patterns, and UML system modeling.",
     descBn:
-      "আধুনিক C# সিনট্যাক্স, মেমোরি ম্যানেজমেন্ট, SOLID নীতিমালা, ডিজাইন প্যাটার্ন এবং UML সিস্টেম মডেলিং।",
-    subjectSlugs: ["csharp", "oop", "design-patterns", "uml"],
+      "গিট ভার্সন কন্ট্রোল, আধুনিক C# সিনট্যাক্স, মেমোরি ম্যানেজমেন্ট, SOLID নীতিমালা, ডিজাইন প্যাটার্ন এবং UML সিস্টেম মডেলিং।",
+    subjectSlugs: ["git", "csharp", "oop", "design-patterns", "uml"],
   },
   {
     id: "track-dsa",

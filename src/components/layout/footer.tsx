@@ -16,8 +16,8 @@ export function Footer() {
     return null;
   }
 
-  const engineeringSubjects = SUBJECTS.slice(0, 6);
-  const systemsSubjects = SUBJECTS.slice(6, 12);
+  const engineeringSubjects = SUBJECTS.slice(0, 7);
+  const systemsSubjects = SUBJECTS.slice(7);
 
   const companies = [
     "Enosis Solutions",

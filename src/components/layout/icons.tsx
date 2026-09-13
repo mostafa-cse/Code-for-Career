@@ -6,6 +6,7 @@ import {
   Code,
   Cpu,
   Database,
+  GitBranch,
   Globe,
   HelpCircle,
   Layers,
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 
 export const SUBJECT_ICONS: Record<string, LucideIcon> = {
+  GitBranch,
   Code,
   Binary,
   Boxes,

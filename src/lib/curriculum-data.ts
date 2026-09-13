@@ -18,8 +18,8 @@ export const CURRICULUM_TRACKS = [
     id: "track-oop" as const,
     nameEn: "Object-Oriented Engineering",
     nameBn: "অবজেক্ট-ওরিয়েন্টেড প্রোগ্রামিং ও আর্কিটেকচার",
-    descEn: "C# syntax, OOP principles, SOLID architecture, design patterns, and UML diagrams.",
-    descBn: "C# ভাষার মূল ধারণা, অবজেক্ট-ওরিয়েন্টেড ডিজাইন, SOLID নীতিমালা ও সফটওয়্যার আর্কিটেকচার।",
+    descEn: "Git version control, C# syntax, OOP principles, SOLID architecture, design patterns, and UML diagrams.",
+    descBn: "গিট ভার্সন কন্ট্রোল, C# ভাষার মূল ধারণা, অবজেক্ট-ওরিয়েন্টেড ডিজাইন, SOLID নীতিমালা ও সফটওয়্যার আর্কিটেকচার।",
   },
   {
     id: "track-dsa" as const,
@@ -44,9 +44,27 @@ export const CURRICULUM_TRACKS = [
   },
 ] as const;
 
+const getSubject = (slug: string) => {
+  const found = SUBJECTS.find((s) => s.slug === slug);
+  if (!found) throw new Error(`Missing subject for slug: ${slug}`);
+  return found;
+};
+
 export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
   {
-    ...SUBJECTS[0], // csharp
+    ...getSubject("git"),
+    trackId: "track-oop",
+    trackNameEn: "Object-Oriented Engineering",
+    trackNameBn: "অবজেক্ট-ওরিয়েন্টেড প্রোগ্রামিং ও আর্কিটেকচার",
+    estimatedLessons: 20,
+    estimatedHours: 16,
+    difficulty: "EASY",
+    starterSlug: "git-fundamentals",
+    topicsEn: ["Git & Repo Fundamentals", "Commits, Branching & Merging", "Remote & GitHub Ecosystem", "Rebase, Actions & Security"],
+    topicsBn: ["গিট ও রিপোজিটরি ভিত্তি", "কমিট, ব্রাঞ্চিং ও মার্জিং", "রিমোট ও গিটহাব ইকোসিস্টেম", "রিব্যাস, অ্যাকশন ও নিরাপত্তা"],
+  },
+  {
+    ...getSubject("csharp"),
     trackId: "track-oop",
     trackNameEn: "Object-Oriented Engineering",
     trackNameBn: "অবজেক্ট-ওরিয়েন্টেড প্রোগ্রামিং ও আর্কিটেকচার",
@@ -58,7 +76,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["সিনট্যাক্স ও কন্ট্রোল ফ্লো", "কালেকশন ও জেনেরিক্স", "টাইপ সিস্টেম ও মেমোরি", "লিন্ক ও অ্যাসিঙ্ক প্রোগ্রামিং"],
   },
   {
-    ...SUBJECTS[1], // dsa
+    ...getSubject("dsa"),
     trackId: "track-dsa",
     trackNameEn: "Data Structures & Problem Solving",
     trackNameBn: "ডেটা স্ট্রাকচার ও সমস্যা সমাধান",
@@ -70,7 +88,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["Big-O জটিলতা বিশ্লেষণ", "ট্রি ও গ্রাফ ডেটা স্ট্রাকচার", "ডায়নামিক প্রোগ্রামিং", "গ্রিডি অ্যালগরিদম কৌশল"],
   },
   {
-    ...SUBJECTS[2], // oop
+    ...getSubject("oop"),
     trackId: "track-oop",
     trackNameEn: "Object-Oriented Engineering",
     trackNameBn: "অবজেক্ট-ওরিয়েন্টেড প্রোগ্রামিং ও আর্কিটেকচার",
@@ -82,7 +100,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["SOLID নীতিমালা গভীর অধ্যয়ন", "এনক্যাপসুলেশন ও অ্যাবস্ট্র্যাকশন", "পলিমরফিজম ও ভার্চুয়াল টেবিল", "কম্পোজিশন বনাম উত্তরাধিকার"],
   },
   {
-    ...SUBJECTS[3], // design-patterns
+    ...getSubject("design-patterns"),
     trackId: "track-oop",
     trackNameEn: "Object-Oriented Engineering",
     trackNameBn: "অবজেক্ট-ওরিয়েন্টেড প্রোগ্রামিং ও আর্কিটেকচার",
@@ -94,7 +112,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["সৃষ্টিধর্মী ডিজাইন প্যাটার্ন", "অবজার্ভার ও স্ট্র্যাটেজি প্যাটার্ন", "রিপোজিটরি ও ইউনিট অব ওয়ার্ক", "ডিপেন্ডেন্সি ইনজেকশন"],
   },
   {
-    ...SUBJECTS[4], // uml
+    ...getSubject("uml"),
     trackId: "track-oop",
     trackNameEn: "Object-Oriented Engineering",
     trackNameBn: "অবজেক্ট-ওরিয়েন্টেড প্রোগ্রামিং ও আর্কিটেকচার",
@@ -106,7 +124,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["ক্লাস ডায়াগ্রাম প্রণয়ন", "সিকোয়েন্স ডায়াগ্রাম", "কম্পোনেন্ট ও ডিপ্লয়মেন্ট মডেলিং", "সাক্ষাৎকারে সিস্টেম মডেলিং"],
   },
   {
-    ...SUBJECTS[5], // database
+    ...getSubject("database"),
     trackId: "track-systems",
     trackNameEn: "Systems & Core Infrastructure",
     trackNameBn: "সিস্টেম ও মূল অবকাঠামো",
@@ -118,7 +136,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["B-Tree ও হ্যাশ ইনডেক্স", "ACID বৈশিষ্ট্য ও আইসোলেশন স্তর", "কোয়েরি এক্সিকিউশন প্ল্যান", "ডেটাবেজ নরমালাইজেশন"],
   },
   {
-    ...SUBJECTS[6], // system-design
+    ...getSubject("system-design"),
     trackId: "track-systems",
     trackNameEn: "Systems & Core Infrastructure",
     trackNameBn: "সিস্টেম ও মূল অবকাঠামো",
@@ -130,7 +148,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["লোড ব্যালেন্সিং ও ক্যাশিং কৌশল", "ডেটাবেজ শার্ডিং", "মেসেজ কিউ ও Kafka", "রেট লিমিটিং ও API নিরাপত্তা"],
   },
   {
-    ...SUBJECTS[7], // networks
+    ...getSubject("networks"),
     trackId: "track-systems",
     trackNameEn: "Systems & Core Infrastructure",
     trackNameBn: "সিস্টেম ও মূল অবকাঠামো",
@@ -142,7 +160,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["TCP হ্যান্ডশেক ও UDP প্রোটোকল", "HTTP/1.1, HTTP/2 ও HTTP/3 তুলনা", "DNS ও CDN কার্যপ্রণালী", "TLS/HTTPS নিরাপত্তা কৌশল"],
   },
   {
-    ...SUBJECTS[8], // os
+    ...getSubject("os"),
     trackId: "track-systems",
     trackNameEn: "Systems & Core Infrastructure",
     trackNameBn: "সিস্টেম ও মূল অবকাঠামো",
@@ -154,7 +172,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["প্রক্রিয়া ও থ্রেড ব্যবস্থাপনা", "ভার্চুয়াল মেমোরি ও পেজিং", "মিউটেক্স, সেমাফোর ও সমান্তরালতা", "ডেডলক শনাক্তকরণ ও প্রতিরোধ"],
   },
   {
-    ...SUBJECTS[9], // ai-ml
+    ...getSubject("ai-ml"),
     trackId: "track-career",
     trackNameEn: "Modern Tech & Interview Mastery",
     trackNameBn: "আধুনিক প্রযুক্তি ও সাক্ষাৎকার দক্ষতা",
@@ -166,7 +184,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["গ্রেডিয়েন্ট ডিসেন্ট অ্যালগরিদম", "লস ফাংশন ও অপটিমাইজেশন", "নিউরাল নেটওয়ার্কের গঠন", "ট্রান্সফর্মার ও বৃহৎ ভাষা মডেল"],
   },
   {
-    ...SUBJECTS[10], // behavioral
+    ...getSubject("behavioral"),
     trackId: "track-career",
     trackNameEn: "Modern Tech & Interview Mastery",
     trackNameBn: "আধুনিক প্রযুক্তি ও সাক্ষাৎকার দক্ষতা",
@@ -178,7 +196,7 @@ export const CURRICULUM_SUBJECTS: CurriculumSubject[] = [
     topicsBn: ["STAR ফ্রেমওয়ার্ক", "দ্বন্দ্ব ব্যবস্থাপনা কৌশল", "নেতৃত্ব ও দায়িত্ববোধ", "প্রতিষ্ঠান সংস্কৃতি ও ভাইভা"],
   },
   {
-    ...SUBJECTS[11], // competitive-programming
+    ...getSubject("competitive-programming"),
     trackId: "track-dsa",
     trackNameEn: "Data Structures & Problem Solving",
     trackNameBn: "ডেটা স্ট্রাকচার ও সমস্যা সমাধান",

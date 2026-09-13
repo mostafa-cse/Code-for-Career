@@ -26,8 +26,8 @@ export function CtaSection() {
 
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               {t(
-                "No expensive courses, no gatekeeping. Get structured access to all 12 modules, curated practice questions, and study notes today.",
-                "কোনো ব্যয়বহুল কোর্স বা হিডেন ফি নেই। আজই শুরু করুন ১২টি মডিউলের সাজানো রোডম্যাপ, ইন্টারভিউ প্রশ্ন এবং গোছানো নোটস।"
+                "No expensive courses, no gatekeeping. Get structured access to all 13 modules, curated practice questions, and study notes today.",
+                "কোনো ব্যয়বহুল কোর্স বা হিডেন ফি নেই। আজই শুরু করুন ১৩টি মডিউলের সাজানো রোডম্যাপ, ইন্টারভিউ প্রশ্ন এবং গোছানো নোটস।"
               )}
             </p>
 

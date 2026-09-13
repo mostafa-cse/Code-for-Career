@@ -152,8 +152,8 @@ export default function LoginPage() {
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {t(
-                "Track your progress across all 12 subjects.",
-                "১২টি বিষয়জুড়ে আপনার অগ্রগতি ট্র্যাক করুন।"
+                "Track your progress across all 13 subjects.",
+                "১৩টি বিষয়জুড়ে আপনার অগ্রগতি ট্র্যাক করুন।"
               )}
             </p>
           </div>

@@ -73,7 +73,7 @@ export function SubjectGrid() {
             <span>{t("Complete Curriculum", "সম্পূর্ণ সিলেবাস")}</span>
           </div>
           <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            {t("12 Core Modules. Everything You Need.", "১২টি মূল মডিউল। যা জানা প্রয়োজন সবই এক সাথে।")}
+            {t("13 Core Modules. Everything You Need.", "১৩টি মূল মডিউল। যা জানা প্রয়োজন সবই এক সাথে।")}
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-sm text-muted-foreground">
             {t(

@@ -105,7 +105,7 @@ export function MobileNav() {
             {/* Subjects List */}
             <div className="flex-1 py-4">
               <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                {t("12 Core Modules", "১২টি মূল মডিউল")}
+                {t(`${SUBJECTS.length} Core Modules`, `${SUBJECTS.length}টি মূল মডিউল`)}
               </p>
               <div className="space-y-1">
                 {SUBJECTS.map((subject) => {

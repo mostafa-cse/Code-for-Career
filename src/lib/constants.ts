@@ -9,12 +9,20 @@ export type SubjectMeta = {
 
 export const SUBJECTS: readonly SubjectMeta[] = [
   {
+    slug: "git",
+    nameEn: "Git & GitHub Version Control",
+    nameBn: "গিট ও গিটহাব ভার্সন কন্ট্রোল",
+    icon: "GitBranch",
+    color: "orange",
+    order: 1,
+  },
+  {
     slug: "csharp",
     nameEn: "Programming in C#",
     nameBn: "C# প্রোগ্রামিং পরিচিতি",
     icon: "Code",
     color: "blue",
-    order: 1,
+    order: 2,
   },
   {
     slug: "dsa",
@@ -22,7 +30,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "ডেটা স্ট্রাকচার ও অ্যালগরিদম",
     icon: "Binary",
     color: "emerald",
-    order: 2,
+    order: 3,
   },
   {
     slug: "oop",
@@ -30,7 +38,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "অবজেক্ট-ওরিয়েন্টেড প্রোগ্রামিং (C#)",
     icon: "Boxes",
     color: "violet",
-    order: 3,
+    order: 4,
   },
   {
     slug: "design-patterns",
@@ -38,7 +46,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "ডিজাইন প্যাটার্ন ও নীতিমালা",
     icon: "Layers",
     color: "amber",
-    order: 4,
+    order: 5,
   },
   {
     slug: "uml",
@@ -46,7 +54,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "UML ডায়াগ্রাম",
     icon: "PenTool",
     color: "rose",
-    order: 5,
+    order: 6,
   },
   {
     slug: "database",
@@ -54,7 +62,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "PostgreSQL ডেটাবেজ",
     icon: "Database",
     color: "cyan",
-    order: 6,
+    order: 7,
   },
   {
     slug: "system-design",
@@ -62,7 +70,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "সিস্টেম ডিজাইন ও আর্কিটেকচার",
     icon: "Network",
     color: "orange",
-    order: 7,
+    order: 8,
   },
   {
     slug: "networks",
@@ -70,7 +78,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "কম্পিউটার নেটওয়ার্কিং",
     icon: "Globe",
     color: "teal",
-    order: 8,
+    order: 9,
   },
   {
     slug: "os",
@@ -78,7 +86,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "অপারেটিং সিস্টেম ধারণা",
     icon: "Cpu",
     color: "slate",
-    order: 9,
+    order: 10,
   },
   {
     slug: "ai-ml",
@@ -86,7 +94,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "কৃত্রিম বুদ্ধিমত্তা ও মেশিন লার্নিং",
     icon: "Brain",
     color: "pink",
-    order: 10,
+    order: 11,
   },
   {
     slug: "behavioral",
@@ -94,7 +102,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "আচরণমূলক সাক্ষাৎকার প্রস্তুতি",
     icon: "Users",
     color: "lime",
-    order: 11,
+    order: 12,
   },
   {
     slug: "competitive-programming",
@@ -102,7 +110,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
     nameBn: "প্রতিযোগিতামূলক প্রোগ্রামিং",
     icon: "Trophy",
     color: "indigo",
-    order: 12,
+    order: 13,
   },
 ] as const;
 

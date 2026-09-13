@@ -59,7 +59,7 @@ export function SubjectDropdown() {
       {isOpen && (
         <div className="absolute left-0 top-full z-50 mt-2 w-[540px] max-w-[90vw] rounded-xl border border-border bg-card p-3 shadow-xl animate-in fade-in-0 zoom-in-95">
           <div className="mb-2 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {t("All 12 Learning Modules", "সকল ১২টি মডিউল")}
+            {t(`All ${SUBJECTS.length} Learning Modules`, `সকল ${SUBJECTS.length}টি মডিউল`)}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             {SUBJECTS.map((subject) => {

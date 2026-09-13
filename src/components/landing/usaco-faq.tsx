@@ -56,8 +56,8 @@ export function UsacoFaq() {
               </dt>
               <dd className="text-sm sm:text-base leading-relaxed text-gray-600 dark:text-gray-400">
                 {t(
-                  "The curriculum is organized into 4 distinct tracks across 12 core subjects: Core CS, Systems Architecture, Modern Specialized (Cloud/DevOps/AI), and Practice Problems with company tags.",
-                  "কারিকুলামটি ১২টি প্রধান বিষয়কে ৪টি মূল ট্র্যাকে বিন্যস্ত করেছে: কোর সিএস, সিস্টেম আর্কিটেকচার, আধুনিক স্পেশালাইজেশন এবং কোম্পানি ট্যাগযুক্ত প্র্যাকটিস প্রবলেম।"
+                  "The curriculum is organized into 4 distinct tracks across 13 core subjects: Core CS, Systems Architecture, Modern Specialized (Cloud/DevOps/AI), and Practice Problems with company tags.",
+                  "কারিকুলামটি ১৩টি প্রধান বিষয়কে ৪টি মূল ট্র্যাকে বিন্যস্ত করেছে: কোর সিএস, সিস্টেম আর্কিটেকচার, আধুনিক স্পেশালাইজেশন এবং কোম্পানি ট্যাগযুক্ত প্র্যাকটিস প্রবলেম।"
                 )}
               </dd>
             </div>

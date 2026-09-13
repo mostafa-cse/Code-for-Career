@@ -20,6 +20,131 @@ export interface ComprehensiveProblem {
 
 export const ALL_PROBLEMS: ComprehensiveProblem[] = [
   {
+    "id": "git-merge-conflict-resolution",
+    "name": "3-Way Merge Conflict Resolution & Detached HEAD Recovery",
+    "nameBn": "৩-ওয়ে মার্জ কনফ্লিক্ট সমাধান ও ডিটাচড HEAD রিকভারি",
+    "source": "BD Tech Interview",
+    "sourceAbbr": "INT",
+    "url": null,
+    "difficulty": "MEDIUM",
+    "company": "Optimizely / Brain Station 23",
+    "tags": [
+      "Git",
+      "Version Control",
+      "Merge Conflicts",
+      "Workflow"
+    ],
+    "subjectSlug": "git",
+    "subjectName": "Git & GitHub Version Control",
+    "appearsIn": [
+      {
+        "title": "Fast-Forward, 3-Way Merge & Conflict Resolution",
+        "url": "/subjects/git/git-merging"
+      },
+      {
+        "title": "Top 20 Git & GitHub Interview Viva Questions",
+        "url": "/subjects/git/git-interview-questions"
+      }
+    ],
+    "solutionEn": "A 3-way merge conflict occurs when two branches edit the exact same lines of a file since their Common Base Ancestor. Git halts the merge and inserts conflict markers (<<<<<<<, =======, >>>>>>>). Resolve by inspecting both changes, editing the file, staging with git add, and finalizing with git commit. If HEAD becomes detached, commit changes to a temporary branch via git branch temp-recovery and merge back.",
+    "solutionBn": "৩-ওয়ে মার্জ কনফ্লিক্ট ঘটে যখন দুটি ব্রাঞ্চ তাদের সাধারণ পূর্বপুরুষ (Common Base) এর পর একই ফাইলের একই লাইন পরিবর্তন করে। গিট মার্জ থামিয়ে কনফ্লিক্ট মার্কার বসায়। উভয় পরিবর্তন যাচাই করে ফাইল এডিট করতে হয়, তারপর git add ও git commit করে সমাধান সম্পন্ন করতে হয়। HEAD ডিটাচড হলে git branch temp-recovery দিয়ে নতুন ব্রাঞ্চ তৈরি করে কমিট সুরক্ষিত রাখা যায়।",
+    "timeComplexity": "O(Diff Lines) text reconciliation",
+    "spaceComplexity": "O(Diff Size) index cache",
+    "solutionCode": "# 1. Identify conflicting files\ngit status\n\n# 2. Inspect conflict markers and edit the files\n# <<<<<<< HEAD\n# Current Branch Code\n# =======\n# Incoming Branch Code\n# >>>>>>> feature-branch\n\n# 3. Stage resolved file and finalize merge\ngit add src/Services/PaymentService.cs\ngit commit -m \"fix: resolve payment gateway merge conflict between main and feature-branch\""
+  },
+  {
+    "id": "git-interactive-rebase-cleanup",
+    "name": "Interactive Rebase, Fixup & Squashing Commits Before Pull Request",
+    "nameBn": "ইন্টারঅ্যাক্টিভ রিব্যাস, ফিক্সআপ ও স্কোয়াশিং: পিআর জমা দেওয়ার পূর্বশর্ত",
+    "source": "BD Tech Interview",
+    "sourceAbbr": "INT",
+    "url": null,
+    "difficulty": "MEDIUM",
+    "company": "Therap (BD) Ltd / Enosis",
+    "tags": [
+      "Git",
+      "Rebase",
+      "Squash",
+      "Clean History"
+    ],
+    "subjectSlug": "git",
+    "subjectName": "Git & GitHub Version Control",
+    "appearsIn": [
+      {
+        "title": "Git Merge vs Rebase & Interactive Rebase",
+        "url": "/subjects/git/git-merge-vs-rebase"
+      }
+    ],
+    "solutionEn": "Interactive rebase (git rebase -i HEAD~N) allows rewriting local, unpushed commits into logical atomic milestones before submitting a pull request. Use 'pick' for the foundation commit, 'squash' (s) or 'fixup' (f) to fold typo/fixup commits into earlier ones, and 'reword' (r) to refine messages. Golden rule: Never rebase commits that have already been pushed to a shared public branch.",
+    "solutionBn": "ইন্টারঅ্যাক্টিভ রিব্যাস (git rebase -i HEAD~N) দিয়ে লোকাল আনপুশড কমিটগুলোকে সাজিয়ে ক্লিন ও অর্থপূর্ণ করা যায়। 'pick' দিয়ে মূল কমিট রেখে ছোটখাটো বাগফিক্স কমিটগুলোতে 'fixup' বা 'squash' কমান্ড প্রয়োগ করে মূল কমিটের সাথে মিশিয়ে ফেলা যায়। গোল্ডেন রুল: অন্য ডেভেলপারদের সাথে শেয়ার করা পাবলিক বা প্রোডাকশন ব্রাঞ্চ কখনো রিব্যাস করবেন না।",
+    "timeComplexity": "O(K) commits replayed",
+    "spaceComplexity": "O(1) temporary rebase ref",
+    "solutionCode": "# Rebase the last 4 local commits interactively\ngit rebase -i HEAD~4\n\n# In the editor:\n# pick a1b2c3d feat(auth): implement jwt token generation\n# fixup e4f5g6h fix typo in token expiration claims\n# fixup i7j8k9l update unit tests for auth service\n# pick m0n1o2p docs(auth): add openapi swagger documentation\n\n# If push was already done to private feature branch:\ngit push --force-with-lease origin feature/jwt-auth"
+  },
+  {
+    "id": "git-reflog-disaster-recovery",
+    "name": "Disaster Recovery with Git Reflog after Accidental git reset --hard",
+    "nameBn": "ভুলবশত git reset --hard চালানোর পর Git Reflog দিয়ে ডেটা রিকভারি",
+    "source": "BD Tech Interview",
+    "sourceAbbr": "INT",
+    "url": null,
+    "difficulty": "HARD",
+    "company": "Brain Station 23 / Optimizely",
+    "tags": [
+      "Git",
+      "Reflog",
+      "Disaster Recovery",
+      "Reset"
+    ],
+    "subjectSlug": "git",
+    "subjectName": "Git & GitHub Version Control",
+    "appearsIn": [
+      {
+        "title": "Advanced Git: Cherry-Pick, Reflog, Bisect & Worktrees",
+        "url": "/subjects/git/git-advanced"
+      }
+    ],
+    "solutionEn": "Git Reflog (reference log) records every movement of HEAD locally, even when commits are removed from branch tip history via 'git reset --hard'. If a catastrophic hard reset drops unpushed commits, run 'git reflog' to identify the SHA-1 or HEAD@{n} immediately before the reset, and recover either via 'git branch recovery-branch HEAD@{1}' or 'git reset --hard HEAD@{1}'.",
+    "solutionBn": "গিট রেফলগ (Reflog) লোকাল রিপোজিটরিতে HEAD এর প্রতিটি নড়াচড়া রেকর্ড রাখে, এমনকি 'git reset --hard' চালিয়ে ব্রাঞ্চ থেকে কমিট মুছে ফেললেও অবজেক্ট স্টোরে তা ৩০-৯০ দিন সংরক্ষিত থাকে। 'git reflog' চালিয়ে রিসেটের পূর্ববর্তী SHA বা HEAD@{n} খুঁজে বের করে 'git branch recovery-branch HEAD@{1}' দিয়ে পুরো কাজ অক্ষত ফিরিয়ে আনা যায়।",
+    "timeComplexity": "O(1) SHA pointer lookup",
+    "spaceComplexity": "O(1) reflog pointer update",
+    "solutionCode": "# 1. Accidental disaster occurred\ngit reset --hard HEAD~3 # Lost 3 commits!\n\n# 2. View local HEAD movement log\ngit reflog\n# Output:\n# 4a2b1c0 (HEAD -> main) HEAD@{0}: reset: moving to HEAD~3\n# 9f8e7d6 HEAD@{1}: commit: feat: complete stripe checkout\n\n# 3. Safely recover the lost work to a dedicated branch\ngit branch restored-stripe-work HEAD@{1}\ngit checkout restored-stripe-work"
+  },
+  {
+    "id": "git-pr-trunk-workflow",
+    "name": "Trunk-Based Development vs Git Flow & Squash Merge in Production CI/CD",
+    "nameBn": "ট্রাঙ্ক-বেসড ডেভেলপমেন্ট বনাম গিট ফ্লো এবং প্রোডাকশন CI/CD-তে স্কোয়াশ মার্জ",
+    "source": "BD Tech Interview",
+    "sourceAbbr": "INT",
+    "url": null,
+    "difficulty": "MEDIUM",
+    "company": "Samsung R&D / Enosis",
+    "tags": [
+      "Git",
+      "GitHub",
+      "CI/CD",
+      "Trunk-Based",
+      "Code Review"
+    ],
+    "subjectSlug": "git",
+    "subjectName": "Git & GitHub Version Control",
+    "appearsIn": [
+      {
+        "title": "Pull Requests: Creation, Review Comments, Approvals & Merge Types",
+        "url": "/subjects/git/git-pull-requests"
+      },
+      {
+        "title": "Collaboration: Fork, Clone, Branch, PR & Workflows",
+        "url": "/subjects/git/git-collaboration"
+      }
+    ],
+    "solutionEn": "Git Flow relies on long-lived develop, release, and hotfix branches, which can lead to large, risky merge conflicts ('merge hell'). Modern high-performing engineering teams adopt Trunk-Based Development: short-lived feature branches (< 1-2 days) continuously integrated into 'main' behind Feature Flags. In GitHub, 'Squash and Merge' is preferred for feature PRs to collapse dozens of exploratory commits into a clean, atomic milestone on trunk.",
+    "solutionBn": "গিট ফ্লো পদ্ধতিতে দীর্ঘস্থায়ী develop, release ও hotfix ব্রাঞ্চ ব্যবহার করা হয় যা পরবর্তীতে বড় ধরনের মার্জ কনফ্লিক্ট তৈরি করে। আধুনিক হাই-পারফর্মিং টিমগুলোতে ট্রাঙ্ক-বেসড ডেভেলপমেন্ট অনুসরণ করা হয়: ছোট ছোট ফিচার ব্রাঞ্চ (১-২ দিনের কাজ) ফিচার ফ্ল্যাগের আড়ালে সরাসরি 'main' ব্রাঞ্চে মার্জ করা হয়। গিটহাবে 'Squash and Merge' ফিচার ব্রাঞ্চের বিশৃঙ্খল কমিটগুলোকে একটি পরিচ্ছন্ন সিঙ্গেল কমিট হিসেবে মেইন ব্রাঞ্চে যুক্ত করে।",
+    "timeComplexity": "O(1) linear merge history",
+    "spaceComplexity": "O(1) atomic merge commit",
+    "solutionCode": "# Trunk-based fast-track workflow:\n# 1. Update trunk\ngit checkout main && git pull --rebase\n\n# 2. Create short-lived atomic feature branch\ngit checkout -b feat/user-export-csv\n\n# 3. Work, test, commit atomically\ngit add .\ngit commit -m \"feat: export active users as csv with streaming writer\"\n\n# 4. Push and open GitHub PR for automated CI validation\ngit push -u origin feat/user-export-csv"
+  },
+  {
     "id": "cs-boxing-unboxing",
     "name": "Value Types vs Reference Types & Boxing Overhead",
     "nameBn": "\u09ad\u09cd\u09af\u09be\u09b2\u09c1 \u099f\u09be\u0987\u09aa \u09ac\u09a8\u09be\u09ae \u09b0\u09c7\u09ab\u09be\u09b0\u09c7\u09a8\u09cd\u09b8 \u099f\u09be\u0987\u09aa \u098f\u09ac\u0982 \u09ac\u0995\u09cd\u09b8\u09bf\u0982 \u0993\u09ad\u09be\u09b0\u09b9\u09c7\u09a1",

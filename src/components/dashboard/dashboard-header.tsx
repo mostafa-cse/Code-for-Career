@@ -55,8 +55,8 @@ export function DashboardHeader() {
 
             <p className="text-xs sm:text-sm text-blue-100 font-medium leading-relaxed max-w-2xl">
               {t(
-                "Track your comprehensive progress across 12 core software engineering subjects, interview problems, and curriculum lessons. Pinned edge-to-edge for focused study.",
-                "১২টি মূল কম্পিউটার সায়েন্স ও সফটওয়্যার ইঞ্জিনিয়ারিং বিষয়ে আপনার সামগ্রিক অগ্রগতি ট্র্যাক করুন।"
+                "Track your comprehensive progress across 13 core software engineering subjects, interview problems, and curriculum lessons. Pinned edge-to-edge for focused study.",
+                "১৩টি মূল কম্পিউটার সায়েন্স ও সফটওয়্যার ইঞ্জিনিয়ারিং বিষয়ে আপনার সামগ্রিক অগ্রগতি ট্র্যাক করুন।"
               )}
             </p>
           </div>
