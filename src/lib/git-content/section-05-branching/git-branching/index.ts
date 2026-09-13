@@ -215,10 +215,10 @@ Top software companies follow strict, prefix-based kebab-case naming rules to ke
 | \`refactor/\` | Clean code / internal redesign | \`refactor/extract-database-service\` |
 | \`test/\` | Adding automated unit/e2e test suites | \`test/cypress-checkout-flow\` |
 
-### 🚫 Anti-patterns to Avoid:
-* ❌ \`my-test\`, \`test123\` (meaningless names)
-* ❌ \`Feature_New_Login_Page\` (never use PascalCase or spaces)
-* ❌ Keeping 50 old merged branches alive on GitHub (always delete after merge!)
+### Anti-patterns to Avoid:
+* \`my-test\`, \`test123\` (meaningless names)
+* \`Feature_New_Login_Page\` (never use PascalCase or spaces)
+* Keeping 50 old merged branches alive on GitHub (always delete after merge!)
 `,
     contentBn: `# ব্রাঞ্চিং: ব্রাঞ্চ কী, git branch, switch বনাম checkout, ডিলিট ও নেইমিং
 
@@ -381,9 +381,9 @@ git push origin --delete feature/user-profile
 | \`release/\` | নতুন সফটওয়্যার ভার্সন তৈরির প্রস্তুতিতে | \`release/v2.1.0\` |
 | \`refactor/\` | কোড ক্লিন বা আর্কিটেকচার পরিবর্তনের জন্য | \`refactor/extract-database-service\` |
 
-### 🚫 যেসব ভুল করবেন না:
-* ❌ \`test\`, \`final-branch\` (অর্থহীন নাম কখনো দেবেন না)।
-* ❌ \`Feature_New_Login\` (কখনো ক্যাপিটাল লেটার বা স্পেস ব্যবহার করবেন না, সর্বদা ছোট হাতের অক্ষর ও হাইফেন \`-\` ব্যবহার করবেন)।
-* ❌ কাজ শেষ হয়ে যাওয়া ৫০টি পুরোনো ব্রাঞ্চ গিটহাবে জমিয়ে রাখবেন না; মার্জ শেষে ডিলিট করুন।
+### যেসব ভুল করবেন না:
+* \`test\`, \`final-branch\` (অর্থহীন নাম কখনো দেবেন না)।
+* \`Feature_New_Login\` (কখনো ক্যাপিটাল লেটার বা স্পেস ব্যবহার করবেন না, সর্বদা ছোট হাতের অক্ষর ও হাইফেন \`-\` ব্যবহার করবেন)।
+* কাজ শেষ হয়ে যাওয়া ৫০টি পুরোনো ব্রাঞ্চ গিটহাবে জমিয়ে রাখবেন না; মার্জ শেষে ডিলিট করুন।
 `,
   };

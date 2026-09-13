@@ -85,7 +85,7 @@ A **Lightweight Tag** is simply a permanent pointer or bookmark pointing directl
 
 ---
 
-## 3. Annotated Tags (Production Standard ⭐)
+## 3. Annotated Tags (Production Standard)
 
 An **Annotated Tag** is stored as a full, standalone Git object in the \`.git\` database.
 
@@ -152,7 +152,7 @@ git tag -d v1.0.0-beta
 ## 5. Pushing Tags (Remote Synchronization)
 
 > [!WARNING]
-> ### ⚠️ The Biggest Tag Gotcha:
+> ### The Biggest Tag Gotcha:
 > **By default, running \`git push\` or \`git push origin main\` DOES NOT send tags to remote servers!**  
 > Tags must be pushed explicitly to GitHub!
 
@@ -198,7 +198,7 @@ gh release create v1.0.0 ./dist/*.zip --title "v1.0.0 Production Launch" --gener
 
 | Command | What it does |
 | :--- | :--- |
-| \`git tag -a v1.0.0 -m "msg"\` | Creates an **annotated tag** with metadata ⭐ |
+| \`git tag -a v1.0.0 -m "msg"\` | Creates an **annotated tag** with metadata |
 | \`git tag v1.0.0\` | Creates a **lightweight tag** (simple pointer) |
 | \`git tag -a v0.9.0 <hash> -m "msg"\` | Tags a specific historical commit from the past |
 | \`git tag\` | Lists all existing tags |
@@ -249,7 +249,7 @@ $$\\mathbf{vMAJOR.MINOR.PATCH} \\quad \\text{(যেমন: } \\mathbf{v2.4.1}\\
 
 ---
 
-## ৩. অ্যানোটেটেড ট্যাগ (Annotated Tags — প্রোডাকশন স্ট্যান্ডার্ড ⭐)
+## ৩. অ্যানোটেটেড ট্যাগ (Annotated Tags — প্রোডাকশন স্ট্যান্ডার্ড)
 
 **Annotated Tag** হলো গিটের ডেটাবেজে সংরক্ষিত একটি স্বয়ংসম্পূর্ণ স্বাধীন অবজেক্ট।
 
@@ -309,7 +309,7 @@ git tag -d v1.0.0-beta
 ## ৫. রিমোটে ট্যাগ পুশ করা (Pushing Tags)
 
 > [!WARNING]
-> ### ⚠️ নতুনদের সবচেয়ে বড় ভুল:
+> ### নতুনদের সবচেয়ে বড় ভুল:
 > **মনে রাখবেন, সাধারণ \`git push\` কিন্তু গিটহাবে কোনো ট্যাগ আপলোড করে না!**  
 > ট্যাগকে আলাদা কমান্ড দিয়ে গিটহাবে পুশ করতে হয়!
 
@@ -346,13 +346,13 @@ gh release create v1.0.0 ./dist/*.zip --title "v1.0.0 Production Release" --gene
 
 | কমান্ড | কাজ ও উদ্দেশ্য |
 | :--- | :--- |
-| \`git tag -a v1.0.0 -m "msg"\` | মেটাডেটা ও মেসেজসহ **অ্যানোটেটেড ট্যাগ** তৈরি ⭐ |
+| \`git tag -a v1.0.0 -m "msg"\` | মেটাডেটা ও মেসেজসহ **অ্যানোটেটেড ট্যাগ** তৈরি |
 | \`git tag v1.0.0\` | সাধারণ **লাইটওয়েট ট্যাগ** তৈরি |
 | \`git tag -a v0.9.0 <hash> -m "msg"\` | পেছনের কোনো পুরনো কমিটে ট্যাগ বসানো |
 | \`git tag\` | রিপোজিটরির সমস্ত ট্যাগের তালিকা দেখা |
 | \`git show <tag>\` | ট্যাগের ট্যাগারের তথ্য ও রিলিজ নোটস দেখা |
 | \`git push origin <tag>\` | নির্দিষ্ট ট্যাগটি গিটহাবে আপলোড করা |
-| \`git push origin --tags\` | সমস্ত লোকাল ট্যাগ একসাথে গিটহাবে পাঠানো ⭐ |
+| \`git push origin --tags\` | সমস্ত লোকাল ট্যাগ একসাথে গিটহাবে পাঠানো |
 | \`git tag -d <tag>\` | লোকাল মেশিন থেকে ট্যাগ মুছে ফেলা |
 | \`git push origin --delete <tag>\` | গিটহাব সার্ভার থেকে ট্যাগ মুছে ফেলা |
 | \`gh release create <tag>\` | অফিসিয়াল গিটহাব রিলিজ প্রকাশ করা |

@@ -188,16 +188,16 @@ This is controlled by three flags: \`--soft\`, \`--mixed\`, and \`--hard\`.
 
 \`\`\`
 +-----------------------+-------------------+-------------------+-------------------+
-| Command               | HEAD Pointer      | Staging Area      | Working Directory |
+| Command | HEAD Pointer | Staging Area | Working Directory |
 +-----------------------+-------------------+-------------------+-------------------+
-| git reset --soft      | MOVES BACK        | KEEPS CHANGES     | KEEPS CHANGES     |
-|                       | (Points earlier)  | (Files STAGED)    | (Edits untouched) |
-|                       |                   |                   |                   |
-| git reset --mixed     | MOVES BACK        | CLEARS INDEX      | KEEPS CHANGES     |
-| (Default behavior)    | (Points earlier)  | (Files UNSTAGED)  | (Edits untouched) |
-|                       |                   |                   |                   |
-| git reset --hard      | MOVES BACK        | CLEARS INDEX      | DESTROYS EDITS    |
-| (DANGER: Data Loss)   | (Points earlier)  | (Files wiped out) | (Files wiped out) |
+| git reset --soft | MOVES BACK | KEEPS CHANGES | KEEPS CHANGES |
+| | (Points earlier) | (Files STAGED) | (Edits untouched) |
+| | | | |
+| git reset --mixed | MOVES BACK | CLEARS INDEX | KEEPS CHANGES |
+| (Default behavior) | (Points earlier) | (Files UNSTAGED) | (Edits untouched) |
+| | | | |
+| git reset --hard | MOVES BACK | CLEARS INDEX | DESTROYS EDITS |
+| (DANGER: Data Loss) | (Points earlier) | (Files wiped out) | (Files wiped out) |
 +-----------------------+-------------------+-------------------+-------------------+
 \`\`\`
 
@@ -262,7 +262,7 @@ git reset --hard HEAD~1
 git reset --hard origin/main
 \`\`\`
 
-### 🛟 Accidental Hard Reset? Use \`git reflog\`!
+### Accidental Hard Reset? Use \`git reflog\`!
 If you ran \`git reset --hard\` by mistake, don't panic! Git logs every movement of HEAD in a hidden safety net called **reflog**:
 \`\`\`bash
 # 1. Inspect recent HEAD movements:
@@ -281,11 +281,11 @@ git reset --hard 9f8e7d6
 
 | Need | Recommended Command | Safety |
 | :--- | :--- | :--- |
-| "I want to fix my last commit message or add a forgotten file." | \`git commit --amend\` | 🟡 Safe locally only |
-| "I need to undo a commit already pushed to a team branch." | \`git revert <hash>\` | 🟢 100% Safe everywhere |
-| "I want to undo commits but keep my changes staged." | \`git reset --soft HEAD~1\` | 🟢 Safe (no code lost) |
-| "I want to undo commits and unstage files, but keep my edits." | \`git reset --mixed HEAD~1\` | 🟢 Safe (no code lost) |
-| "I want to completely wipe out bad code and start fresh." | \`git reset --hard HEAD~1\` | 🔴 Destructive |
+| "I want to fix my last commit message or add a forgotten file." | \`git commit --amend\` | Safe locally only |
+| "I need to undo a commit already pushed to a team branch." | \`git revert <hash>\` | 100% Safe everywhere |
+| "I want to undo commits but keep my changes staged." | \`git reset --soft HEAD~1\` | Safe (no code lost) |
+| "I want to undo commits and unstage files, but keep my edits." | \`git reset --mixed HEAD~1\` | Safe (no code lost) |
+| "I want to completely wipe out bad code and start fresh." | \`git reset --hard HEAD~1\` | Destructive |
 `,
     contentBn: `# কমিট: তৈরি, মেসেজ স্ট্যান্ডার্ড, হিস্ট্রি, অ্যামেন্ড, রিভার্ট ও রিসেটের প্রকারভেদ
 
@@ -418,16 +418,16 @@ git revert --no-edit 9a8f2b1
 
 \`\`\`
 +-----------------------+-------------------+-------------------+-------------------+
-| কমান্ড                | HEAD পয়েন্টার    | স্টেজিং এরিয়া     | লোকাল কোড ফাইল    |
+| কমান্ড | HEAD পয়েন্টার | স্টেজিং এরিয়া | লোকাল কোড ফাইল |
 +-----------------------+-------------------+-------------------+-------------------+
-| git reset --soft      | পেছনে যায়        | অক্ষত থাকে        | অক্ষত থাকে        |
-|                       |                   | (ফাইল Staged থাকে)| (কোড নষ্ট হয় না) |
-|                       |                   |                   |                   |
-| git reset --mixed     | পেছনে যায়        | আনস্টেজড হয়      | অক্ষত থাকে        |
-| (ডিফল্ট নিয়ম)        |                   | (বক্স খালি হয়)   | (কোড নষ্ট হয় না) |
-|                       |                   |                   |                   |
-| git reset --hard      | পেছনে যায়        | সম্পূর্ণ মুছে যায় | সম্পূর্ণ মুছে যায় |
-| (বিপজ্জনক!)         |                   | (ডেটা লস)         | (কোড ডিলিট হয়)   |
+| git reset --soft | পেছনে যায় | অক্ষত থাকে | অক্ষত থাকে |
+| | | (ফাইল Staged থাকে)| (কোড নষ্ট হয় না) |
+| | | | |
+| git reset --mixed | পেছনে যায় | আনস্টেজড হয় | অক্ষত থাকে |
+| (ডিফল্ট নিয়ম) | | (বক্স খালি হয়) | (কোড নষ্ট হয় না) |
+| | | | |
+| git reset --hard | পেছনে যায় | সম্পূর্ণ মুছে যায় | সম্পূর্ণ মুছে যায় |
+| (বিপজ্জনক!) | | (ডেটা লস) | (কোড ডিলিট হয়) |
 +-----------------------+-------------------+-------------------+-------------------+
 \`\`\`
 
@@ -487,7 +487,7 @@ git reset --hard HEAD~1
 git reset --hard origin/main
 \`\`\`
 
-### 🛟 ভুলবশত হার্ড রিসেট দিয়ে ফেলেছেন? উদ্ধার করবে \`git reflog\`!
+### ভুলবশত হার্ড রিসেট দিয়ে ফেলেছেন? উদ্ধার করবে \`git reflog\`!
 গিট তার ব্যাকগ্রাউন্ডে HEAD-এর প্রতিটি নড়াচড়া একটি সিক্রেট লগে লিখে রাখে যার নাম **reflog**:
 \`\`\`bash
 # ১. অতীতের প্রতিটি মুভমেন্টের তালিকা দেখুন:
@@ -506,10 +506,10 @@ git reset --hard 9f8e7d6
 
 | আপনি যা চান | সঠিক কমান্ড | নিরাপত্তা |
 | :--- | :--- | :--- |
-| শেষ কমিটের মেসেজ ঠিক করতে বা ভুলে যাওয়া ফাইল যোগ করতে | \`git commit --amend\` | 🟡 শুধু লোকাল ব্রাঞ্চে নিরাপদ |
-| গিটহাবে পুশ করা পাবলিক ব্রাঞ্চের কমিট বাতিল করতে | \`git revert <hash>\` | 🟢 শতভাগ নিরাপদ |
-| কমিট আনডু করে সব কোড স্টেজড রাখতে | \`git reset --soft HEAD~1\` | 🟢 নিরাপদ (কোড অক্ষত থাকে) |
-| কমিট আনডু করে কোড আনস্টেজড রাখতে | \`git reset --mixed HEAD~1\` | 🟢 নিরাপদ (কোড অক্ষত থাকে) |
-| কোড ও হিস্ট্রি সব ডিলিট করে পূর্বের অবস্থায় ফিরতে | \`git reset --hard HEAD~1\` | 🔴 মারাত্মক ঝুঁকিপূর্ণ |
+| শেষ কমিটের মেসেজ ঠিক করতে বা ভুলে যাওয়া ফাইল যোগ করতে | \`git commit --amend\` | শুধু লোকাল ব্রাঞ্চে নিরাপদ |
+| গিটহাবে পুশ করা পাবলিক ব্রাঞ্চের কমিট বাতিল করতে | \`git revert <hash>\` | শতভাগ নিরাপদ |
+| কমিট আনডু করে সব কোড স্টেজড রাখতে | \`git reset --soft HEAD~1\` | নিরাপদ (কোড অক্ষত থাকে) |
+| কমিট আনডু করে কোড আনস্টেজড রাখতে | \`git reset --mixed HEAD~1\` | নিরাপদ (কোড অক্ষত থাকে) |
+| কোড ও হিস্ট্রি সব ডিলিট করে পূর্বের অবস্থায় ফিরতে | \`git reset --hard HEAD~1\` | মারাত্মক ঝুঁকিপূর্ণ |
 `,
   };

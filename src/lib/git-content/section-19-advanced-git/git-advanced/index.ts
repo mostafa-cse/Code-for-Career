@@ -189,7 +189,7 @@ squash 3c4d5e6 test: add unit tests for payments
 \`\`\`
 Save and close the editor. Git combines them into a single clean commit!
 
-> ⚠️ **The Golden Rule of Rebase:** Never rebase commits that have already been pushed to a shared public branch! Only rebase your local feature branches before merging.
+> **The Golden Rule of Rebase:** Never rebase commits that have already been pushed to a shared public branch! Only rebase your local feature branches before merging.
 
 ---
 
@@ -408,7 +408,7 @@ Developer runs git commit -m "my commit"
      [.git/hooks/commit-msg]   ──► Verifies Conventional Commit Regex
                  │ (Pass)
                  ▼
-        [Commit Recorded ✅]
+        [Commit Recorded]
 \`\`\`
 
 ### What are Git Hooks?
@@ -548,7 +548,7 @@ squash 3c4d5e6 test: add checkout unit tests
 \`\`\`
 ফাইলটি সেভ করে বের হলে Git ৪টি কমিটকে একটি সুন্দর পূর্ণাঙ্গ কমিটে পরিণত করবে।
 
-> ⚠️ **রিবেসের গোল্ডেন রুল:** পাবলিক বা শেয়ার্ড ব্রাঞ্চে যা ইতিমধ্যে পুশ হয়ে গেছে, সেখানে কখনোই রিবেস চালাবেন না!
+> **রিবেসের গোল্ডেন রুল:** পাবলিক বা শেয়ার্ড ব্রাঞ্চে যা ইতিমধ্যে পুশ হয়ে গেছে, সেখানে কখনোই রিবেস চালাবেন না!
 
 ---
 
@@ -734,7 +734,7 @@ git worktree list
      [.git/hooks/commit-msg]   ──► কনভেনশনাল কমিট মেসেজ ফরমেট চেক
                  │ (সফল হলে)
                  ▼
-        [কমিট সম্পন্ন হলো! ✅]
+        [কমিট সম্পন্ন হলো]
 \`\`\`
 
 ### গিট হুকস কী?

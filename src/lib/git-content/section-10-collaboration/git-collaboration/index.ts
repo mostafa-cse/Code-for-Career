@@ -169,7 +169,7 @@ GitHub Issues serve as the project's central task board and bug tracker.
 - **Assignees**: The developers responsible for solving the ticket.
 - **Milestones**: Target release dates or sprints (e.g., \`v2.0.0 Beta\`, \`Sprint 42\`).
 
-### 💡 Magic Closing Keywords:
+### Magic Closing Keywords:
 If you include specific keywords in your commit message or PR description, GitHub will **automatically close the issue** when your PR is merged:
 \`\`\`markdown
 Closes #42
@@ -186,7 +186,7 @@ While **Issues** track actionable bugs and concrete tasks, **GitHub Discussions*
 | Feature | GitHub Issues | GitHub Discussions |
 | :--- | :--- | :--- |
 | **Purpose** | Actionable tasks & bug reports | Ideas, Q&A, brainstorming, announcements |
-| **Lifecycle** | Open ➔ Closed (by code or PR) | Ongoing conversation / community forum |
+| **Lifecycle** | Open -> Closed (by code or PR) | Ongoing conversation / community forum |
 | **Outcome** | Results in a Pull Request / Commit | Results in an RFC, consensus, or accepted answer |
 | **Q&A Support**| No | Yes (questions can have an "Accepted Answer") |
 
@@ -204,9 +204,9 @@ In a professional software engineering company, teams generally choose between t
 ### Model B: The Forking Model
 - Standard for open-source projects (Linux, Kubernetes, React, .NET) or companies with strict zero-trust security boundaries where contractors only push to their own forks.
 
-### 🚀 Trunk-Based Development vs. Git Flow:
+### Trunk-Based Development vs. Git Flow:
 
-| Comparison | Trunk-Based Development (Modern Industry Standard ⭐) | Git Flow (Legacy Model) |
+| Comparison | Trunk-Based Development (Modern Industry Standard) | Git Flow (Legacy Model) |
 | :--- | :--- | :--- |
 | **Branch Lifespan** | Very short (hours to 1–2 days max) | Long-lived (\`develop\`, \`release\`, \`feature\`, \`hotfix\`) |
 | **Merge Frequency** | Multiple times per day | Weekly or monthly |
@@ -324,7 +324,7 @@ git push -u origin fix/order-cancellation-timeout
 - **ফিচার রিকোয়েস্ট**: নতুন কোনো আইডিয়া প্রস্তাব করা।
 - **লেবেল ও মাইলস্টোন**: \`bug\`, \`good first issue\`, \`enhancement\` ইত্যাদি লেবেল দিয়ে কাজ ভাগ করা।
 
-### 💡 ম্যাজিক কিওয়ার্ড (অটোমেটিক ইস্যু ক্লোজ):
+### ম্যাজিক কিওয়ার্ড (অটোমেটিক ইস্যু ক্লোজ):
 পিআরের ডেসক্রিপশনে নিচের কিওয়ার্ডগুলো লিখলে পিআর মার্জ হওয়ামাত্র ইস্যুটি স্বয়ংক্রিয়ভাবে ক্লোজ হয়ে যায়:
 \`\`\`
 Closes #42
@@ -356,8 +356,8 @@ Resolves #256
 ### মডেল ২: Forking Model (ওপেন সোর্স ও জিরো-ট্রাস্ট)
 - ডেভেলপাররা সরাসরি মূল রিপোতে কোড পুশ করতে পারেন না; প্রত্যেকে নিজ নিজ ফোর্কে পুশ করে পিআর পাঠান।
 
-### 🚀 ট্রাঙ্ক-বেসড ডেভেলপমেন্ট বনাম গিট ফ্লো:
-* **Trunk-Based Development (আধুনিক স্ট্যান্ডার্ড ⭐)**: খুব ছোট ছোট ফিচার ব্রাঞ্চ (১-২ দিনের কাজ) তৈরি করে প্রতিদিন বা দিনে কয়েকবার সরাসরি \`main\` ট্রাঙ্কে মার্জ করা হয়। এতে মার্জ কনফ্লিক্টের ঝুঁকি থাকে না।
+### ট্রাঙ্ক-বেসড ডেভেলপমেন্ট বনাম গিট ফ্লো:
+* **Trunk-Based Development (আধুনিক স্ট্যান্ডার্ড)**: খুব ছোট ছোট ফিচার ব্রাঞ্চ (১-২ দিনের কাজ) তৈরি করে প্রতিদিন বা দিনে কয়েকবার সরাসরি \`main\` ট্রাঙ্কে মার্জ করা হয়। এতে মার্জ কনফ্লিক্টের ঝুঁকি থাকে না।
 * **Git Flow (ঐতিহ্যবাহী মডেল)**: \`develop\`, \`release\`, \`hotfix\` ইত্যাদি দীর্ঘস্থায়ী ব্রাঞ্চ থাকে যা মাস বা কোয়ার্টার শেষে রিলিজের সময় মার্জ কনফ্লিক্টের পাহাড় তৈরি করতে পারে।
 `,
   };

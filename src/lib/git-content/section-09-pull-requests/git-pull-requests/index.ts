@@ -97,27 +97,27 @@ gh pr create --title "feat(billing): integrate Stripe checkout sessions" --body 
 A PR with no description forces reviewers to guess your intentions and slows down code review by days. Follow this standardized production-grade template:
 
 \`\`\`markdown
-## 📝 Summary of Changes
+## Summary of Changes
 - Integrated Stripe Checkout Session API for subscription payments.
 - Created secure Stripe webhook handler (\`/api/v1/webhooks/stripe\`) with cryptographic signature validation.
 - Added Redis idempotency locking to prevent double-charging on duplicate webhook deliveries.
 
-## 🔗 Related Ticket / Issue
+## Related Ticket / Issue
 Closes #142 (Fixes subscription checkout failure on retry).
 
-## 🧪 How to Test Locally
+## How to Test Locally
 1. Run dependencies: \`docker-compose up -d\`
 2. Forward test webhooks using Stripe CLI:
    \`stripe listen --forward-to localhost:5000/api/v1/webhooks/stripe\`
 3. Trigger test checkout: \`stripe trigger payment_intent.succeeded\`
 4. Verify user record in PostgreSQL has \`subscription_status = 'active'\`.
 
-## 📸 Screenshots / Demos (For UI changes)
+## Screenshots / Demos (For UI changes)
 | Before (Error) | After (Success Modal) |
 | :---: | :---: |
 | ![Before](https://placehold.co/300x200?text=Error) | ![After](https://placehold.co/300x200?text=Success) |
 
-## ✅ Author Checklist
+## Author Checklist
 - [x] Automated unit and integration tests added and passing
 - [x] No hardcoded secrets, API keys, or development credentials
 - [x] Database migration scripts tested forward and backward
@@ -173,7 +173,7 @@ When you have reviewed the code, verified tests, and are confident that the chan
 3. Select **Approve**.
 4. Click **Submit review**.
 
-> This turns your review state into a **green checkmark** (✅), satisfying branch protection rules that require peer sign-off.
+> This turns your review state into a **green checkmark**, satisfying branch protection rules that require peer sign-off.
 
 ---
 
@@ -186,7 +186,7 @@ If you find a critical bug, broken business requirement, memory leak, or securit
 3. Select **Request changes**.
 4. Click **Submit review**.
 
-> This places a **red X** (❌) on the PR and blocks the **Merge** button.
+> This places a **red X** on the PR and blocks the **Merge** button.
 
 ### How the Author Resolves Changes:
 1. Fix the issues locally on the same feature branch.
@@ -197,7 +197,7 @@ If you find a critical bug, broken business requirement, memory leak, or securit
    git push origin feature/stripe-payment
    \`\`\`
 3. The PR updates automatically on GitHub with the new commits!
-4. Click the **Re-request review** icon (🔄) next to the reviewer's name to invite them back.
+4. Click the **Re-request review** icon next to the reviewer's name to invite them back.
 
 ---
 
@@ -209,7 +209,7 @@ GitHub provides 3 distinct merge strategies:
 
 | Strategy | What happens to commit history? | Ideal Use Case |
 | :--- | :--- | :--- |
-| **Squash and merge ⭐** | Condenses all 15 messy feature commits into **1 clean, atomic commit** on \`main\`. | **Most popular in enterprise & startups**. Keeps the primary git history clean, readable, and easy to revert. |
+| **Squash and merge** | Condenses all 15 messy feature commits into **1 clean, atomic commit** on \`main\`. | **Most popular in enterprise & startups**. Keeps the primary git history clean, readable, and easy to revert. |
 | **Create a merge commit** | Keeps every single intermediate commit and creates a 3-way merge commit on \`main\`. | Open-source libraries where granular individual author commits must be preserved. |
 | **Rebase and merge** | Replays each commit individually on top of \`main\` without creating a merge commit. | Teams that want a strictly linear history but want to retain individual commits. |
 
@@ -324,7 +324,7 @@ git push -u origin feature/stripe-payment
 1. **Review changes** ড্রপডাউনে যান।
 2. একটি ইতিবাচক মন্তব্য লিখুন (যেমন: *"Clean code and great test coverage. Approved!"*)।
 3. **Approve** রেডিও বাটনে ক্লিক করে **Submit review** দিন।
-4. এতে পিআর-এ একটি **সবুজ টিক চিহ্ন (✅)** চলে আসে এবং ব্রাঞ্চ প্রটেকশন রুল পূরণ হয়।
+4. এতে পিআর-এ একটি **সবুজ টিক চিহ্ন** চলে আসে এবং ব্রাঞ্চ প্রটেকশন রুল পূরণ হয়।
 
 ---
 
@@ -333,13 +333,13 @@ git push -u origin feature/stripe-payment
 কোডে যদি কোনো মারাত্মক বাগ, সিকিউরিটি দুর্বলতা বা লজিক্যাল ভুল থাকে, তবে মার্জ আটকানোর জন্য **Request Changes** ব্যবহার করা হয়:
 1. **Review changes**-এ গিয়ে কারণ ব্যাখ্যা করুন।
 2. **Request changes** নির্বাচন করে সাবমিট করুন।
-3. এতে পিআর-এ একটি **লাল ক্রস (❌)** চলে আসবে এবং মার্জ বাটন লক হয়ে যাবে।
+3. এতে পিআর-এ একটি **লাল ক্রস** চলে আসবে এবং মার্জ বাটন লক হয়ে যাবে।
 
 ### লেখক কীভাবে সংশোধন করবেন?
 * লোকাল মেশিনে একই ফিচার ব্রাঞ্চে কোড সংশোধন করুন।
 * স্বাভাবিকভাবে \`git commit\` এবং \`git push\` করুন।
 * পুশ করামাত্র গিটহাব পিআর-টি স্বয়ংক্রিয়ভাবে নতুন কমিটগুলো যুক্ত করে আপডেট হয়ে যাবে!
-* রিভিউয়ারের নামের পাশে থাকা **Re-request review (🔄)** বাটনে ক্লিক করে পুনরায় রিভিউ করার অনুরোধ জানান।
+* রিভিউয়ারের নামের পাশে থাকা **Re-request review** বাটনে ক্লিক করে পুনরায় রিভিউ করার অনুরোধ জানান।
 
 ---
 
@@ -351,7 +351,7 @@ git push -u origin feature/stripe-payment
 
 | স্ট্র্যাটেজি | হিস্ট্রিতে কী ঘটে? | কখন ব্যবহার করবেন? |
 | :--- | :--- | :--- |
-| **Squash and Merge ⭐** | ফিচার ব্রাঞ্চের সমস্ত ১৫টি খসড়া কমিটকে সংকুচিত করে **১টি পরিষ্কার, সুসংগঠিত কমিট** হিসেবে \`main\`-এ যোগ করে। | **ইন্ডাস্ট্রির সবচেয়ে জনপ্রিয় পছন্দ**। মেইন ব্রাঞ্চের হিস্ট্রি অত্যন্ত পরিষ্কার ও রিভার্ট করা সহজ রাখে। |
+| **Squash and Merge** | ফিচার ব্রাঞ্চের সমস্ত ১৫টি খসড়া কমিটকে সংকুচিত করে **১টি পরিষ্কার, সুসংগঠিত কমিট** হিসেবে \`main\`-এ যোগ করে। | **ইন্ডাস্ট্রির সবচেয়ে জনপ্রিয় পছন্দ**। মেইন ব্রাঞ্চের হিস্ট্রি অত্যন্ত পরিষ্কার ও রিভার্ট করা সহজ রাখে। |
 | **Create a merge commit** | ফিচার ব্রাঞ্চের প্রতিটি কমিট অক্ষত রেখে একটি অতিরিক্ত ৩-ওয়ে মার্জ কমিট তৈরি করে। | ওপেন-সোর্স প্রজেক্ট যেখানে প্রতিটি আলাদা ডেভেলপারের অবদান অবিকল রাখতে হয়। |
 | **Rebase and merge** | কোনো মার্জ কমিট ছাড়াই ফিচার ব্রাঞ্চের কমিটগুলোকে মেইনের অগ্রভাগে একে একে সাজিয়ে দেয়। | যাঁরা মার্জ কমিট ছাড়া সম্পূর্ণ লিনিয়ার গ্রাফ পছন্দ করেন। |
 

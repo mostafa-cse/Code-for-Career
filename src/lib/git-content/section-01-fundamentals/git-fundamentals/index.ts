@@ -118,13 +118,13 @@ Many beginners mistakenly use the words "Git" and "GitHub" interchangeably. They
 
 \`\`\`
 +------------------------------------+               +------------------------------------+
-|            GIT (Local)             |               |          GITHUB (Cloud)            |
+| GIT (Local) | | GITHUB (Cloud) |
 +------------------------------------+               +------------------------------------+
-| • A command-line software tool     |   git push    | • A website / cloud platform       |
-| • Runs entirely on your computer   | ============> | • Owned by Microsoft               |
-| • 100% offline (no internet needed)|               | • Requires internet connection     |
-| • Tracks history, commits, branches|   git pull    | • Remote backup, Pull Requests,    |
-| • Open-source & completely free    | <============ |   code reviews, CI/CD Actions      |
+| • A command-line software tool | git push | • A website / cloud platform |
+| • Runs entirely on your computer | ============> | • Owned by Microsoft |
+| • 100% offline (no internet needed)| | • Requires internet connection |
+| • Tracks history, commits, branches| git pull | • Remote backup, Pull Requests, |
+| • Open-source & completely free | <============ | code reviews, CI/CD Actions |
 +------------------------------------+               +------------------------------------+
 \`\`\`
 
@@ -242,12 +242,12 @@ To use Git effectively, you must understand the journey a file takes from when y
 
 \`\`\`
 +-------------------------+             +-------------------------+             +-------------------------+             +-------------------------+
-|    WORKING DIRECTORY    |   git add   |      STAGING AREA       | git commit  |    LOCAL REPOSITORY     |  git push   |    REMOTE REPOSITORY    |
-|   (Your Project Desk)   | ==========> |   (The Packing Box)     | ==========> |   (The Storage Vault)   | ==========> |      (GitHub Cloud)     |
-|                         |             |                         |             |                         |             |                         |
-| • You write & edit code |             | • Ready for next commit |             | • Permanent history     |             | • Backed up online      |
-| • Files are "Modified"  |  restore    | • Manifest index file   |             | • Saved in .git/ folder |  git pull   | • Shared with team      |
-| • Files are "Untracked" | <---------- | • Staged snapshot draft |             | • Immutable commit hash | <---------- | • Pull Requests & CI/CD |
+| WORKING DIRECTORY | git add | STAGING AREA | git commit | LOCAL REPOSITORY | git push | REMOTE REPOSITORY |
+| (Your Project Desk) | ==========> | (The Packing Box) | ==========> | (The Storage Vault) | ==========> | (GitHub Cloud) |
+| | | | | | | |
+| • You write & edit code | | • Ready for next commit | | • Permanent history | | • Backed up online |
+| • Files are "Modified" | restore | • Manifest index file | | • Saved in .git/ folder | git pull | • Shared with team |
+| • Files are "Untracked" | <---------- | • Staged snapshot draft | | • Immutable commit hash | <---------- | • Pull Requests & CI/CD |
 +-------------------------+             +-------------------------+             +-------------------------+             +-------------------------+
 \`\`\`
 
@@ -331,13 +331,13 @@ My_Project/
 
 \`\`\`
 +------------------------------------+               +------------------------------------+
-|             গিট (Git - লোকাল)      |               |         গিটহাব (GitHub - ক্লাউড)   |
+| গিট (Git - লোকাল) | | গিটহাব (GitHub - ক্লাউড) |
 +------------------------------------+               +------------------------------------+
-| • একটি কমান্ড-লাইন সফটওয়্যার টুল  |   git push    | • একটি ওয়েবসাইট / ক্লাউড প্ল্যাটফর্ম|
-| • আপনার নিজের কম্পিউটারে চলে      | ============> | • মাইক্রোসফটের মালিকানাধীন         |
-| • শতভাগ অফলাইনে কাজ করে (নেট লাগে না)|            | • ইন্টারনেট সংযোগ প্রয়োজন          |
-| • কোডের হিস্ট্রি ও ব্রাঞ্চ ট্র্যাক করে|  git pull   | • রিমোট ব্যাকআপ, পুল রিকোয়েস্ট,   |
-| • ফ্রি ও ওপেন সোর্স                | <============ |   কোড রিভিউ ও অটোমেশন (Actions)   |
+| • একটি কমান্ড-লাইন সফটওয়্যার টুল | git push | • একটি ওয়েবসাইট / ক্লাউড প্ল্যাটফর্ম|
+| • আপনার নিজের কম্পিউটারে চলে | ============> | • মাইক্রোসফটের মালিকানাধীন |
+| • শতভাগ অফলাইনে কাজ করে (নেট লাগে না)| | • ইন্টারনেট সংযোগ প্রয়োজন |
+| • কোডের হিস্ট্রি ও ব্রাঞ্চ ট্র্যাক করে| git pull | • রিমোট ব্যাকআপ, পুল রিকোয়েস্ট, |
+| • ফ্রি ও ওপেন সোর্স | <============ | কোড রিভিউ ও অটোমেশন (Actions) |
 +------------------------------------+               +------------------------------------+
 \`\`\`
 

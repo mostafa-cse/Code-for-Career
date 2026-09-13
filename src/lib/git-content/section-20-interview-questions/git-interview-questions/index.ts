@@ -243,7 +243,7 @@ Your Laptop Machine (/Users/you/projects/react)
 
 * **\`git clone\`**: A native Git CLI command that copies an entire remote Git repository down to your local machine, configuring a remote named \`origin\`.
 * **Fork**: A GitHub/GitLab platform feature (not a Git command) that creates a server-side independent clone of another user's repository under your own account.
-* **Collaboration Flow**: Fork repo on GitHub ➔ Clone your fork locally ➔ Create feature branch ➔ Push to your fork (\`origin\`) ➔ Open Pull Request to upstream author repository.
+* **Collaboration Flow**: Fork repo on GitHub -> Clone your fork locally -> Create feature branch -> Push to your fork (\`origin\`) -> Open Pull Request to upstream author repository.
 
 ---
 
@@ -542,7 +542,7 @@ git revert C2:            (ইতিহাস অক্ষত রাখে: C2 �
 
 * **\`git clone\`**: এটি একটি অফিশিয়াল গিট কমান্ড যা রিমোটের সম্পূর্ণ রিপোজিটরি আপনার লোকাল কম্পিউটারে ডাউনলোড করে।
 * **Fork**: এটি কোনো গিট কমান্ড নয়, বরং GitHub/GitLab প্ল্যাটফর্মের একটি ওয়েব ফিচার যা অন্য কারও পাবলিক রিপোজিটরি হুবহু কপি করে আপনার নিজের গিটহাব অ্যাকাউন্টে হোস্ট করে দেয়।
-* **ওপেন সোর্স কাজের ধারা:** অন্যের রিপো Fork করুন ➔ নিজের ফর্ক পিসিতে Clone করুন ➔ ফিচার ব্রাঞ্চে কাজ করুন ➔ নিজের ফর্কে Push করুন ➔ মূল প্রজেক্টে Pull Request পাঠান।
+* **ওপেন সোর্স কাজের ধারা:** অন্যের রিপো Fork করুন -> নিজের ফর্ক পিসিতে Clone করুন -> ফিচার ব্রাঞ্চে কাজ করুন -> নিজের ফর্কে Push করুন -> মূল প্রজেক্টে Pull Request পাঠান।
 
 ---
 

@@ -195,7 +195,7 @@ Choose **\`git rebase\`** in the following scenarios:
 ## 7. Rebase Best Practices & The Golden Rule
 
 > [!CAUTION]
-> ### 🛡️ The Golden Rule of Rebasing:
+> ### The Golden Rule of Rebasing:
 > **NEVER rebase commits that exist outside your local machine and have been pushed to a shared public branch where other developers are working!**
 
 ### Why is violating the Golden Rule catastrophic?
@@ -211,7 +211,7 @@ Because rebase rewrites commit hashes (replays them with new SHAs). If you rebas
 | **Commit Hashes** | Original hashes preserved intact | New commit hashes generated (Rewrites history) |
 | **Conflict Handling** | Resolved once during merge commit | Resolved commit-by-commit during replay |
 | **Traceability** | Exact historical chronology preserved | Polished, clean logical story |
-| **Safety on Public Branches** | 🟢 100% Safe | 🔴 Dangerous (violates Golden Rule) |
+| **Safety on Public Branches** | 100% Safe | Dangerous (violates Golden Rule) |
 | **Best Used On** | Public/shared branches (\`main\`, \`develop\`) | Private local feature branches before PR |
 `,
     contentBn: `# গিট মার্জ বনাম রিব্যাস: মেকানিক্স, ইন্টারঅ্যাক্টিভ রিব্যাস ও গোল্ডেন রুল
@@ -288,7 +288,7 @@ pick m0n1o2p update readme documentation
 * **\`pick\` (p)**: কমিটটি অপরিবর্তিত রাখা।
 * **\`reword\` (r)**: কমিট ঠিক রেখে শুধু কমিট মেসেজ পরিবর্তন করা।
 * **\`squash\` (s)**: কমিটটিকে আগের কমিটের সাথে মিলিয়ে দেওয়া এবং উভয় মেসেজকে একত্রিত করা।
-* **\`fixup\` (f)**: কোনো মেসেজ না রেখে সরাসরি আগের কমিটের ভেতরে ঢুকিয়ে দেওয়া (ছোটখাটো টাইপো বা বাগ ফিক্সের জন্য সেরা ⭐)।
+* **\`fixup\` (f)**: কোনো মেসেজ না রেখে সরাসরি আগের কমিটের ভেতরে ঢুকিয়ে দেওয়া (ছোটখাটো টাইপো বা বাগ ফিক্সের জন্য সেরা)।
 * **\`drop\` (d)**: কোনো কমিটকে ইতিহাস থেকে চিরতরে মুছে ফেলা।
 * **ক্রম পরিবর্তন**: লাইনের স্থান পরিবর্তন (Cut-Paste) করলেই কমিটের ক্রম বদলে যাবে!
 
@@ -308,7 +308,7 @@ pick m0n1o2p update readme documentation
 # ৩. সমাধানকৃত ফাইলটি স্টেজিং এরিয়ায় যুক্ত করুন:
 git add src/Services/AuthService.cs
 
-# ৪. ⚠️ মারাত্মক ভুল এড়িয়ে চলুন: কখনো 'git commit' চালাবেন না!
+# ৪. মারাত্মক ভুল এড়িয়ে চলুন: কখনো 'git commit' চালাবেন না!
 # বরং গিটকে পরবর্তী কমিট প্লে করতে বলুন:
 git rebase --continue
 
@@ -342,7 +342,7 @@ git rebase --abort
 ## ৭. রিব্যাসের গোল্ডেন রুল ও সেরা প্র্যাকটিস
 
 > [!CAUTION]
-> ### 🛡️ The Golden Rule of Rebasing:
+> ### The Golden Rule of Rebasing:
 > **যে কমিটগুলো ইতিমধ্যে ইন্টারনেটে গিটহাবে পুশ করা হয়েছে এবং যে ব্রাঞ্চে অন্য সহকর্মীরা কাজ করছেন, সেই পাবলিক বা শেয়ার্ড ব্রাঞ্চে কখনোই রিব্যাস করবেন না!**
 
 ### গোল্ডেন রুল ভাঙলে কী সর্বনাশ হয়?
@@ -355,7 +355,7 @@ git rebase --abort
 | **হিস্ট্রি গ্রাফ** | শাখা-প্রশাখাযুক্ত ৩-ওয়ে মার্জ হিস্ট্রি | সোজা, পরিচ্ছন্ন লিনিয়ার লাইন |
 | **কমিট হ্যাশ** | পুরনো হ্যাশ ১০০% অক্ষত থাকে | নতুন কমিট হ্যাশ তৈরি হয় (ইতিহাস বদলায়) |
 | **কনফ্লিক্ট সমাধান**| একবারে মার্জ কমিটে সমাধান | প্রতিটি কমিট রি-প্লে হওয়ার সময় ধাপে ধাপে |
-| **পাবলিক ব্রাঞ্চে নিরাপত্তা** | 🟢 সম্পূর্ণ নিরাপদ | 🔴 মারাত্মক ঝুঁকিপূর্ণ |
+| **পাবলিক ব্রাঞ্চে নিরাপত্তা** | সম্পূর্ণ নিরাপদ | মারাত্মক ঝুঁকিপূর্ণ |
 | **আদর্শ স্থান** | শেয়ার্ড ব্রাঞ্চ (\`main\`, \`develop\`) | লোকাল ব্যক্তিগত ফিচার ব্রাঞ্চ |
 `,
   };

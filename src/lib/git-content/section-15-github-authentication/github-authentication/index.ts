@@ -107,7 +107,7 @@ git clone git@github.com:username/repository.git
 ## 3. SSH Keys (Generation, Config & Testing)
 
 ### Algorithm Choice: Ed25519 vs RSA
-* **Ed25519 (Recommended ⭐):** Modern elliptic curve cryptography (256-bit). Faster, smaller, more secure.
+* **Ed25519 (Recommended):** Modern elliptic curve cryptography (256-bit). Faster, smaller, more secure.
 * **RSA (4096-bit):** Legacy standard. Use only if required by outdated internal infrastructure.
 * *Never use DSA or RSA 1024 (insecure & deprecated).*
 
@@ -178,7 +178,7 @@ A Personal Access Token is an encrypted random string that functions exactly lik
 
 ### Types of Personal Access Tokens:
 
-| Feature | Fine-grained PAT (⭐ Recommended) | PAT (Classic) |
+| Feature | Fine-grained PAT (Recommended) | PAT (Classic) |
 | :--- | :--- | :--- |
 | **Repository Scope** | Selected repositories only | All repositories on account |
 | **Permissions** | Granular (e.g., Read issues, Write code) | Broad scopes (\`repo\`, \`admin\`) |
@@ -204,10 +204,10 @@ The official **GitHub CLI (\`gh\`)** is the fastest, cleanest way to authenticat
 gh auth login
 \`\`\`
 Interactive prompts:
-1. *What account do you want to log into?* ➔ **GitHub.com**
-2. *What is your preferred protocol for Git operations?* ➔ **SSH** (or **HTTPS**)
-3. *Generate a new SSH key to add to your GitHub account?* ➔ **Yes** (or select existing)
-4. *How would you like to authenticate GitHub CLI?* ➔ **Login with a web browser**
+1. *What account do you want to log into?* -> **GitHub.com**
+2. *What is your preferred protocol for Git operations?* -> **SSH** (or **HTTPS**)
+3. *Generate a new SSH key to add to your GitHub account?* -> **Yes** (or select existing)
+4. *How would you like to authenticate GitHub CLI?* -> **Login with a web browser**
 5. Enter the one-time device code in the browser and confirm!
 
 ### Managing CLI Authentication:
@@ -250,12 +250,12 @@ git config --global credential.helper manager
 # In-memory cache for 1 hour (Linux servers):
 git config --global credential.helper "cache --timeout=3600"
 
-# ⚠️ AVOID: 'store' saves your password in plaintext ~/.git-credentials!
+# AVOID: 'store' saves your password in plaintext ~/.git-credentials!
 \`\`\`
 
 ### How to Reset / Clear Expired Stored Credentials:
-* **macOS:** Open **Keychain Access** app ➔ search for \`github.com\` ➔ delete the saved internet password entry.
-* **Windows:** Open **Credential Manager** ➔ **Windows Credentials** ➔ under *Generic Credentials*, find \`git:https://github.com\` ➔ click **Remove**.
+* **macOS:** Open **Keychain Access** app -> search for \`github.com\` -> delete the saved internet password entry.
+* **Windows:** Open **Credential Manager** -> **Windows Credentials** -> under *Generic Credentials*, find \`git:https://github.com\` -> click **Remove**.
 * **Terminal CLI Command:**
   \`\`\`bash
   echo "url=https://github.com" | git credential reject
@@ -267,8 +267,8 @@ git config --global credential.helper "cache --timeout=3600"
 
 | Method | Best For | Security Level | Maintenance |
 | :--- | :--- | :--- | :--- |
-| **SSH (Ed25519)** ⭐ | Daily development, terminal power users | **Highest** (Asymmetric crypto) | Set up once, works forever |
-| **GitHub CLI (\`gh\`)** ⭐ | All-in-one terminal & PR management | **Highest** (OAuth + SSH) | 1 command (\`gh auth login\`) |
+| **SSH (Ed25519)** | Daily development, terminal power users | **Highest** (Asymmetric crypto) | Set up once, works forever |
+| **GitHub CLI (\`gh\`)** | All-in-one terminal & PR management | **Highest** (OAuth + SSH) | 1 command (\`gh auth login\`) |
 | **GCM (HTTPS)** | GUI developers, Windows IDE users | **High** (OS encrypted token) | Browser pop-up login |
 | **Fine-grained PAT** | CI/CD runners, automated deployment scripts | **High** (Scoped & expiring) | Must renew upon expiration |
 `,
@@ -280,20 +280,20 @@ git config --global credential.helper "cache --timeout=3600"
 
 ## ১. HTTPS (Hypertext Transfer Protocol Secure)
 
-### 🔹 HTTPS কীভাবে কাজ করে?
+### HTTPS কীভাবে কাজ করে?
 HTTPS পদ্ধতিতে রিপোজিটরি ক্লোন বা পুশ করার সময় ইউআরএল দেখতে হয় এমন: \`https://github.com/username/repo.git\`। এটি ওয়েবের সাধারণ এনক্রিপ্টেড TLS পোর্ট ৪৪৩ (Port 443) ব্যবহার করে যোগাযোগ করে।
 
-### 🔹 সাধারণ পাসওয়ার্ড কেন বাতিল করা হলো?
+### সাধারণ পাসওয়ার্ড কেন বাতিল করা হলো?
 1. **নির্দিষ্ট পারমিশন বা স্কোপ থাকে না:** অ্যাকাউন্টের পাসওয়ার্ড দিয়ে যেকেউ পুরো প্রোফাইল ডিলিট, বিলিং বা প্রাইভেট সব রিপোজিটরিতে পূর্ণ নিয়ন্ত্রণ নিয়ে নিতে পারে।
 2. **মেয়াদ উত্তীর্ণ হয় না:** পাসওয়ার্ড নিজে নিজে এক্সপায়ার হয় না, ফলে ফিশিং বা চুরির ঝুঁকি থাকে।
 3. **টু-ফ্যাক্টর অথেনটিকেশন (2FA) অচল:** টার্মিনালে ইউজারনেম-পাসওয়ার্ড চাইলে মোবাইলের 2FA কোড দেওয়ার ব্যবস্থা থাকে না।
 
-### 🔹 আধুনিক HTTPS অথেনটিকেশন:
+### আধুনিক HTTPS অথেনটিকেশন:
 বর্তমানে টার্মিনালে HTTPS পুশ করার সময় পাসওয়ার্ড প্রম্পট আসলে:
 * **Username:** আপনার গিটহাব ইউজারনেম।
 * **Password:** আপনার তৈরি করা **Personal Access Token (PAT)** অথবা ব্রাউজার লগইনের মাধ্যমে **Git Credential Manager (GCM)**।
 
-### 🔹 কখন HTTPS ব্যবহার করবেন?
+### কখন HTTPS ব্যবহার করবেন?
 * অফিসের বা ইউনিভার্সিটির ফায়ারওয়াল যেখানে SSH পোর্ট ২২ (Port 22) ব্লক করা থাকে।
 * ওপেন-সোর্স প্রজেক্টের কোড SSH সেটআপ ছাড়াই চটজলদি ক্লোন করার জন্য।
 
@@ -301,10 +301,10 @@ HTTPS পদ্ধতিতে রিপোজিটরি ক্লোন ব�
 
 ## ২. SSH (Secure Shell)
 
-### 🔹 SSH কী এবং কীভাবে কাজ করে?
+### SSH কী এবং কীভাবে কাজ করে?
 SSH হলো একটি ক্রিপ্টোগ্রাফিক নেটওয়ার্ক প্রোটোকল। সফটওয়্যার ডেভেলপারদের জন্য এটি হলো সবচেয়ে জনপ্রিয় ও আরামদায়ক পদ্ধতি, কারণ এতে **কখনোই বারবার ইউজারনেম বা পাসওয়ার্ড টাইপ করতে হয় না**।
 
-### 🔹 মেন্টাল মডেল: অ্যাসিমেট্রিক পাবলিক-প্রাইভেট কি (Public-Key Cryptography)
+### মেন্টাল মডেল: অ্যাসিমেট্রিক পাবলিক-প্রাইভেট কি (Public-Key Cryptography)
 তালা ও চাবির কথা চিন্তা করুন:
 * **পাবলিক কি (\`.pub\`):** এটি হলো তালা (Padlock)। এই তালাটি আপনি সানন্দে গিটহাবের দরজায় ঝুলিয়ে রাখবেন।
 * **প্রাইভেট কি:** এটি হলো আসল চাবি। এটি আপনার কম্পিউটারের হার্ডডিস্কে পরম যত্নে লুকিয়ে থাকবে। ইন্টারনেটে কখনোই প্রাইভেট কি পাঠানো হয় না। শুধুমাত্র আপনার এই গোপন চাবি দিয়েই গিটহাবে ঝুলানো তালাটি খোলা সম্ভব।
@@ -318,7 +318,7 @@ SSH হলো একটি ক্রিপ্টোগ্রাফিক নে�
 └─────────────────┘                        └─────────────────┘
 \`\`\`
 
-### 🔹 SSH ইউআরএল ফরম্যাট:
+### SSH ইউআরএল ফরম্যাট:
 \`\`\`bash
 git clone git@github.com:username/repository.git
 \`\`\`
@@ -327,12 +327,12 @@ git clone git@github.com:username/repository.git
 
 ## ৩. SSH Keys (তৈরি, কনফিগারেশন ও কানেকশন টেস্ট)
 
-### 🔹 অ্যালগরিদম নির্বাচন: Ed25519 বনাম RSA
-* **Ed25519 (Recommended ⭐):** আধুনিক উপবৃত্তাকার বক্ররেখা (Elliptic Curve 256-bit)। এটি অবিশ্বাস্য রকমের দ্রুত, হালকা এবং সবচেয়ে বেশি নিরাপদ।
+### অ্যালগরিদম নির্বাচন: Ed25519 বনাম RSA
+* **Ed25519 (Recommended):** আধুনিক উপবৃত্তাকার বক্ররেখা (Elliptic Curve 256-bit)। এটি অবিশ্বাস্য রকমের দ্রুত, হালকা এবং সবচেয়ে বেশি নিরাপদ।
 * **RSA (4096-bit):** পুরোনো স্ট্যান্ডার্ড। পুরোনো লিগ্যাসি সার্ভার ছাড়া নতুন কাজে RSA ব্যবহার অপ্রয়োজনীয়।
 * *(কখনোই DSA বা 1024-bit RSA ব্যবহার করবেন না, এগুলো অনিরাপদ ও বাতিল ঘোষিত)।*
 
-### 🔹 স্টেপ-বাই-স্টেপ সেটআপ গাইড:
+### স্টেপ-বাই-স্টেপ সেটআপ গাইড:
 
 #### ধাপ ১: Ed25519 কি-পেয়ার তৈরি করুন
 \`\`\`bash
@@ -394,19 +394,19 @@ Host github.com
 
 ## ৪. Personal Access Tokens (PAT)
 
-### 🔹 PAT কী?
+### PAT কী?
 পার্সোনাল অ্যাক্সেস টোকেন হলো ক্রিপ্টোগ্রাফিক অ্যালগরিদম দিয়ে তৈরি একটি দীর্ঘ স্ট্রিং, যা HTTPS অপারেশনে পাসওয়ার্ডের বিকল্প হিসেবে ব্যবহৃত হয়।
 
-### 🔹 টোকেনের প্রকারভেদ:
+### টোকেনের প্রকারভেদ:
 
-| বৈশিষ্ট্য | Fine-grained PAT (⭐ রিকমেন্ডেড) | PAT Classic |
+| বৈশিষ্ট্য | Fine-grained PAT (রিকমেন্ডেড) | PAT Classic |
 | :--- | :--- | :--- |
 | **রিপোজিটরির পরিধি** | শুধুমাত্র নির্দিষ্ট রিপোজিটরি সিলেক্ট করা যায় | অ্যাকাউন্টের সমস্ত রিপোজিটরিতে এক্সেস পায় |
 | **অনুমতি (Permissions)** | সূক্ষ্মভাবে নিয়ন্ত্রণযোগ্য (যেমন: শুধু কোড রিড/রাইট) | ঢালাও বড় বড় স্কোপ (\`repo\`, \`admin\`) |
 | **মেয়াদ (Expiry)** | সর্বোচ্চ ১ বছরের মধ্যে মেয়াদ নির্ধারণ বাধ্যতামূলক | "No expiration" দেওয়া যায় (যা ঝুঁকিপূর্ণ) |
 | **অর্গানাইজেশন সুরক্ষা** | কোম্পানি চাইলে টোকেন রিভিউ ও ব্লক করতে পারে | অ্যাডমিনের কোনো সরাসরি নিয়ন্ত্রণ থাকে না |
 
-### 🔹 Fine-grained PAT তৈরির নিয়ম:
+### Fine-grained PAT তৈরির নিয়ম:
 1. **GitHub** > **Settings** > **Developer settings** > **Personal access tokens** > **Fine-grained tokens**-এ যান।
 2. **Generate new token**-এ ক্লিক করুন।
 3. টোকেনের নাম, মেয়াদ এবং নির্দিষ্ট রিপোজিটরি সিলেক্ট করুন।
@@ -419,18 +419,18 @@ Host github.com
 
 গিটহাবের অফিসিয়াল কমান্ড লাইন টুল **GitHub CLI (\`gh\`)** হলো সবচেয়ে দ্রুত ও ঝামেলাহীন অথেনটিকেশন পদ্ধতি। কোনো ফাইল খোঁজাখুঁজি বা কপি-পেস্ট ছাড়াই এটি সম্পূর্ণ অথেনটিকেশন করে দেয়।
 
-### 🔹 ইন্টারেক্টিভ উইজার্ড দিয়ে লগইন:
+### ইন্টারেক্টিভ উইজার্ড দিয়ে লগইন:
 \`\`\`bash
 gh auth login
 \`\`\`
 টার্মিনাল আপনাকে সহজ কয়েকটি প্রশ্ন করবে:
-1. *What account do you want to log into?* ➔ **GitHub.com**
-2. *What is your preferred protocol for Git operations?* ➔ **SSH** (অথবা **HTTPS**)
-3. *Generate a new SSH key to add to your GitHub account?* ➔ **Yes**
-4. *How would you like to authenticate GitHub CLI?* ➔ **Login with a web browser**
+1. *What account do you want to log into?* -> **GitHub.com**
+2. *What is your preferred protocol for Git operations?* -> **SSH** (অথবা **HTTPS**)
+3. *Generate a new SSH key to add to your GitHub account?* -> **Yes**
+4. *How would you like to authenticate GitHub CLI?* -> **Login with a web browser**
 5. টার্মিনালে আসা ৮ অক্ষরের ওটিপি কোডটি ব্রাউজারে পেস্ট করলেই বাজিমাত!
 
-### 🔹 সিএলআই ম্যানেজমেন্ট কমান্ড:
+### সিএলআই ম্যানেজমেন্ট কমান্ড:
 \`\`\`bash
 # লগইন স্ট্যাটাস ও স্কোপ চেক করতে
 gh auth status
@@ -446,13 +446,13 @@ gh auth logout
 
 ## ৬. Credential Management (গিট ক্রেডেনশিয়াল ম্যানেজার)
 
-### 🔹 Git Credential Manager (GCM) কী?
+### Git Credential Manager (GCM) কী?
 Git Credential Manager হলো একটি সিকিউর টুল যা উইন্ডোজ ও ম্যাকের সাথে ডিফল্টভাবে থাকে। আপনি যখন HTTPS দিয়ে পুশ করতে যান, এটি নিজে থেকেই একটি ব্রাউজার পপআপ খুলে টু-ফ্যাক্টর অথেনটিকেশন (2FA) করিয়ে নেয় এবং টোকেনটি আপনার কম্পিউটারের নিজস্ব এনক্রিপ্টেড ভল্টে সেভ করে রাখে:
 * **macOS:** Apple Keychain Access
 * **Windows:** Windows Credential Manager
 * **Linux:** Secret Service API (\`libsecret\`)
 
-### 🔹 ক্রেডেনশিয়াল হেল্পার চেক ও কনফিগারেশন:
+### ক্রেডেনশিয়াল হেল্পার চেক ও কনফিগারেশন:
 \`\`\`bash
 # আপনার কম্পিউটারে বর্তমানে কোন হেল্পার চালু আছে দেখতে
 git config --get credential.helper
@@ -466,12 +466,12 @@ git config --global credential.helper manager
 # লিনাক্স সার্ভারে সাময়িক ১ ঘণ্টার জন্য মেমোরিতে ক্যাশ করতে:
 git config --global credential.helper "cache --timeout=3600"
 
-# ⚠️ সাবধান: ভুলেও 'store' হেল্পার দেবেন না, এটি প্লেইন টেক্সট ফাইলে পাসওয়ার্ড জমায়!
+# সাবধান: ভুলেও 'store' হেল্পার দেবেন না, এটি প্লেইন টেক্সট ফাইলে পাসওয়ার্ড জমায়!
 \`\`\`
 
-### 🔹 পুরোনো বা ভুল ক্রেডেনশিয়াল মুছে রিসেট করার নিয়ম:
-* **macOS:** **Keychain Access** অ্যাপ ওপেন করুন ➔ সার্চ বক্সে \`github.com\` লিখুন ➔ এন্ট্রি সিলেক্ট করে ডিলিট করে দিন।
-* **Windows:** **Credential Manager** ওপেন করুন ➔ **Windows Credentials**-এ যান ➔ *Generic Credentials* এর ভেতর \`git:https://github.com\` মুছে দিন।
+### পুরোনো বা ভুল ক্রেডেনশিয়াল মুছে রিসেট করার নিয়ম:
+* **macOS:** **Keychain Access** অ্যাপ ওপেন করুন -> সার্চ বক্সে \`github.com\` লিখুন -> এন্ট্রি সিলেক্ট করে ডিলিট করে দিন।
+* **Windows:** **Credential Manager** ওপেন করুন -> **Windows Credentials**-এ যান -> *Generic Credentials* এর ভেতর \`git:https://github.com\` মুছে দিন।
 * **টার্মিনাল দিয়ে এক লাইনে রিজেক্ট করতে:**
   \`\`\`bash
   echo "url=https://github.com" | git credential reject
@@ -479,12 +479,12 @@ git config --global credential.helper "cache --timeout=3600"
 
 ---
 
-## 💡 কোনটা কখন ব্যবহার করবেন?
+## কোনটা কখন ব্যবহার করবেন?
 
 | মেথড | কার জন্য সেরা | নিরাপত্তার মাত্রা | সুবিধা |
 | :--- | :--- | :--- | :--- |
-| **SSH (Ed25519)** ⭐ | প্রফেশনাল ডেভেলপমেন্ট ও নিয়মিত পুশ/পুল | **সর্বোচ্চ** (অ্যাসিমেট্রিক কি) | একবার সেট করলে আজীবন পাসওয়ার্ড ছাড়া দ্রুত কাজ |
-| **GitHub CLI (\`gh\`)** ⭐ | টার্মিনাল লাভার ও পিআর/ইস্যু ম্যানেজমেন্ট | **সর্বোচ্চ** (OAuth + SSH) | \`gh auth login\` দিয়ে ১ মিনিটে রেডি |
+| **SSH (Ed25519)** | প্রফেশনাল ডেভেলপমেন্ট ও নিয়মিত পুশ/পুল | **সর্বোচ্চ** (অ্যাসিমেট্রিক কি) | একবার সেট করলে আজীবন পাসওয়ার্ড ছাড়া দ্রুত কাজ |
+| **GitHub CLI (\`gh\`)** | টার্মিনাল লাভার ও পিআর/ইস্যু ম্যানেজমেন্ট | **সর্বোচ্চ** (OAuth + SSH) | \`gh auth login\` দিয়ে ১ মিনিটে রেডি |
 | **GCM (HTTPS)** | উইন্ডোজ/ম্যাক আইডিই এবং বিগিনার ইউজার | **উচ্চ** (ওএস এনক্রিপ্টেড কি-চেইন) | ব্রাউজারে লগইন করলেই অটোমেটিক সেভ |
 | **Fine-grained PAT** | সিআই/সিডি (CI/CD) ও অটোমেশন স্ক্রিপ্ট | **উচ্চ** (স্কোপ ও মেয়াদী টোকেন) | শুধুমাত্র নির্দিষ্ট রিপোর পারমিশন সীমাবদ্ধ রাখা যায় |
 `,

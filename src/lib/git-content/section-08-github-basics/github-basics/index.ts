@@ -92,7 +92,7 @@ git push -u origin main
 | **Searchability** | Indexed by Google & GitHub Search | Invisible in search engines and profiles |
 | **Forks & Stars** | Anyone can star, fork, and clone | Cannot be starred or forked by outsiders |
 | **Best Used For** | Portfolios, open-source libraries, capstone projects | Proprietary commercial code, freelance client apps, internal tools |
-| **Hiring Value** | ⭐⭐⭐⭐⭐ Critical for job applications | Hidden from recruiters |
+| **Hiring Value** | Critical for job applications | Hidden from recruiters |
 
 > [!CAUTION]
 > **Security Warning**: If you switch a private repository to public, ensure you have never committed API keys, database passwords, or JWT secrets in any previous commit. The entire commit history becomes publicly searchable!
@@ -106,7 +106,7 @@ A project without a \`README.md\` is like a store with no sign. Recruiters will 
 ### The Anatomy of a Standout README:
 
 \`\`\`markdown
-# 🛒 Distributed E-Commerce Microservices API
+# Distributed E-Commerce Microservices API
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
@@ -114,25 +114,25 @@ A project without a \`README.md\` is like a store with no sign. Recruiters will 
 
 A high-performance e-commerce platform built with ASP.NET Core 9 Clean Architecture, PostgreSQL, Redis, and RabbitMQ.
 
-## 🚀 Key Features
+## Key Features
 - **Clean Architecture & CQRS**: Separation of concerns with MediatR.
 - **Resilient Messaging**: RabbitMQ event bus with Outbox Pattern.
 - **Distributed Caching**: Redis cache for catalog read endpoints.
 - **JWT & Role-Based Auth**: Secure authorization for Customer and Admin roles.
 
-## 🏗️ Architecture Diagram
+## Architecture Diagram
 \`\`\`
 [ Client App ] ──► [ API Gateway ] ──► [ Orders Service ] ──► [ PostgreSQL ]
                                               │
                                               └──► [ RabbitMQ ] ──► [ Inventory Service ]
 \`\`\`
 
-## 🛠️ Tech Stack
+## Tech Stack
 - **Backend**: C# / .NET 9, EF Core, Dapper
 - **Database**: PostgreSQL 16, Redis 7
 - **DevOps**: Docker, GitHub Actions CI/CD
 
-## ⚡ Getting Started
+## Getting Started
 
 ### Prerequisites
 - .NET 9 SDK
@@ -154,19 +154,19 @@ dotnet ef database update --project src/Infrastructure
 dotnet run --project src/Api
 \`\`\`
 
-## 📖 API Endpoints
+## API Endpoints
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :--- |
 | \`POST\` | \`/api/v1/auth/login\` | User authentication & JWT issuance | No |
 | \`GET\` | \`/api/v1/products\` | Paginated product listing | No |
 | \`POST\` | \`/api/v1/orders\` | Place customer order | Bearer JWT |
 
-## 🧪 Running Tests
+## Running Tests
 \`\`\`bash
 dotnet test --logger "console;verbosity=detailed"
 \`\`\`
 
-## 📄 License
+## License
 Distributed under the MIT License. See \`LICENSE\` for more information.
 \`\`\`
 
@@ -203,7 +203,7 @@ node_modules/
 Thumbs.db
 \`\`\`
 
-### 💡 Pro Tip: How to untrack an already-committed file
+### Pro Tip: How to untrack an already-committed file
 If you accidentally committed a file that was later added to \`.gitignore\`:
 \`\`\`bash
 # Untrack without deleting from local hard drive:
@@ -223,7 +223,7 @@ If you create a public GitHub repository **without a license**, copyright law de
 
 ### Top 3 Licenses Developers Must Know:
 
-1. **MIT License (Permissive — Most Popular ⭐)**:
+1. **MIT License (Permissive — Most Popular)**:
    - Super simple and short.
    - Anyone can use, copy, modify, distribute, and sell your code commercially.
    - **Requirement**: They must include your original copyright notice.
@@ -363,7 +363,7 @@ git push -u origin main
 | **সার্চ ফলাফল** | গুগল ও গিটহাব সার্চে আসে | কোনো সার্চ ইঞ্জিনে আসবে না |
 | **স্টার ও ফোর্ক** | যেকেউ স্টার বা ফোর্ক করতে পারে | বাইরের কেউ স্টার বা ফোর্ক করতে পারে না |
 | **ব্যবহারের ক্ষেত্র** | পোর্টফোলিও, ওপেন-সোর্স লাইব্রেরি, ইন্টারভিউ প্রজেক্ট | কোম্পানির বাণিজ্যিক কোড, ফ্রিল্যান্স ক্লায়েন্টের কাজ |
-| **চাকরির জন্য মূল্য** | ⭐⭐⭐⭐⭐ রিক্রুটার সরাসরি কোড দেখতে পান | রিক্রুটার কিছুই দেখতে পান না |
+| **চাকরির জন্য মূল্য** | রিক্রুটার সরাসরি কোড দেখতে পান | রিক্রুটার কিছুই দেখতে পান না |
 
 > [!CAUTION]
 > **নিরাপত্তা সতর্কতা**: কোনো প্রাইভেট রিপোজিটরিকে পরবর্তীতে পাবলিক করার আগে নিশ্চিত হোন যে কোনো কমিটে আপনার ডাটাবেজ পাসওয়ার্ড, ক্লাউড সিক্রেট বা এপিআই কী রয়ে যায়নি! পাবলিক করামাত্র সম্পূর্ণ হিস্ট্রি উন্মুক্ত হয়ে যায়।
@@ -431,7 +431,7 @@ git commit -m "chore: remove .env from git tracking"
 
 ### শীর্ষ ৩টি ওপেন-সোর্স লাইসেন্স:
 
-1. **MIT License (সবচেয়ে জনপ্রিয় ও নমনীয় ⭐)**:
+1. **MIT License (সবচেয়ে জনপ্রিয় ও নমনীয়)**:
    - অত্যন্ত সহজ ও সংক্ষিপ্ত লাইসেন্স।
    - যেকেউ আপনার কোড দেখতে, পরিবর্তন করতে, বিক্রি করতে এবং নিজের বাণিজ্যিক প্রজেক্টে ব্যবহার করতে পারে।
    - **শর্ত**: তারা আপনার মূল কপিরাইট নোটিশটি রেখে দেবে।

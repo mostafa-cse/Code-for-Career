@@ -163,7 +163,7 @@ GitHub also supports structured YAML form schemas with required input boxes, dro
 GitHub Projects is a built-in project management tool that aggregates issues and PRs across multiple repositories into flexible views:
 
 1. **Board View (Classic Kanban):**
-   * Columns: \`Backlog\` ➔ \`Ready / Todo\` ➔ \`In Progress\` ➔ \`In Review\` ➔ \`Done\`.
+   * Columns: \`Backlog\` -> \`Ready / Todo\` -> \`In Progress\` -> \`In Review\` -> \`Done\`.
    * Drag-and-drop cards as work progresses.
 2. **Table View (Spreadsheet):**
    * Highly customizable columns: Status, Estimate (Story Points), Priority, Assignee, Sprint Iteration.
@@ -188,7 +188,7 @@ You can close issues automatically upon PR merge using supported closing keyword
 | **fix** | fixes, fixed | \`Fixes #108\` |
 | **resolve** | resolves, resolved | \`Resolves #15\` |
 
-> ⚠️ **Key Rule:** The issue will **ONLY close when the PR is merged into the default branch (\`main\`)**! Creating or approving a PR will not close the issue.
+> **Key Rule:** The issue will **ONLY close when the PR is merged into the default branch (\`main\`)**! Creating or approving a PR will not close the issue.
 
 ### Issue Search & Filter Shortcuts:
 \`\`\`text
@@ -228,13 +228,13 @@ gh issue close 42 --comment "Resolved in PR #56"
 
 ## ১. Issues (গিটহাব ইস্যু কী ও এর গঠন)
 
-### 🔹 গিটহাব ইস্যু কী?
+### গিটহাব ইস্যু কী?
 **Issue** হলো যেকোনো প্রজেক্টের কাজের একটি সুস্পষ্ট ইউনিট বা ট্র্যাকিং আইটেম। গিট কমিট যেমন সোর্স কোডের পরিবর্তন ট্র্যাক করে, গিটহাব ইস্যু তেমনি মানুষের কাজের অগ্রগতি ট্র্যাক করে:
 * **Bug Reports:** সফটওয়্যারে কোনো ত্রুটি বা ক্র্যাশ ধরা পড়লে তা সমাধান করার জন্য।
 * **Feature Requests:** নতুন কোনো ফিচার বা বিজনেস লজিক যোগ করার প্রস্তাবনা।
 * **Tech Debt & Tasks:** লাইব্রেরি ভার্সন আপগ্রেড, রিফ্যাক্টরিং বা ডকুমেন্টেশন লেখার টাস্ক।
 
-### 🔹 একটি ইস্যুর অভ্যন্তরীণ উপাদানসমূহ:
+### একটি ইস্যুর অভ্যন্তরীণ উপাদানসমূহ:
 1. **Title:** সংক্ষিপ্ত ও স্পষ্ট শিরোনাম (যেমন: \`[BUG] চেকআউট পেজে বিকাশ পেমেন্ট ওটিপি ভেরিফিকেশন ফেইল করছে\`)।
 2. **Description:** মার্কডাউন (GFM) ফরম্যাটে বিস্তারিত বিবরণ, চেকলিস্ট (\`- [ ]\`), স্ক্রিনশট এবং ত্রুটির লগ।
 3. **Discussion Thread:** টিমের সবাই কমেন্টে আলোচনা করতে পারে এবং নির্দিষ্ট কোড বা পিআর লিংক করতে পারে।
@@ -244,10 +244,10 @@ gh issue close 42 --comment "Resolved in PR #56"
 
 ## ২. Labels (লেবেল ও ক্যাটাগরি ব্যবস্থাপনা)
 
-### 🔹 লেবেল কেন ব্যবহার করবেন?
+### লেবেল কেন ব্যবহার করবেন?
 লেবেল হলো রঙিন ট্যাগ যার মাধ্যমে হাজার হাজার ইস্যুর ভেতর থেকে প্রয়োজনীয় ইস্যুগুলোকে ফিল্টার, ক্যাটাগরাইজ ও প্রায়োরিটাইজ করা যায়।
 
-### 🔹 প্রফেশনাল টিম ট্যাক্সোনমি (Industry Standard):
+### প্রফেশনাল টিম ট্যাক্সোনমি (Industry Standard):
 * **টাইপ অনুযায়ী (Type):**
   * \`type: bug\` (লাল) — বাগ বা ক্র্যাশ ফিক্স।
   * \`type: feature\` (সবুজ) — নতুন রিকোয়েস্টেড ফিচার।
@@ -267,15 +267,15 @@ gh issue close 42 --comment "Resolved in PR #56"
 
 ## ৩. Milestones (মাইলস্টোন ও স্প্রিন্ট ট্র্যাকিং)
 
-### 🔹 মাইলস্টোন কী?
+### মাইলস্টোন কী?
 একটি নির্দিষ্ট ডেডলাইন বা ডেলিভারি টার্গেটকে সামনে রেখে সম্পর্কিত একগুচ্ছ ইস্যু এবং পুল রিকোয়েস্টকে একটি ফোল্ডারে বাঁধার নাম হলো **Milestone**।
 
-### 🔹 বাস্তব উদাহরণ:
+### বাস্তব উদাহরণ:
 * \`Sprint 24 (Oct 1 - Oct 14)\`
 * \`Release v2.0.0 (Production Launch)\`
 * \`Q4 Database Migration\`
 
-### 🔹 মাইলস্টোনের সুবিধাসমূহ:
+### মাইলস্টোনের সুবিধাসমূহ:
 * **Progress Bar:** মাইলস্টোনের কয়টি কাজ সম্পন্ন হয়েছে এবং কয়টি বাকি তার একটি রিয়েল-টাইম পার্সেন্টেজ বার দেখা যায়।
 * **Due Date:** নির্ধারিত ডেডলাইনের কতদিন বাকি আছে তা ক্যালেন্ডার ডেট সহ মনে করিয়ে দেয়।
 * **স্কোপ নিয়ন্ত্রন:** টিমে অযাচিত কাজের চাপ কমানো ও সময়মতো রিলিজ নিশ্চিত করা যায়।
@@ -284,7 +284,7 @@ gh issue close 42 --comment "Resolved in PR #56"
 
 ## ৪. Assignees (দায়িত্ব বণ্টন ও ট্র্যাকিং)
 
-### 🔹 কাজের দায়িত্ব প্রদান:
+### কাজের দায়িত্ব প্রদান:
 * **Assignees:** একটি ইস্যুতে সর্বোচ্চ **১০ জন ডেভেলপারকে** যুক্ত করা যায়।
 * এর মাধ্যমে নিশ্চিত করা হয় কাজটি ঠিক কে বা কারা লিড দিচ্ছেন, যাতে একাধিক ডেভেলপার একই কাজে সময় নষ্ট না করেন।
 * **Mentions (\`@username\`):** কমেন্টে নির্দিষ্ট টিম মেম্বারকে মেনশন করলে তার কাছে ইনস্ট্যান্ট নোটিফিকেশন যায়।
@@ -300,7 +300,7 @@ gh issue close 42 --comment "Resolved in PR #56"
 
 সাধারণ ইউজার বা কিউএ (QA) ইঞ্জিনিয়াররা যেন শুধু "লগইন হচ্ছে না" লিখে অস্পষ্ট ইস্যু না খোলেন, সেজন্য প্রজেক্টে **Issue Template** সেটআপ করা হয়।
 
-### 🔹 মার্কডাউন টেমপ্লেট উদাহরণ:
+### মার্কডাউন টেমপ্লেট উদাহরণ:
 রিপোজিটরির \`.github/ISSUE_TEMPLATE/bug_report.md\` ফাইলে নিচের মতো টেমপ্লেট রাখুন:
 
 \`\`\`markdown
@@ -332,18 +332,18 @@ assignees: ''
 
 ## ৬. Projects (গিটহাব প্রজেক্টস — Kanban Boards ও Roadmaps)
 
-### 🔹 GitHub Projects (v2) কী?
+### GitHub Projects (v2) কী?
 ট্রেলে (Trello) বা জিরার (Jira) মতো গিটহাবের নিজস্ব চমৎকার প্রজেক্ট ম্যানেজমেন্ট প্ল্যাটফর্ম হলো GitHub Projects:
 
 1. **Board View (ঐতিহ্যবাহী কানবান বোর্ড):**
-   * কলামসমূহ: \`Backlog\` ➔ \`Ready / Todo\` ➔ \`In Progress\` ➔ \`In Review\` ➔ \`Done\`।
+   * কলামসমূহ: \`Backlog\` -> \`Ready / Todo\` -> \`In Progress\` -> \`In Review\` -> \`Done\`।
    * কাজের সাথে সাথে কার্ড এক কলাম থেকে অন্য কলামে ড্র্যাগ-অ্যান্ড-ড্রপ করা যায়।
 2. **Table View (স্প্রেডশিট ভিউ):**
    * এক্সেল বা নোশনের মতো টেবিল যেখানে কাস্টম ফিল্ড যোগ করা যায় (যেমন: Story Points, Priority, Sprint Iteration)।
 3. **Roadmap View (টাইমলাইন / গ্যান্ট চার্ট):**
    * কোয়ার্টার বা মাসের ক্যালেন্ডারে কোন ফিচারের কাজ কবে শুরু হয়ে কবে শেষ হবে তার ভিজ্যুয়াল রোডম্যাপ।
 
-### 🔹 অটোমেশন ফিচার:
+### অটোমেশন ফিচার:
 * নতুন ইস্যু খোলার সাথে সাথে স্বয়ংক্রিয়ভাবে প্রজেক্ট বোর্ডে কার্ড তৈরি হওয়া।
 * পিআর ওপেন হলে কার্ড নিজে থেকেই \`In Progress\`-এ চলে যাওয়া।
 * পিআর মেইন ব্রাঞ্চে মার্জ হওয়ামাত্র কার্ডটি স্বয়ংক্রিয়ভাবে \`Done\` কলামে চলে যাওয়া!
@@ -352,7 +352,7 @@ assignees: ''
 
 ## ৭. Issue Tracking & PR Linking (অটোমেশন টেকনিক)
 
-### 🔹 Pull Request দিয়ে স্বয়ংক্রিয়ভাবে ইস্যু বন্ধ করা:
+### Pull Request দিয়ে স্বয়ংক্রিয়ভাবে ইস্যু বন্ধ করা:
 পিআরের ডেসক্রিপশনে বা কমিট মেসেজে নির্দিষ্ট কিছু কিওয়ার্ডের সাথে ইস্যু নম্বর লিখে দিলে পিআর মার্জ হওয়ার সাথে সাথে সংশ্লিষ্ট ইস্যুটি নিজে থেকেই ক্লোজ হয়ে যায়:
 
 | কিওয়ার্ড | সমর্থিত রূপসমূহ | উদাহরণ সিনট্যাক্স |
@@ -361,9 +361,9 @@ assignees: ''
 | **fix** | fixes, fixed | \`Fixes #108\` |
 | **resolve** | resolves, resolved | \`Resolves #15\` |
 
-> ⚠️ **গোল্ডেন রুল:** পিআরটি যখন **ডিফল্ট ব্রাঞ্চে (main)** মার্জ হবে, ঠিক তখনই ইস্যুটি বন্ধ হবে। পিআর ড্রাফট অবস্থায় থাকলে বা মার্জ না করে ক্যানসেল করলে ইস্যুটি বন্ধ হবে না।
+> **গোল্ডেন রুল:** পিআরটি যখন **ডিফল্ট ব্রাঞ্চে (main)** মার্জ হবে, ঠিক তখনই ইস্যুটি বন্ধ হবে। পিআর ড্রাফট অবস্থায় থাকলে বা মার্জ না করে ক্যানসেল করলে ইস্যুটি বন্ধ হবে না।
 
-### 🔹 ইস্যু সার্চ করার পাওয়ারফুল ফিল্টারসমূহ:
+### ইস্যু সার্চ করার পাওয়ারফুল ফিল্টারসমূহ:
 \`\`\`text
 # নির্দিষ্ট লেবেলের সমস্ত ওপেন বাগ দেখতে
 is:issue is:open label:"type: bug"
@@ -378,7 +378,7 @@ is:issue is:open assignee:@me
 is:issue is:open milestone:"Sprint 24"
 \`\`\`
 
-### 🔹 GitHub CLI (\`gh\`) দিয়ে টার্মিনাল থেকেই ইস্যু ম্যানেজমেন্ট:
+### GitHub CLI (\`gh\`) দিয়ে টার্মিনাল থেকেই ইস্যু ম্যানেজমেন্ট:
 \`\`\`bash
 # টার্মিনাল থেকে সরাসরি নতুন ইস্যু তৈরি করা
 gh issue create --title "বিকাশ পেমেন্ট বাগ" --body "বিস্তারিত বিবরণ..." --label "type: bug"

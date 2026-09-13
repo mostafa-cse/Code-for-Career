@@ -187,12 +187,12 @@ git stash push -m "WIP: auth config" src/Config/AuthConfig.cs
 | :--- | :--- | :--- |
 | \`git stash push -m "msg"\` | Saves tracked changes with message | Stacked |
 | \`git stash -u -m "msg"\` | Saves tracked + **untracked new files** | Stacked |
-| \`git stash pop\` | Restores top stash & **deletes** it from stack | ❌ Deleted |
-| \`git stash apply\` | Restores top stash & **keeps** it on stack | 🟢 Kept |
+| \`git stash pop\` | Restores top stash & **deletes** it from stack | Deleted |
+| \`git stash apply\` | Restores top stash & **keeps** it on stack | Kept |
 | \`git stash list\` | Displays all saved stashes with indices | Read-only |
 | \`git stash show -p stash@{0}\` | Shows line-by-line diff inside a stash | Read-only |
-| \`git stash drop stash@{n}\` | Deletes a specific stash entry | ❌ Deleted |
-| \`git stash clear\` | Wipes the entire stash stack permanently | ❌ Cleared |
+| \`git stash drop stash@{n}\` | Deletes a specific stash entry | Deleted |
+| \`git stash clear\` | Wipes the entire stash stack permanently | Cleared |
 `,
     contentBn: `# গিট স্ট্যাশ: কোড শেলভিং, পপ, অ্যাপ্লাই, ড্রপ ও আনকমিটেড কাজ সংরক্ষণ
 
@@ -345,12 +345,12 @@ git stash push -m "WIP: auth config only" src/Config/AuthConfig.cs
 | কমান্ড | কাজ ও বিবরণ | স্ট্যাক মেমোরির অবস্থা |
 | :--- | :--- | :--- |
 | \`git stash push -m "msg"\` | মেসেজসহ ট্র্যাকড কোড সাময়িক তুলে রাখা | মেমোরিতে যুক্ত হয় |
-| \`git stash -u -m "msg"\` | নতুন আনট্র্যাকড ফাইলসহ তুলে রাখা ⭐ | মেমোরিতে যুক্ত হয় |
-| \`git stash pop\` | কোড ফিরিয়ে এনে স্ট্যাক থেকে **মুছে ফেলা** | ❌ মুছে যায় |
-| \`git stash apply\` | কোড ফিরিয়ে এনে স্ট্যাকে **অক্ষত রাখা** | 🟢 সংরক্ষিত থাকে |
+| \`git stash -u -m "msg"\` | নতুন আনট্র্যাকড ফাইলসহ তুলে রাখা | মেমোরিতে যুক্ত হয় |
+| \`git stash pop\` | কোড ফিরিয়ে এনে স্ট্যাক থেকে **মুছে ফেলা** | মুছে যায় |
+| \`git stash apply\` | কোড ফিরিয়ে এনে স্ট্যাকে **অক্ষত রাখা** | সংরক্ষিত থাকে |
 | \`git stash list\` | সংরক্ষিত সমস্ত স্ট্যাশের তালিকা দেখা | Read-only |
 | \`git stash show -p stash@{0}\` | স্ট্যাশের ভেতরের লাইন-বাই-লাইন কোড দেখা | Read-only |
-| \`git stash drop stash@{n}\` | নির্দিষ্ট একটি স্ট্যাশ ডিলিট করা | ❌ মুছে যায় |
-| \`git stash clear\` | সমস্ত স্ট্যাশ চিরতরে ডিলিট করা | ❌ সব খালি হয় |
+| \`git stash drop stash@{n}\` | নির্দিষ্ট একটি স্ট্যাশ ডিলিট করা | মুছে যায় |
+| \`git stash clear\` | সমস্ত স্ট্যাশ চিরতরে ডিলিট করা | সব খালি হয় |
 `,
   };

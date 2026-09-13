@@ -49,17 +49,17 @@ Git manages your code using three distinct zones (often called **The Three Trees
 
 \`\`\`
 +---------------------------------------------------------------------------------------------------------------+
-|                                            THE THREE TREES OF GIT                                             |
+| THE THREE TREES OF GIT |
 +-----------------------------------+-----------------------------------+---------------------------------------+
-|        1. WORKING DIRECTORY       |          2. STAGING AREA          |         3. LOCAL REPOSITORY           |
-|            (The Desk)             |         (The Shipping Box)        |             (The Vault)               |
+| 1. WORKING DIRECTORY | 2. STAGING AREA | 3. LOCAL REPOSITORY |
+| (The Desk) | (The Shipping Box) | (The Vault) |
 +-----------------------------------+-----------------------------------+---------------------------------------+
-| • Actual files on your hard disk  | • A binary cache file:            | • The permanent object database:      |
-| • Where you type code in VS Code  |   \`\.git/index\`                  |   \`\.git/objects\`                    |
-| • Changes are live, uncommitted,  | • The preview draft of your next  | • Immutable commits with unique       |
-|   and vulnerable to crashes       |   commit                          |   cryptographic SHA hashes            |
-| • Holds Untracked & Modified      | • Created and updated via:        | • Sealed and stamped via:             |
-|   files                           |   \`git add <file>\`               |   \`git commit -m "msg"\`              |
+| • Actual files on your hard disk | • A binary cache file: | • The permanent object database: |
+| • Where you type code in VS Code | \`\.git/index\` | \`\.git/objects\` |
+| • Changes are live, uncommitted, | • The preview draft of your next | • Immutable commits with unique |
+| and vulnerable to crashes | commit | cryptographic SHA hashes |
+| • Holds Untracked & Modified | • Created and updated via: | • Sealed and stamped via: |
+| files | \`git add <file>\` | \`git commit -m "msg"\` |
 +-----------------------------------+-----------------------------------+---------------------------------------+
 \`\`\`
 
@@ -86,19 +86,19 @@ Files in your project exist in one of three primary lifecycle states:
 
 \`\`\`
 +-----------------------------------------------------------------------------------------------+
-|                                    FILE LIFECYCLE PROGRESSION                                 |
+| FILE LIFECYCLE PROGRESSION |
 +-----------------------------------------------------------------------------------------------+
-|                                                                                               |
-|  [ New File Created ]                                                                         |
-|          │                                                                                    |
-|          ▼                                                                                    |
-|   1. UNTRACKED (??)  ════════( git add )════════>  3. STAGED (M )  ════( git commit )════> [ COMMITTED ]
-|                                                           ▲                                      │
-|  [ Tracked File Edited ]                                  │                                      │
-|          │                                                │                                 (edit again)
-|          ▼                                                │                                      │
-|   2. MODIFIED ( M)   ════════( git add )══════════════════╝ <════════════════════════════════════╝
-|                                                                                               |
+| |
+| [ New File Created ] |
+| │ |
+| ▼ |
+| 1. UNTRACKED (??)  ════════( git add )════════>  3. STAGED (M )  ════( git commit )════> [ COMMITTED ]
+| ▲                                      │
+| [ Tracked File Edited ]                                  │                                      │
+| │                                                │                                 (edit again)
+| ▼                                                │                                      │
+| 2. MODIFIED ( M)   ════════( git add )══════════════════╝ <════════════════════════════════════╝
+| |
 +-----------------------------------------------------------------------------------------------+
 \`\`\`
 
@@ -125,12 +125,12 @@ Mistakes happen in every coding session. Git provides three dedicated commands t
 
 \`\`\`
 +-----------------------+---------------------------------------+---------------------------------------+
-| Goal                  | Command                               | Danger Level                          |
+| Goal | Command | Danger Level |
 +-----------------------+---------------------------------------+---------------------------------------+
-| Unstage a file        | \`git restore --staged <file>\`         | 🟢 Completely Safe (keeps file edits) |
-| Discard local edits   | \`git restore <file>\`                  | 🔴 Permanent Loss of uncommitted code |
-| Legacy unstage        | \`git reset HEAD <file>\`               | 🟢 Completely Safe (keeps file edits) |
-| Delete untracked files| \`git clean -f -d\`                     | 🔴 Permanent Deletion of new files    |
+| Unstage a file | \`git restore --staged <file>\` | Completely Safe (keeps file edits) |
+| Discard local edits | \`git restore <file>\` | Permanent Loss of uncommitted code |
+| Legacy unstage | \`git reset HEAD <file>\` | Completely Safe (keeps file edits) |
+| Delete untracked files| \`git clean -f -d\` | Permanent Deletion of new files |
 +-----------------------+---------------------------------------+---------------------------------------+
 \`\`\`
 
@@ -186,7 +186,7 @@ git reset HEAD
 Neither \`git restore\` nor \`git reset\` will touch **Untracked** files (files Git has never tracked).
 If you build your app and your folder gets cluttered with 50 temporary \`.log\` files, temporary text notes, or test folders:
 
-### ⚠️ Golden Rule: Always Dry-Run First!
+### Golden Rule: Always Dry-Run First!
 \`\`\`bash
 # Step 1: Preview what will be deleted WITHOUT actually deleting anything (-n = dry-run, -d = directories):
 git clean -n -d
@@ -223,17 +223,17 @@ git clean -f -d -x
 
 \`\`\`
 +---------------------------------------------------------------------------------------------------------------+
-|                                            গিটের ৩টি অভ্যন্তরীণ স্তর                                          |
+| গিটের ৩টি অভ্যন্তরীণ স্তর |
 +-----------------------------------+-----------------------------------+---------------------------------------+
-|      ১. ওয়ার্কিং ডিরেক্টরি        |          ২. স্টেজিং এরিয়া          |          ৩. লোকাল রিপোজিটরি           |
-|         (কাজের টেবিল)             |           (প্যাকিং বাক্স)          |              (সিন্দুক)                |
+| ১. ওয়ার্কিং ডিরেক্টরি | ২. স্টেজিং এরিয়া | ৩. লোকাল রিপোজিটরি |
+| (কাজের টেবিল) | (প্যাকিং বাক্স) | (সিন্দুক) |
 +-----------------------------------+-----------------------------------+---------------------------------------+
-| • কম্পিউটারের বাস্তব ফোল্ডার       | • একটি বাইনারি ক্যাশ ফাইল:        | • পার্মানেন্ট অবজেক্ট ডেটাবেজ:       |
-| • যেখানে আপনি VS Code-এ কোড লেখেন |   \`\.git/index\`                  |   \`\.git/objects\`                    |
-| • পরিবর্তনগুলো লাইভ থাকে এবং       | • পরবর্তী কমিটের জন্য সাজানো      | • অপরিবর্তনীয় কমিট হিস্ট্রি এবং      |
-|   সেভ না করলে হারানোর ঝুঁকি থাকে |   খসড়া ড্রাফট                    |   ইউনিক ক্রিপ্টোগ্রাফিক হ্যাশ         |
-| • Untracked ও Modified ফাইল থাকে   | • \`git add <file>\` দিয়ে তৈরি   | • \`git commit -m "msg"\` দিয়ে স্থায়ী|
-|                                   |   ও আপডেট হয়                     |   সিলগালা হয়                         |
+| • কম্পিউটারের বাস্তব ফোল্ডার | • একটি বাইনারি ক্যাশ ফাইল: | • পার্মানেন্ট অবজেক্ট ডেটাবেজ: |
+| • যেখানে আপনি VS Code-এ কোড লেখেন | \`\.git/index\` | \`\.git/objects\` |
+| • পরিবর্তনগুলো লাইভ থাকে এবং | • পরবর্তী কমিটের জন্য সাজানো | • অপরিবর্তনীয় কমিট হিস্ট্রি এবং |
+| সেভ না করলে হারানোর ঝুঁকি থাকে | খসড়া ড্রাফট | ইউনিক ক্রিপ্টোগ্রাফিক হ্যাশ |
+| • Untracked ও Modified ফাইল থাকে | • \`git add <file>\` দিয়ে তৈরি | • \`git commit -m "msg"\` দিয়ে স্থায়ী|
+| | ও আপডেট হয় | সিলগালা হয় |
 +-----------------------------------+-----------------------------------+---------------------------------------+
 \`\`\`
 
@@ -258,13 +258,13 @@ git clean -f -d -x
 
 \`\`\`
 +-----------------------------------------------------------------------------------------------+
-|                                      ফাইলের ৩টি অবস্থা                                        |
+| ফাইলের ৩টি অবস্থা |
 +-----------------------------------------------------------------------------------------------+
-|  নতুন ফাইল তৈরি হলে:                                                                          |
-|  Untracked (??) ══════( git add )══════> Staged (M ) ══════( git commit )══════> Committed    |
-|                                                ▲                                      │       |
-|  পুরনো ফাইলে কোড এডিট করলে:                    │                                 (আবার এডিট)  |
-|  Modified ( M)  ══════( git add )══════════════╝ <════════════════════════════════════╝       |
+| নতুন ফাইল তৈরি হলে: |
+| Untracked (??) ══════( git add )══════> Staged (M ) ══════( git commit )══════> Committed |
+| ▲                                      │ |
+| পুরনো ফাইলে কোড এডিট করলে:                    │                                 (আবার এডিট) |
+| Modified ( M)  ══════( git add )══════════════╝ <════════════════════════════════════╝ |
 +-----------------------------------------------------------------------------------------------+
 \`\`\`
 
@@ -332,7 +332,7 @@ git reset HEAD
 
 \`git restore\` শুধুমাত্র গিট ট্র্যাক করা ফাইলের ওপর কাজ করে। কিন্তু আপনি যদি ১০টি অস্থায়ী নোটপ্যাড ফাইল বা লগ ফাইল তৈরি করে থাকেন যা এখনো আনট্র্যাকড (Untracked):
 
-### ⚠️ গোল্ডেন রুল: আগে প্রিভিউ (Dry-run) দেখুন!
+### গোল্ডেন রুল: আগে প্রিভিউ (Dry-run) দেখুন!
 \`\`\`bash
 # ধাপ ১: প্রিভিউ দেখুন কোনো দরকারি ফাইল ডিলিট হচ্ছে কি না (-n = dry run, -d = directories):
 git clean -n -d

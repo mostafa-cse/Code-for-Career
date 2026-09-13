@@ -61,7 +61,7 @@ A single leaked API key, database connection string, or unreviewed push to the p
 
 ### Why Git Commit History is Permanent:
 Git is an append-only directed acyclic graph (DAG). When you make a commit containing a secret, Git permanently compresses that file into its object database.
-> ⚠️ **The Fatal Mistake:** If you make a second commit that deletes \`.env\`, **the secret is STILL 100% VISIBLE in the previous commit's history!** Anyone can view it by running \`git checkout HEAD~1\` or viewing the commit on GitHub.
+> **Warning - The Fatal Mistake:** If you make a second commit that deletes \`.env\`, **the secret is STILL 100% VISIBLE in the previous commit's history!** Anyone can view it by running \`git checkout HEAD~1\` or viewing the commit on GitHub.
 
 ### Automated Scraping Bots:
 Public GitHub repositories are continuously monitored in real-time by thousands of automated threat-actor bots. If an active AWS, Stripe, or SendGrid key is pushed publicly:
@@ -102,7 +102,7 @@ gitleaks protect --staged
 
 ### Dangerous Anti-Patterns:
 \`\`\`csharp
-// ❌ NEVER DO THIS in source code:
+// NEVER DO THIS in source code:
 var connectionString = "Server=db.prod.internal;Database=master;User Id=sa;Password=SuperSecretPassword123!;";
 \`\`\`
 
@@ -147,7 +147,7 @@ GitHub continuously scans public (and opted-in private) repositories for known s
 * **Partner Program:** GitHub partners with over 100 cloud providers (AWS, Stripe, Google Cloud, Slack, Microsoft).
 * When GitHub detects a leaked key, it automatically alerts the issuing partner. The partner immediately revokes the key or notifies the account owner!
 
-### Push Protection (⭐ The Ultimate Shield):
+### Push Protection (The Ultimate Shield):
 Push Protection intercepts the push **at the network level** before the commit even reaches GitHub's servers:
 1. Go to repository **Settings** > **Code security and analysis**.
 2. Under **Secret scanning**, check **Push protection** (Enable).
@@ -216,7 +216,7 @@ Grant access based on the **Principle of Least Privilege (Zero Trust)**:
 
 ---
 
-## 📋 Emergency Incident Response Playbook
+## Emergency Incident Response Playbook
 
 If a secret is accidentally committed and pushed publicly:
 \`\`\`bash
@@ -242,15 +242,15 @@ git push origin --force --tags
 
 ## ১. Never Commit Secrets (কখনোই সিক্রেট কমিট করবেন না)
 
-### 🔹 গিট হিস্ট্রি চিরস্থায়ী (Immutable History):
+### গিট হিস্ট্রি চিরস্থায়ী (Immutable History):
 Git একটি স্থায়ী অবজেক্ট গ্রাফ হিস্ট্রি মেনে চলে। আপনি যদি ভুল করে কোনো পাসওয়ার্ড বা এপিআই কি কমিট করে ফেলেন, তবে তা Git-এর ইন্টারনাল অবজেক্ট ডেটাবেজে স্থায়ীভাবে সেভ হয়ে যায়।
-> ⚠️ **মারাত্মক ভুল ধারণা:** অনেকে ভুল বুঝতে পেরে নতুন আরেকটি কমিট দিয়ে ফাইলটি ডিলিট করেন বা পরে \`.gitignore\`-এ যোগ করেন। **এতে সমস্যা বিন্দুমাত্র মেটে না!** কারণ আগের কমিটের হিস্ট্রিতে (\`git checkout HEAD~1\`) পাসওয়ার্ডটি হুবহু আগের মতোই রয়ে যায়।
+> **সতর্কতা - মারাত্মক ভুল ধারণা:** অনেকে ভুল বুঝতে পেরে নতুন আরেকটি কমিট দিয়ে ফাইলটি ডিলিট করেন বা পরে \`.gitignore\`-এ যোগ করেন। **এতে সমস্যা বিন্দুমাত্র মেটে না!** কারণ আগের কমিটের হিস্ট্রিতে (\`git checkout HEAD~1\`) পাসওয়ার্ডটি হুবহু আগের মতোই রয়ে যায়।
 
-### 🔹 হ্যাকারদের অটোমেটিক স্ক্র্যাপার রোবট (Bot Scrapers):
+### হ্যাকারদের অটোমেটিক স্ক্র্যাপার রোবট (Bot Scrapers):
 পাবলিক গিটহাব রিপোজিটরির প্রতিটি নতুন কমিট চব্বিশ ঘণ্টা অটোমেটিক বটের মাধ্যমে স্ক্যান হয়। আপনি কোনো AWS, OpenAI বা Stripe কি পাবলিক রিপোতে পুশ করার **৩০ থেকে ৯০ সেকেন্ডের মধ্যে** রোবটরা তা কপি করে ফেলে!
 * হ্যাকাররা চুরি করা AWS কি দিয়ে নিমেষেই হাজার হাজার ডলারের ক্রিপ্টো মাইনিং সার্ভার চালু করে দেয়।
 
-### 🔹 লোকাল মেশিনে সিক্রেট প্রতিরোধ (Pre-commit Hooks):
+### লোকাল মেশিনে সিক্রেট প্রতিরোধ (Pre-commit Hooks):
 কমিট করার আগেই পিসিতে সিক্রেট স্ক্যান করতে \`gitleaks\` ব্যবহার করুন:
 \`\`\`bash
 # গিটলিক্স ইনস্টল করুন
@@ -264,12 +264,12 @@ gitleaks protect --staged
 
 ## ২. API Keys (এপিআই কি নিরাপত্তা)
 
-### 🔹 এপিআই কি কী?
+### এপিআই কি কী?
 * পেমেন্ট গেটওয়ে: Stripe Secret Key (\`sk_live_...\`), বিকাশ বা এসএসএলকমার্জ ক্রেডেনশিয়াল।
 * ক্লাউড সেবা: AWS Access Key ID ও Secret Key (\`AKIA...\`), গুগল ক্লাউড সার্ভিস একাউন্ট কি।
 * এআই ও মেসেজিং: OpenAI এপিআই কি, Twilio বা SendGrid টোকেন।
 
-### 🔹 সুরক্ষার গোল্ডেন রুলস:
+### সুরক্ষার গোল্ডেন রুলস:
 1. **ন্যূনতম পারমিশন (Principle of Least Privilege):** ক্লায়েন্ট বা ব্রাউজার অ্যাপ্লিকেশনে কখনোই অ্যাডমিন বা সিক্রেট কি ব্যবহার করবেন না। শুধু নির্দিষ্ট আইপি বা ডোমেইন সীমাবদ্ধ করে কি তৈরি করুন।
 2. **নিয়মিত কি রোটেশন (Key Rotation):** প্রতি ৯০ দিন পরপর পুরোনো এপিআই কি বাতিল করে নতুন কি চালু করুন।
 3. **পরিবেশ বিভাজন:** ডেভেলপমেন্ট, স্টেজিং এবং প্রোডাকশনের জন্য সম্পূর্ণ আলাদা কি ব্যবহার করুন।
@@ -278,13 +278,13 @@ gitleaks protect --staged
 
 ## ৩. Passwords (ডাটাবেজ ও সার্ভিস পাসওয়ার্ড)
 
-### ❌ কোডের ভেতর যা কখনোই করা যাবে না:
+### কোডের ভেতর যা কখনোই করা যাবে না:
 \`\`\`csharp
 // সোর্স কোডে কখনোই হার্ডকোডেড পাসওয়ার্ড লিখবেন না:
 string conn = "Server=mydb.com;User=admin;Password=MySecretPassword123!;";
 \`\`\`
 
-### 🔹 সঠিক সমাধান: ক্লাউড সিক্রেটস ম্যানেজার
+### সঠিক সমাধান: ক্লাউড সিক্রেটস ম্যানেজার
 প্রফেশনাল সফটওয়্যার আর্কিটেকচারে পাসওয়ার্ড ফাইলে রাখা হয় না; রানটাইমে সার্ভারের ক্লাউড ভল্ট থেকে সরাসরি ইনজেক্ট করা হয়:
 * **ক্লাউড ভল্ট:** AWS Secrets Manager, HashiCorp Vault, Doppler, Azure Key Vault।
 * **ক্লাউড প্ল্যাটফর্ম:** Vercel Environment Variables, Render Secrets, Kubernetes Secrets।
@@ -293,7 +293,7 @@ string conn = "Server=mydb.com;User=admin;Password=MySecretPassword123!;";
 
 ## ৪. Environment Variables (.env ও সিক্রেট হাইজিন)
 
-### 🔹 \`.env\` বনাম \`.env.example\` প্যাটার্ন:
+### \`.env\` বনাম \`.env.example\` প্যাটার্ন:
 * \`.env\` (লোকাল সিক্রেট ফাইল): এটি \`.gitignore\`-এ থাকবে। এখানে আপনার কম্পিউটারের আসল পাসওয়ার্ড থাকবে।
 * \`.env.example\` (ব্লুপ্রিন্ট টেমপ্লেট): এটি গিটহাবে কমিট হবে। এতে কোনো আসল পাসওয়ার্ড থাকবে না, শুধু ভেরিয়েবলের নাম থাকবে যাতে নতুন ডেভেলপার বুঝতে পারেন কী কী কনফিগার করতে হবে।
 
@@ -305,7 +305,7 @@ JWT_SECRET=your_super_secret_jwt_key_here
 STRIPE_KEY=pk_test_dummy_key
 \`\`\`
 
-### 🔹 \`.gitignore\` নিশ্চিত করুন:
+### \`.gitignore\` নিশ্চিত করুন:
 \`\`\`gitignore
 .env
 .env*.local
@@ -317,10 +317,10 @@ STRIPE_KEY=pk_test_dummy_key
 
 ## ৫. Secret Scanning ও Push Protection
 
-### 🔹 গিটহাব সিক্রেট স্ক্যানিং কী?
+### গিটহাব সিক্রেট স্ক্যানিং কী?
 GitHub বিশ্বজুড়ে ১০০টিরও বেশি শীর্ষ ক্লাউড প্রোভাইডারের (AWS, Google Cloud, Stripe, Slack, Microsoft) সাথে পার্টনারশিপ করেছে। কোনো রিপোজিটরিতে এদের চেনা সিক্রেট লিক হওয়ামাত্র গিটহাব সংশ্লিষ্ট কোম্পানিকে অটোমেটিক নোটিফিকেশন পাঠায় এবং কোম্পানি সাথে সাথে কি বাতিল করে একাউন্ট রক্ষা করে।
 
-### 🔹 পুশ প্রটেকশন (Push Protection — ⭐ গেম চেঞ্জার):
+### পুশ প্রটেকশন (Push Protection —  গেম চেঞ্জার):
 গিটহাব রিপোজিটরির **Settings** > **Code security and analysis** থেকে **Push protection** অন করে রাখুন।
 * কোনো ডেভেলপার ভুলবশত কোনো সিক্রেট বা এপিআই কি পুশ করতে গেলে, **গিটহাব টার্মিনাল থেকেই পুশ আটকে দেয়** এবং সার্ভারে কমিট আপলোড হতে দেয় না!
 
@@ -330,7 +330,7 @@ GitHub বিশ্বজুড়ে ১০০টিরও বেশি শী�
 
 আধুনিক সফটওয়্যারের ৮০-৯০% কোডই আসে থার্ড পার্টি ওপেন সোর্স প্যাকেজ (যেমন: npm, NuGet, pip) থেকে। পুরোনো প্যাকেজে কোনো সিকিউরিটি ত্রুটি (CVE) থাকা মানে পুরো প্রজেক্ট হ্যাকিংয়ের ঝুঁকিতে পড়া।
 
-### 🔹 ডিপেন্ডাবটের ৩টি প্রধান সুবিধা:
+### ডিপেন্ডাবটের ৩টি প্রধান সুবিধা:
 1. **Dependabot Alerts:** আপনার \`package-lock.json\` স্ক্যান করে কোনো প্যাকেজে ত্রুটি থাকলে লাল সতর্কবার্তা দেয়।
 2. **Dependabot Security Updates:** সমাধান বের হওয়ামাত্র ডিপেন্ডাবট নিজে থেকেই একটি রেডিমেড পুল রিকোয়েস্ট (PR) ওপেন করে দেয়।
 3. **Dependabot Version Updates (\`.github/dependabot.yml\`):** প্রতি সপ্তাহে সমস্ত প্যাকেজের লেটেস্ট ভার্সন চেক করে আপডেট পিআর পাঠায়:
@@ -372,7 +372,7 @@ updates:
 
 ---
 
-## 🚨 ইমার্জেন্সি ইনসিডেন্ট রেসপন্স (সিক্রেট লিক হলে কী করবেন?)
+## ইমার্জেন্সি ইনসিডেন্ট রেসপন্স (সিক্রেট লিক হলে কী করবেন?)
 
 যদি দুর্ঘটনাবশত পাবলিক রিপোতে কোনো সিক্রেট পুশ হয়ে যায়:
 \`\`\`bash

@@ -110,11 +110,11 @@ git clone git@github.com:mostafa-cse/Code-for-Career.git my-custom-folder
 ### Understanding File States in \`git status\`:
 \`\`\`
 +-----------------------+-------------------------------------------------------------+
-| State                 | Meaning                                                     |
+| State | Meaning |
 +-----------------------+-------------------------------------------------------------+
-| Untracked (??)        | A brand new file that Git has never seen before             |
-| Modified ( M)         | A file that was previously committed, but you changed lines |
-| Staged (M )           | A file whose changes have been packed into the staging area |
+| Untracked (??) | A brand new file that Git has never seen before |
+| Modified ( M) | A file that was previously committed, but you changed lines |
+| Staged (M ) | A file whose changes have been packed into the staging area |
 +-----------------------+-------------------------------------------------------------+
 \`\`\`
 
@@ -193,7 +193,7 @@ git commit -m "feat(auth): implement JWT token generation on user login"
 git commit -am "fix(auth): correct token expiration from seconds to minutes"
 \`\`\`
 
-### 🏆 Writing Great Commit Messages (Conventional Commits):
+### Writing Great Commit Messages (Conventional Commits):
 Top tech companies enforce clean commit conventions:
 * \`feat: add google oauth login\` (new feature)
 * \`fix: resolve null pointer exception in payment gateway\` (bug fix)
@@ -353,11 +353,11 @@ git clone git@github.com:mostafa-cse/Code-for-Career.git my-custom-folder
 ### ফাইলের তিনটি প্রধান অবস্থা:
 \`\`\`
 +-----------------------+-------------------------------------------------------------+
-| অবস্থা                 | অর্থ                                                        |
+| অবস্থা | অর্থ |
 +-----------------------+-------------------------------------------------------------+
-| Untracked (??)        | সম্পূর্ণ নতুন ফাইল যা গিট আগে কখনো দেখেনি                    |
-| Modified ( M)         | পুরনো ফাইল যাতে আপনি নতুন লাইন যোগ বা বিয়োগ করেছেন        |
-| Staged (M )           | ফাইলটি স্টেজিং এরিয়ার বক্সে প্যাক করা হয়েছে               |
+| Untracked (??) | সম্পূর্ণ নতুন ফাইল যা গিট আগে কখনো দেখেনি |
+| Modified ( M) | পুরনো ফাইল যাতে আপনি নতুন লাইন যোগ বা বিয়োগ করেছেন |
+| Staged (M ) | ফাইলটি স্টেজিং এরিয়ার বক্সে প্যাক করা হয়েছে |
 +-----------------------+-------------------------------------------------------------+
 \`\`\`
 

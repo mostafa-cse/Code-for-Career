@@ -252,11 +252,11 @@ git branch -vv
 
 | Command | What it does | Safe for working files? |
 | :--- | :--- | :--- |
-| \`git remote -v\` | Lists remote nicknames & URLs | 🟢 Read-only |
-| \`git fetch origin\` | Downloads remote commits to local database | 🟢 100% Safe (files untouched) |
-| \`git pull origin main\` | Downloads AND merges into working files | 🟡 May cause merge conflicts |
-| \`git push -u origin <branch>\` | Uploads commits & sets tracking | 🟢 Uploads local work |
-| \`git push --force-with-lease\` | Safely updates rewritten remote history | 🟡 Use on private branches only |
+| \`git remote -v\` | Lists remote nicknames & URLs | Read-only |
+| \`git fetch origin\` | Downloads remote commits to local database | 100% Safe (files untouched) |
+| \`git pull origin main\` | Downloads AND merges into working files | May cause merge conflicts |
+| \`git push -u origin <branch>\` | Uploads commits & sets tracking | Uploads local work |
+| \`git push --force-with-lease\` | Safely updates rewritten remote history | Use on private branches only |
 `,
     contentBn: `# রিমোট রিপোজিটরি: রিমোট, git remote, origin, ফেচ বনাম পুল, পুশ, আপস্ট্রিম ও ট্র্যাকিং
 
