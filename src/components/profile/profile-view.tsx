@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Mail,
   Award,
@@ -13,19 +14,40 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
+  Search,
+  Users,
+  Flame,
+  Building2,
+  Target,
+  Trophy,
+  ExternalLink,
+  ShieldCheck,
+  BookOpen,
+  Sparkles,
+  Share2,
+  X,
+  Code2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/components/providers/language-provider";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
 import { CURRICULUM_TRACKS } from "@/lib/curriculum-data";
+import { CandidateSearchModal } from "@/components/profile/candidate-search-modal";
 
 interface ProfileViewProps {
   initialUser: {
     id: string;
     email: string;
+    username: string;
     name: string | null;
     avatarUrl: string | null;
     role?: string;
+    bio?: string;
+    targetRole?: string;
+    targetCompanies?: string[];
+    githubUrl?: string | null;
+    linkedinUrl?: string | null;
+    codeforcesHandle?: string | null;
   };
 }
 
@@ -34,13 +56,40 @@ export function ProfileView({ initialUser }: ProfileViewProps) {
   const router = useRouter();
   const { overallStats, trackStats, syncWithCloud } = useUserProgress();
 
-  const [name, setName] = useState(initialUser.name ?? "");
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [savingName, setSavingName] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  // Form states
+  const [username, setUsername] = useState(initialUser.username || "candidate");
+  const [name, setName] = useState(initialUser.name || "");
+  const [bio, setBio] = useState(
+    initialUser.bio ||
+      "Dedicated software engineering candidate preparing for technical interviews at top software companies in Bangladesh."
+  );
+  const [targetRole, setTargetRole] = useState(
+    initialUser.targetRole || "Software Engineer"
+  );
+  const [targetCompaniesInput, setTargetCompaniesInput] = useState(
+    (initialUser.targetCompanies || [
+      "Enosis",
+      "Therap",
+      "Samsung R&D",
+      "Brain Station 23",
+    ]).join(", ")
+  );
+  const [githubUrl, setGithubUrl] = useState(initialUser.githubUrl || "");
+  const [linkedinUrl, setLinkedinUrl] = useState(initialUser.linkedinUrl || "");
+  const [codeforcesHandle, setCodeforcesHandle] = useState(
+    initialUser.codeforcesHandle || ""
+  );
+
+  const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [syncSuccess, setSyncSuccess] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+
   const [suggestions, setSuggestions] = useState<
     Array<{
       id: string;
@@ -61,35 +110,82 @@ export function ProfileView({ initialUser }: ProfileViewProps) {
       .finally(() => setLoadingSuggestions(false));
   }, []);
 
-  const initials = (name || initialUser.email || "?")
+  const initials = (name || username || initialUser.email || "?")
     .split(" ")
     .map((w) => w[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
 
-  async function handleUpdateName(e: React.FormEvent) {
-    e.preventDefault();
-    if (!name.trim()) return;
-    setSavingName(true);
-    try {
-      const supabase = createClient();
-      await supabase.auth.updateUser({
-        data: { full_name: name.trim() },
-      });
-      await supabase
-        .from("profiles")
-        .update({ name: name.trim() })
-        .eq("id", initialUser.id);
+  const targetCompaniesList = targetCompaniesInput
+    .split(",")
+    .map((c) => c.trim())
+    .filter(Boolean);
 
+  async function handleSaveProfile(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const cleanUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
+      const cleanCompanies = targetCompaniesInput
+        .split(",")
+        .map((c) => c.trim())
+        .filter(Boolean);
+
+      const supabase = createClient();
+      // 1. Update Auth User Metadata
+      await supabase.auth.updateUser({
+        data: {
+          full_name: name.trim(),
+          username: cleanUsername,
+          bio: bio.trim(),
+          target_role: targetRole.trim(),
+          target_companies: cleanCompanies,
+          github_url: githubUrl.trim() || null,
+          linkedin_url: linkedinUrl.trim() || null,
+          codeforces_handle: codeforcesHandle.trim() || null,
+        },
+      });
+
+      // 2. Update profiles table row
+      try {
+        await supabase
+          .from("profiles")
+          .update({
+            name: name.trim(),
+            username: cleanUsername,
+            bio: bio.trim(),
+            target_role: targetRole.trim(),
+            target_companies: cleanCompanies,
+            github_url: githubUrl.trim() || null,
+            linkedin_url: linkedinUrl.trim() || null,
+            codeforces_handle: codeforcesHandle.trim() || null,
+          } as any)
+          .eq("id", initialUser.id);
+      } catch {
+        // Handled if column does not exist yet
+      }
+
+      setUsername(cleanUsername);
       setSavedSuccess(true);
-      setIsEditingName(false);
+      setIsEditModalOpen(false);
       setTimeout(() => setSavedSuccess(false), 3000);
       router.refresh();
     } catch (err) {
-      console.error("Failed to update profile name:", err);
+      console.error("Failed to update profile:", err);
     } finally {
-      setSavingName(false);
+      setSaving(false);
+    }
+  }
+
+  function handleCopyProfileLink() {
+    if (typeof window !== "undefined") {
+      const url = `${window.location.origin}/profile/${username}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url);
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 2500);
+      }
     }
   }
 
@@ -111,189 +207,330 @@ export function ProfileView({ initialUser }: ProfileViewProps) {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
-      {/* Header Profile Card */}
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-xs sm:p-8">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-5">
-            {initialUser.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={initialUser.avatarUrl}
-                alt={name || "User Avatar"}
-                className="h-20 w-20 rounded-2xl object-cover ring-2 ring-border shadow-xs"
-              />
-            ) : (
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-foreground text-background text-2xl font-bold ring-2 ring-border shadow-xs">
-                {initials}
-              </div>
-            )}
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+      {/* Candidate Search Modal */}
+      <CandidateSearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
 
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-extrabold text-foreground sm:text-2xl">
-                  {name || t("Anonymous Learner", "নামহীন শিক্ষার্থী")}
-                </h1>
-                <span className="rounded-full border border-border bg-muted px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  {initialUser.role ?? "USER"}
-                </span>
-              </div>
-              <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Mail className="h-3.5 w-3.5" />
-                <span>{initialUser.email}</span>
-              </p>
+      {/* ─────────────────────────────────────────────────────────────
+          1. PEER & CANDIDATE SEARCH HERO BANNER
+      ───────────────────────────────────────────────────────────── */}
+      <div className="rounded-3xl p-[1.5px] bg-gradient-to-r from-blue-500/30 via-indigo-500/20 to-emerald-500/30 shadow-md">
+        <div className="rounded-[1.45rem] bg-card/95 dark:bg-[#080e1b]/95 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-xl">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20">
+              <Users className="h-5 w-5" />
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2.5">
-            <button
-              type="button"
-              onClick={handleCloudSync}
-              disabled={syncing}
-              className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-60"
-            >
-              {syncing ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : syncSuccess ? (
-                <Check className="h-3.5 w-3.5 text-emerald-500" />
-              ) : (
-                <RefreshCw className="h-3.5 w-3.5" />
-              )}
-              <span>
-                {syncSuccess
-                  ? t("Synced!", "সিঙ্ক হয়েছে!")
-                  : t("Sync Progress", "অগ্রগতি সিঙ্ক")}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleSignOut}
-              disabled={signingOut}
-              className="flex items-center gap-1.5 rounded-lg border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50 hover:border-rose-200 dark:text-rose-400 dark:hover:bg-rose-950/40 disabled:opacity-60"
-            >
-              {signingOut ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <LogOut className="h-3.5 w-3.5" />
-              )}
-              <span>{t("Sign Out", "সাইন আউট")}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Edit Name Form */}
-        <div className="mt-6 border-t border-border pt-4">
-          {!isEditingName ? (
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">
-                {t("Display Name:", "প্রদর্শিত নাম:")}{" "}
-                <strong className="text-foreground">{name || "—"}</strong>
-              </span>
-              <button
-                type="button"
-                onClick={() => setIsEditingName(true)}
-                className="font-semibold text-foreground underline hover:opacity-80"
-              >
-                {t("Edit", "সম্পাদনা")}
-              </button>
-            </div>
-          ) : (
-            <form
-              onSubmit={handleUpdateName}
-              className="flex flex-wrap items-center gap-2"
-            >
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={t("Your name", "আপনার নাম")}
-                className="rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                autoFocus
-              />
-              <button
-                type="submit"
-                disabled={savingName}
-                className="flex items-center gap-1 rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background shadow-xs hover:opacity-90 disabled:opacity-60"
-              >
-                {savingName && <Loader2 className="h-3 w-3 animate-spin" />}
-                {t("Save", "সংরক্ষণ")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsEditingName(false)}
-                className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted"
-              >
-                {t("Cancel", "বাতিল")}
-              </button>
-            </form>
-          )}
-
-          {savedSuccess && (
-            <p className="mt-2 text-xs font-medium text-emerald-600">
-              {t("Name updated successfully!", "নাম সফলভাবে হালনাগাদ হয়েছে!")}
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Progress Overview Section */}
-      <div className="mt-8 space-y-6">
-        <h2 className="text-lg font-bold text-foreground">
-          {t("Learning Progress", "শেখার অগ্রগতি")}
-        </h2>
-
-        {/* Readiness Card */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                <Award className="h-4 w-4 text-amber-500" />
-                <span>{t("Interview Readiness", "ইন্টারভিউ প্রস্তুতি")}</span>
-              </div>
-              <p className="mt-1 text-2xl font-extrabold text-foreground sm:text-3xl">
-                {language === "bn"
-                  ? overallStats.readinessLevelBn
-                  : overallStats.readinessLevelEn}
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <h3 className="text-sm font-bold text-foreground">
+                {t("Find Other Candidates by Username", "ইউজারনেম দিয়ে অন্য সহকর্মীদের খুঁজুন")}
+              </h3>
+              <p className="text-[11px] text-muted-foreground">
                 {t(
-                  "Reach 75% curriculum completion for Interview Ready status.",
-                  "ইন্টারভিউ উপযোগী স্ট্যাটাসের জন্য ৭৫% কারিকুলাম সম্পন্ন করুন।"
+                  "Discover fellow candidates preparing for Enosis, Therap, and Samsung",
+                  "এনোসিস, থেরাপ ও স্যামসাংয়ের জন্য প্রস্তুতরত সহকর্মীদের প্রোফাইল ও অগ্রগতি দেখুন"
                 )}
               </p>
             </div>
-
-            <div className="flex items-center gap-6">
-              <div className="text-center sm:text-right">
-                <span className="text-2xl font-extrabold text-foreground">
-                  {overallStats.percentage}%
-                </span>
-                <p className="text-[11px] text-muted-foreground">
-                  {t("Overall Progress", "মোট অগ্রগতি")}
-                </p>
-              </div>
-              <div className="text-center sm:text-right">
-                <span className="text-2xl font-extrabold text-foreground">
-                  {overallStats.completedLessons}/{overallStats.totalLessons}
-                </span>
-                <p className="text-[11px] text-muted-foreground">
-                  {t("Lessons Completed", "পাঠ সম্পন্ন")}
-                </p>
-              </div>
-            </div>
           </div>
 
-          {/* Progress Bar */}
-          <div className="mt-6 h-2.5 w-full overflow-hidden rounded-full bg-muted">
+          <button
+            type="button"
+            onClick={() => setIsSearchOpen(true)}
+            className="group relative flex items-center justify-between gap-3 w-full sm:w-72 rounded-xl border border-border/80 bg-background/80 px-3.5 py-2 text-xs text-muted-foreground hover:border-blue-500/50 hover:text-foreground transition-all shadow-xs cursor-pointer"
+          >
+            <span className="flex items-center gap-2 truncate">
+              <Search className="h-3.5 w-3.5 text-blue-500" />
+              <span>{t("Search @username, company...", "@ইউজারনেম, কোম্পানি খুঁজুন...")}</span>
+            </span>
+            <kbd className="hidden sm:inline-block rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono font-bold text-muted-foreground border border-border">
+              ⌘K
+            </kbd>
+          </button>
+        </div>
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          2. HEADER PROFILE CARD WITH RADIANT COVER & GLASS
+      ───────────────────────────────────────────────────────────── */}
+      <div className="rounded-3xl p-[1.5px] bg-gradient-to-b from-white/20 via-white/10 to-transparent shadow-xl">
+        <div className="relative overflow-hidden rounded-[1.4rem] border border-border/70 bg-card/95 dark:bg-[#070c18]/95 p-6 sm:p-8 backdrop-blur-2xl">
+          {/* Top Banner Aurora Glow */}
+          <div
+            className="pointer-events-none absolute -top-24 -right-12 h-64 w-96 transform-gpu blur-3xl opacity-30"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.5), rgba(16, 185, 129, 0.4), transparent 70%)",
+            }}
+          />
+
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 relative z-10">
+            {/* Left: Avatar & Candidate Info */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5">
+              {/* Avatar Frame with Status Ring */}
+              <div className="relative shrink-0">
+                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-amber-500 via-blue-500 to-emerald-400 opacity-50 blur-xs" />
+                {initialUser.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={initialUser.avatarUrl}
+                    alt={name || "User Avatar"}
+                    className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-2xl object-cover ring-2 ring-background shadow-lg"
+                  />
+                ) : (
+                  <div className="relative flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-800 text-white text-2xl font-black ring-2 ring-background shadow-lg">
+                    {initials}
+                  </div>
+                )}
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full border border-amber-400/40 bg-amber-500 px-2 py-0.5 text-[9px] font-black uppercase text-white shadow-xs">
+                  PRO
+                </div>
+              </div>
+
+              {/* Identity & Bio */}
+              <div className="space-y-1.5 min-w-0">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <h1 className="text-xl sm:text-2xl font-black text-foreground">
+                    {name || t("Engineering Candidate", "প্রকৌশল পরীক্ষার্থী")}
+                  </h1>
+                  <span className="font-mono text-xs font-bold text-blue-500 dark:text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">
+                    @{username}
+                  </span>
+                  <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    {initialUser.role ?? "USER"}
+                  </span>
+                </div>
+
+                <p className="text-xs font-bold text-muted-foreground">
+                  {targetRole}
+                </p>
+
+                <p className="text-xs text-foreground/80 max-w-lg leading-relaxed">
+                  {bio}
+                </p>
+
+                <p className="flex items-center justify-center sm:justify-start gap-1.5 text-xs text-muted-foreground pt-0.5">
+                  <Mail className="h-3.5 w-3.5" />
+                  <span>{initialUser.email}</span>
+                </p>
+
+                {/* Target Company Tags */}
+                <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mr-1">
+                    {t("Targets:", "লক্ষ্য:")}
+                  </span>
+                  {targetCompaniesList.map((comp) => (
+                    <span
+                      key={comp}
+                      className="rounded bg-muted/80 px-2 py-0.5 text-[10px] font-bold text-foreground border border-border/70 shadow-2xs"
+                    >
+                      {comp}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Actions Suite */}
+            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2.5">
+              <button
+                type="button"
+                onClick={() => setIsEditModalOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-muted/60 px-3.5 py-2 text-xs font-bold text-foreground hover:bg-muted hover:border-border transition-colors shadow-xs cursor-pointer"
+              >
+                <Edit3 className="h-3.5 w-3.5" />
+                <span>{t("Edit Profile", "প্রোফাইল সম্পাদনা")}</span>
+              </button>
+
+              <Link
+                href={`/profile/${username}`}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-blue-500/30 bg-blue-500/10 px-3.5 py-2 text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 transition-colors shadow-xs"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                <span>{t("View Public Page", "পাবলিক প্রোফাইল")}</span>
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleCopyProfileLink}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-xs cursor-pointer"
+              >
+                {copiedLink ? (
+                  <>
+                    <Check className="h-3.5 w-3.5 text-emerald-500" />
+                    <span className="text-emerald-500">{t("Copied!", "কপি হয়েছে!")}</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span>{t("Copy URL", "ইউআরএল")}</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCloudSync}
+                disabled={syncing}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-60 cursor-pointer"
+              >
+                {syncing ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : syncSuccess ? (
+                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                ) : (
+                  <RefreshCw className="h-3.5 w-3.5" />
+                )}
+                <span>
+                  {syncSuccess ? t("Synced!", "সিঙ্ক হয়েছে!") : t("Sync Cloud", "ক্লাউড সিঙ্ক")}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-muted/50 px-3 py-2 text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50 hover:border-rose-200 dark:text-rose-400 dark:hover:bg-rose-950/40 disabled:opacity-60 cursor-pointer"
+              >
+                {signingOut ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <LogOut className="h-3.5 w-3.5" />
+                )}
+                <span>{t("Sign Out", "সাইন আউট")}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          3. CANDIDATE PERFORMANCE HUD (4 CARDS)
+      ───────────────────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1: Readiness */}
+        <div className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {t("Interview Readiness", "ইন্টারভিউ প্রস্তুতি")}
+            </span>
+            <Flame className="h-4 w-4 text-amber-500 animate-pulse" />
+          </div>
+          <div className="my-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-black text-foreground font-mono">
+                {overallStats.percentage}%
+              </span>
+              <span className="text-xs font-bold text-amber-500">
+                {language === "bn"
+                  ? overallStats.readinessLevelBn
+                  : overallStats.readinessLevelEn}
+              </span>
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              {t("Cross 75% for Interview Ready status", "৭৫% সম্পন্ন হলে সম্পূর্ণ প্রস্তুত")}
+            </p>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-foreground transition-all duration-500"
+              className="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full transition-all duration-500"
               style={{ width: `${overallStats.percentage}%` }}
             />
           </div>
         </div>
 
-        {/* Track Breakdown Grid */}
+        {/* Card 2: Lessons */}
+        <div className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {t("Lessons Completed", "পাঠ সম্পন্ন")}
+            </span>
+            <BookOpen className="h-4 w-4 text-blue-500" />
+          </div>
+          <div className="my-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-black text-foreground font-mono">
+                {overallStats.completedLessons}
+              </span>
+              <span className="text-xs text-muted-foreground font-mono">
+                / {overallStats.totalLessons} {t("topics", "টপিক")}
+              </span>
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              {t("Curriculum syllabus coverage", "কারিকুলাম সমাপ্তি অগ্রগতি")}
+            </p>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full bg-blue-500 rounded-full transition-all duration-500"
+              style={{
+                width: `${overallStats.totalLessons > 0 ? (overallStats.completedLessons / overallStats.totalLessons) * 100 : 0}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Card 3: Solved Problems */}
+        <div className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {t("Problems Solved", "কোডিং সমস্যা সমাধান")}
+            </span>
+            <Target className="h-4 w-4 text-emerald-500" />
+          </div>
+          <div className="my-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-black text-foreground font-mono">
+                {overallStats.solvedProblems}
+              </span>
+              <span className="text-xs text-muted-foreground font-mono">
+                {t("solved", "সমাধান")}
+              </span>
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              {t("Bangladeshi employer interview sets", "বিডি কোম্পানি ইন্টারভিউ সেট")}
+            </p>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+              style={{ width: `${Math.min(100, (overallStats.solvedProblems / 40) * 100)}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Card 4: Streak */}
+        <div className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {t("Candidate Rank", "পরীক্ষার্থী র‍্যাংক")}
+            </span>
+            <Trophy className="h-4 w-4 text-amber-400" />
+          </div>
+          <div className="my-2">
+            <span className="text-lg font-black text-foreground block">
+              {t("Active Contender", "সক্রিয় প্রস্তুতকারী")}
+            </span>
+            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">
+              {t("Community Profile Published ✓", "কমিউনিটি প্রোফাইল প্রস্তুত ✓")}
+            </p>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full w-full" />
+          </div>
+        </div>
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          4. TRACK PROGRESS BREAKDOWN
+      ───────────────────────────────────────────────────────────── */}
+      <div className="space-y-4">
+        <h2 className="text-base font-black text-foreground tracking-tight">
+          {t("Track Progress Breakdown", "ট্র্যাক অনুযায়ী প্রস্তুতি")}
+        </h2>
+
         <div className="grid gap-4 sm:grid-cols-2">
           {CURRICULUM_TRACKS.map((track) => {
             const stat = trackStats[track.id] ?? {
@@ -305,7 +542,7 @@ export function ProfileView({ initialUser }: ProfileViewProps) {
             return (
               <div
                 key={track.id}
-                className="rounded-xl border border-border bg-card p-5 shadow-xs"
+                className="rounded-2xl border border-border bg-card p-5 shadow-xs"
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -313,16 +550,16 @@ export function ProfileView({ initialUser }: ProfileViewProps) {
                       {language === "bn" ? track.nameBn : track.nameEn}
                     </h3>
                     <p className="text-xs text-muted-foreground">
-                      {stat.completed} / {stat.total} {t("lessons", "পাঠ")}
+                      {stat.completed} / {stat.total} {t("lessons completed", "পাঠ সম্পন্ন")}
                     </p>
                   </div>
-                  <span className="text-sm font-extrabold text-foreground">
+                  <span className="text-sm font-extrabold text-foreground font-mono">
                     {stat.percentage}%
                   </span>
                 </div>
                 <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-foreground transition-all duration-300"
+                    className="h-full rounded-full bg-gradient-to-r from-blue-600 to-emerald-500 transition-all duration-300"
                     style={{ width: `${stat.percentage}%` }}
                   />
                 </div>
@@ -332,17 +569,19 @@ export function ProfileView({ initialUser }: ProfileViewProps) {
         </div>
       </div>
 
-      {/* Editorial Suggestions Section */}
-      <div className="mt-10 space-y-4">
+      {/* ─────────────────────────────────────────────────────────────
+          5. EDITORIAL SUGGESTIONS SECTION
+      ───────────────────────────────────────────────────────────── */}
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-foreground">
-              {t("My Editorial Suggestions", "আমার সম্পাদনার প্রস্তাবসমূহ")}
+            <h2 className="text-base font-black text-foreground">
+              {t("My Editorial Contributions", "আমার সম্পাদনার প্রস্তাবসমূহ")}
             </h2>
             <p className="text-xs text-muted-foreground">
               {t(
-                "Track the status of contributions and corrections you submitted to lessons.",
-                "পাঠসমূহে আপনার প্রস্তাবিত উন্নয়ন ও সংশোধনের স্ট্যাটাস দেখুন।"
+                "Track the status of contributions and improvements you proposed.",
+                "কারিকুলাম উন্নয়নে আপনার প্রস্তাবসমূহের স্ট্যাটাস ট্র্যাক করুন।"
               )}
             </p>
           </div>
@@ -424,6 +663,167 @@ export function ProfileView({ initialUser }: ProfileViewProps) {
           </div>
         )}
       </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          6. EDIT PROFILE MODAL
+      ───────────────────────────────────────────────────────────── */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in"
+            onClick={() => setIsEditModalOpen(false)}
+          />
+          <div className="relative z-50 w-full max-w-lg rounded-3xl border border-border bg-card p-6 sm:p-7 shadow-2xl animate-in zoom-in-95">
+            <div className="flex items-center justify-between pb-4 border-b border-border">
+              <h3 className="text-base font-bold text-foreground">
+                {t("Edit Candidate Profile", "প্রার্থী প্রোফাইল সম্পাদনা")}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsEditModalOpen(false)}
+                className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveProfile} className="mt-4 space-y-4">
+              {/* Username Field */}
+              <div>
+                <label className="block text-xs font-bold text-foreground mb-1">
+                  {t("Unique Handle (@username)", "ইউনিক হ্যান্ডেল (@ইউজারনেম)")}
+                </label>
+                <div className="relative flex items-center">
+                  <span className="absolute left-3 font-mono text-sm font-bold text-muted-foreground">
+                    @
+                  </span>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) =>
+                      setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))
+                    }
+                    placeholder="e.g. mostafakamal"
+                    className="w-full rounded-xl border border-border bg-background py-2 pl-7 pr-3 text-xs font-mono font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  {t(
+                    "Your public link: bdsoftwareprep.com/profile/",
+                    "আপনার পাবলিক লিংক: bdsoftwareprep.com/profile/"
+                  )}
+                  {username}
+                </p>
+              </div>
+
+              {/* Full Name */}
+              <div>
+                <label className="block text-xs font-bold text-foreground mb-1">
+                  {t("Display Name", "প্রদর্শিত নাম")}
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Mostafa Kamal"
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+
+              {/* Target Role */}
+              <div>
+                <label className="block text-xs font-bold text-foreground mb-1">
+                  {t("Target Role / Headline", "টার্গেট পদবী / হেডলাইন")}
+                </label>
+                <input
+                  type="text"
+                  value={targetRole}
+                  onChange={(e) => setTargetRole(e.target.value)}
+                  placeholder="e.g. Senior Backend / Full-Stack Engineer"
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Bio */}
+              <div>
+                <label className="block text-xs font-bold text-foreground mb-1">
+                  {t("Candidate Bio / Elevator Pitch", "সংক্ষিপ্ত জীবনবৃত্তান্ত")}
+                </label>
+                <textarea
+                  rows={2}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Write a brief intro about your goals and technical passions..."
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Target Companies */}
+              <div>
+                <label className="block text-xs font-bold text-foreground mb-1">
+                  {t("Target Companies (comma separated)", "টার্গেট কোম্পানি (কমা দিয়ে লিখুন)")}
+                </label>
+                <input
+                  type="text"
+                  value={targetCompaniesInput}
+                  onChange={(e) => setTargetCompaniesInput(e.target.value)}
+                  placeholder="e.g. Enosis, Therap, Samsung R&D, Brain Station 23"
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* GitHub & Codeforces handles */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-foreground mb-1">
+                    GitHub URL
+                  </label>
+                  <input
+                    type="url"
+                    value={githubUrl}
+                    onChange={(e) => setGithubUrl(e.target.value)}
+                    placeholder="https://github.com/..."
+                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-foreground mb-1">
+                    Codeforces Handle
+                  </label>
+                  <input
+                    type="text"
+                    value={codeforcesHandle}
+                    onChange={(e) => setCodeforcesHandle(e.target.value)}
+                    placeholder="e.g. tourist"
+                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-2 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="rounded-xl border border-border px-4 py-2 text-xs font-medium text-muted-foreground hover:bg-muted"
+                >
+                  {t("Cancel", "বাতিল")}
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2 text-xs font-bold text-white shadow-md hover:from-blue-500 hover:to-indigo-500 disabled:opacity-60 cursor-pointer"
+                >
+                  {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                  {t("Save Changes", "সংরক্ষণ করুন")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

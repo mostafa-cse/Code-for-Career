@@ -34,8 +34,9 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  // Protect /profile — redirect unauthenticated visitors to login
-  if (pathname.startsWith("/profile") && !user) {
+  // Protect /profile dashboard — redirect unauthenticated visitors to login
+  // Note: /profile/[username] is a public candidate showcase and remains open
+  if (pathname === "/profile" && !user) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/auth/login";
     loginUrl.searchParams.set("redirectTo", pathname);
