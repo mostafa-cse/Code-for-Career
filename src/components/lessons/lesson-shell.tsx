@@ -16,6 +16,7 @@ import {
   Search,
   Trophy,
   ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import { useSearchModal } from "@/components/providers/search-provider";
@@ -27,7 +28,7 @@ import {
   ModuleProgressSelector,
   type LessonStatus,
 } from "@/components/lessons/module-progress-selector";
-import { LessonMilestoneModal } from "@/components/lessons/lesson-milestone-modal";
+import { ConfettiCanvas } from "@/components/lessons/confetti-canvas";
 
 import { ProblemList } from "@/components/lessons/problem-list";
 import { SuggestionModal } from "@/components/suggestions/suggestion-modal";
@@ -73,7 +74,9 @@ export function LessonShell({
   const { openSearch } = useSearchModal();
   const [displayLang, setDisplayLang] = useState<"en" | "bn">(language);
   const [isSuggestOpen, setIsSuggestOpen] = useState(false);
-  const [isMilestoneOpen, setIsMilestoneOpen] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [isBlinking, setIsBlinking] = useState(false);
+  const [confettiKey, setConfettiKey] = useState(0);
 
   // User progress tracking & stats
   const { getLessonStatus, markLesson, subjectStats, overallStats } = useUserProgress();
@@ -91,11 +94,20 @@ export function LessonShell({
     Math.round((subStat.completed / totalLessonsCount) * 100)
   );
 
+  const triggerCompletionCelebration = useCallback(() => {
+    setConfettiKey((k) => k + 1);
+    setShowConfetti(true);
+    setIsBlinking(true);
+    setTimeout(() => {
+      setIsBlinking(false);
+    }, 3200);
+  }, []);
+
   const handleStatusChange = useCallback((newStatus: LessonStatus, oldStatus: LessonStatus) => {
     if (newStatus === "COMPLETED" && oldStatus !== "COMPLETED") {
-      setIsMilestoneOpen(true);
+      triggerCompletionCelebration();
     }
-  }, []);
+  }, [triggerCompletionCelebration]);
 
   // Sync display language when global language changes
   useEffect(() => {
@@ -505,23 +517,31 @@ export function LessonShell({
 
               {/* ── Topic Completion & Module Progress Card ── */}
               <div
-                className={`my-10 rounded-2xl border transition-all backdrop-blur-sm shadow-xs ${
-                  isLessonDone
-                    ? "border-emerald-500/30 bg-emerald-500/[0.03] dark:bg-emerald-950/[0.12]"
-                    : "border-border/80 bg-card/60 dark:bg-card/40"
+                className={`my-10 rounded-2xl border transition-all duration-500 backdrop-blur-sm overflow-hidden ${
+                  isBlinking
+                    ? "border-emerald-500/70 bg-gradient-to-br from-emerald-500/[0.12] via-card to-emerald-500/[0.06] dark:from-emerald-950/[0.35] dark:via-card/70 dark:to-emerald-900/[0.15] ring-2 ring-emerald-500/60 shadow-[0_0_35px_rgba(16,185,129,0.3)] animate-pulse"
+                    : isLessonDone
+                    ? "border-emerald-500/35 bg-gradient-to-br from-emerald-500/[0.05] via-card to-emerald-500/[0.02] dark:from-emerald-950/[0.2] dark:via-card/60 dark:to-card/80 shadow-[0_4px_24px_rgba(16,185,129,0.06)]"
+                    : "border-border/80 bg-card/60 dark:bg-card/40 hover:border-border"
                 }`}
               >
                 {/* Upper Section: Status Overview & Dropdown */}
                 <div className="p-5 sm:p-6 pb-4 border-b border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="flex items-start sm:items-center gap-3.5 min-w-0">
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                      className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all ${
                         isLessonDone
-                          ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-2xs"
+                          ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-2xs"
                           : "border-border/80 bg-muted/60 text-muted-foreground"
-                      }`}
+                      } ${isBlinking ? "scale-105 ring-2 ring-emerald-400 ring-offset-2 ring-offset-background" : ""}`}
                     >
                       <CheckCircle2 className="h-5 w-5" />
+                      {isLessonDone && (
+                        <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        </span>
+                      )}
                     </div>
 
                     <div className="min-w-0 space-y-0.5">
@@ -529,14 +549,18 @@ export function LessonShell({
                         <span className="text-sm sm:text-base font-bold text-foreground tracking-tight">
                           {isLessonDone
                             ? isBn
-                              ? "পাঠটি সম্পন্ন হয়েছে"
+                              ? "পাঠটি সফলভাবে সম্পন্ন হয়েছে"
                               : "Topic Completed"
                             : isBn
                             ? "মডিউল সমাপ্তি অবস্থা"
                             : "Topic Progress"}
                         </span>
                         {isLessonDone ? (
-                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-300">
+                            <span className="relative flex h-1.5 w-1.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                            </span>
                             {isBn ? "সম্পন্ন" : "Completed"}
                           </span>
                         ) : (
@@ -549,8 +573,8 @@ export function LessonShell({
                       <p className="text-xs text-muted-foreground leading-relaxed max-w-lg">
                         {isLessonDone
                           ? isBn
-                            ? "অধ্যায়টি আপনার শেখার তালিকায় সম্পন্ন হিসেবে যুক্ত হয়েছে।"
-                            : "This topic has been marked as complete in your learning roadmap."
+                            ? "দারুণ প্রস্তুতি! অধ্যায়টি আপনার লার্নিং রোডম্যাপে সফলভাবে সংরক্ষিত হয়েছে।"
+                            : "Well done! This topic is marked complete in your candidate preparation roadmap."
                           : isBn
                           ? "এই অধ্যায়ের প্রস্তুতি শেষ হলে সম্পন্ন হিসেবে চিহ্নিত করুন — সাইডবার ও ড্যাশবোর্ডে সাথে সাথে যুক্ত হবে।"
                           : "Mark as completed when you finish this lesson to update your candidate roadmap."}
@@ -595,9 +619,9 @@ export function LessonShell({
                         type="button"
                         onClick={() => {
                           markLesson(subjectSlug, lesson.slug, "COMPLETED");
-                          setIsMilestoneOpen(true);
+                          triggerCompletionCelebration();
                         }}
-                        className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white px-4 h-8 text-xs font-semibold shadow-xs hover:shadow-sm transition-all cursor-pointer"
+                        className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white px-4 h-8 text-xs font-semibold shadow-xs hover:shadow-sm transition-all cursor-pointer"
                       >
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         <span>{isBn ? "পাঠ সম্পন্ন করুন" : "Mark as Completed"}</span>
@@ -606,16 +630,17 @@ export function LessonShell({
                       <>
                         <button
                           type="button"
-                          onClick={() => setIsMilestoneOpen(true)}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-border/80 bg-background/80 hover:bg-muted/80 text-foreground px-3 h-8 text-xs font-medium transition-colors cursor-pointer"
+                          onClick={triggerCompletionCelebration}
+                          title={isBn ? "পুনরায় কনফেটি ছিটান" : "Throw Confetti"}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-border/80 bg-background/80 hover:bg-muted/80 text-muted-foreground hover:text-foreground px-3 h-8 text-xs font-medium transition-colors cursor-pointer active:scale-95"
                         >
-                          <Trophy className="h-3.5 w-3.5 text-amber-500" />
-                          <span>{isBn ? "মাইলস্টোন" : "Milestone"}</span>
+                          <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                          <span>{isBn ? "কনফেটি" : "Confetti"}</span>
                         </button>
                         {nextLesson && (
                           <Link
                             href={`/subjects/${subjectSlug}/${nextLesson.slug}`}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground px-3.5 h-8 text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-primary hover:bg-primary/90 active:scale-[0.98] text-primary-foreground px-3.5 h-8 text-xs font-semibold shadow-xs transition-all cursor-pointer"
                           >
                             <span>{isBn ? "পরবর্তী পাঠ" : "Next Topic"}</span>
                             <ArrowRight className="h-3.5 w-3.5" />
@@ -682,20 +707,13 @@ export function LessonShell({
         lessonTitle={lesson.titleEn}
       />
 
-      {/* Lesson Milestone Congratulations Modal */}
-      <LessonMilestoneModal
-        isOpen={isMilestoneOpen}
-        onClose={() => setIsMilestoneOpen(false)}
-        lesson={lesson}
-        subjectSlug={subjectSlug}
-        subjectNameEn={subjectNameEn}
-        subjectNameBn={subjectNameBn}
-        nextLesson={nextLesson}
-        completedCount={subStat.completed}
-        totalCount={subStat.total || allLessons.length}
-        readinessLevelEn={overallStats.readinessLevelEn}
-        readinessLevelBn={overallStats.readinessLevelBn}
-      />
+      {/* Full-screen celebratory Confetti Engine (non-blocking, no modal) */}
+      {showConfetti && (
+        <ConfettiCanvas
+          key={confettiKey}
+          onComplete={() => setShowConfetti(false)}
+        />
+      )}
     </div>
   );
 }
