@@ -15,7 +15,6 @@ import {
   Languages,
   Search,
   Trophy,
-  Sparkles,
   ArrowRight,
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -65,6 +64,8 @@ export function LessonShell({
   subjectSlug,
   subjectNameEn,
   subjectNameBn,
+  subjectIcon,
+  subjectColor,
   contentEn,
   contentBn,
 }: LessonShellProps) {
@@ -84,6 +85,11 @@ export function LessonShell({
     total: allLessons.length,
     percentage: 0,
   };
+  const totalLessonsCount = subStat.total || allLessons.length || 1;
+  const progressPercent = Math.min(
+    100,
+    Math.round((subStat.completed / totalLessonsCount) * 100)
+  );
 
   const handleStatusChange = useCallback((newStatus: LessonStatus, oldStatus: LessonStatus) => {
     if (newStatus === "COMPLETED" && oldStatus !== "COMPLETED") {
@@ -473,6 +479,7 @@ export function LessonShell({
                       subjectSlug={subjectSlug}
                       lessonSlug={lesson.slug}
                       displayLang={displayLang}
+                      size="sm"
                       onStatusChange={handleStatusChange}
                     />
                   </div>
@@ -496,69 +503,93 @@ export function LessonShell({
                 <ProblemList problems={lesson.problems} displayLang={displayLang} />
               </div>
 
-              {/* ── Bottom USACO Module Progress & Luxury Milestone Completion Gate ── */}
+              {/* ── Topic Completion & Module Progress Card ── */}
               <div
-                className={`my-12 p-[1.5px] rounded-3xl transition-all shadow-lg ${
+                className={`my-10 rounded-2xl border transition-all backdrop-blur-sm shadow-xs ${
                   isLessonDone
-                    ? "bg-gradient-to-r from-amber-400/40 via-emerald-500/40 to-blue-500/40 shadow-emerald-500/10"
-                    : "bg-gradient-to-r from-border via-border/80 to-border shadow-xs"
+                    ? "border-emerald-500/30 bg-emerald-500/[0.03] dark:bg-emerald-950/[0.12]"
+                    : "border-border/80 bg-card/60 dark:bg-card/40"
                 }`}
               >
-                <div
-                  className={`rounded-[1.45rem] p-6 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-xl ${
-                    isLessonDone
-                      ? "bg-card/95 dark:bg-[#080e1b]/95"
-                      : "bg-card/90 dark:bg-card/60"
-                  }`}
-                >
-                  <div className="flex items-center gap-4 text-left w-full md:w-auto">
+                {/* Upper Section: Status Overview & Dropdown */}
+                <div className="p-5 sm:p-6 pb-4 border-b border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5 min-w-0">
                     <div
-                      className={`flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl font-bold shadow-md transition-all ${
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors ${
                         isLessonDone
-                          ? "bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 text-white shadow-amber-500/30 border border-amber-300/40"
-                          : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
+                          ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-2xs"
+                          : "border-border/80 bg-muted/60 text-muted-foreground"
                       }`}
                     >
-                      {isLessonDone ? (
-                        <Trophy className="h-6 w-6 text-white drop-shadow-md animate-pulse" />
-                      ) : (
-                        <CheckCircle2 className="h-6 w-6" />
-                      )}
+                      <CheckCircle2 className="h-5 w-5" />
                     </div>
-                    <div>
+
+                    <div className="min-w-0 space-y-0.5">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-base font-black text-foreground tracking-tight">
+                        <span className="text-sm sm:text-base font-bold text-foreground tracking-tight">
                           {isLessonDone
                             ? isBn
-                              ? "🎉 অভিনন্দন! পাঠটি সফলভাবে সম্পন্ন হয়েছে"
-                              : "🎉 Milestone Achieved! Topic Mastered"
+                              ? "পাঠটি সম্পন্ন হয়েছে"
+                              : "Topic Completed"
                             : isBn
                             ? "মডিউল সমাপ্তি অবস্থা"
-                            : "Module Milestone Progress"}
+                            : "Topic Progress"}
                         </span>
                         {isLessonDone ? (
-                          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-300 shadow-xs">
-                            {isBn ? "সম্পন্ন ✓" : "Completed ✓"}
+                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
+                            {isBn ? "সম্পন্ন" : "Completed"}
                           </span>
                         ) : (
-                          <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-[10px] font-semibold text-blue-600 dark:text-blue-400">
-                            {subStat.completed} / {subStat.total || allLessons.length} {isBn ? "সম্পন্ন" : "Done"}
+                          <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-muted/70 px-2 py-0.5 text-[10px] font-medium font-mono text-muted-foreground">
+                            {subStat.completed} / {totalLessonsCount} {isBn ? "সম্পন্ন" : "Done"}
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1 max-w-lg leading-relaxed">
+
+                      <p className="text-xs text-muted-foreground leading-relaxed max-w-lg">
                         {isLessonDone
                           ? isBn
-                            ? "আপনি এই অধ্যায়টি সফলভাবে শেষ করেছেন — মাইলস্টোন অ্যানিমেশন দেখতে উদযাপন বাটনে ক্লিক করুন।"
-                            : "You've conquered this core topic — click the celebration button to review your milestone stats & confetti."
+                            ? "অধ্যায়টি আপনার শেখার তালিকায় সম্পন্ন হিসেবে যুক্ত হয়েছে।"
+                            : "This topic has been marked as complete in your learning roadmap."
                           : isBn
                           ? "এই অধ্যায়ের প্রস্তুতি শেষ হলে সম্পন্ন হিসেবে চিহ্নিত করুন — সাইডবার ও ড্যাশবোর্ডে সাথে সাথে যুক্ত হবে।"
-                          : "Mark as completed when you finish this lesson — automatically updates your candidate roadmap & readiness index."}
-                      </div>
+                          : "Mark as completed when you finish this lesson to update your candidate roadmap."}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-start md:justify-end">
+                  {/* Status Dropdown */}
+                  <div className="shrink-0 self-start sm:self-center">
+                    <ModuleProgressSelector
+                      subjectSlug={subjectSlug}
+                      lessonSlug={lesson.slug}
+                      displayLang={displayLang}
+                      size="sm"
+                      onStatusChange={handleStatusChange}
+                    />
+                  </div>
+                </div>
+
+                {/* Lower Section: Progress Meter & Primary CTA */}
+                <div className="px-5 sm:px-6 py-3.5 bg-muted/[0.12] rounded-b-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  {/* Progress Meter */}
+                  <div className="flex items-center gap-3 w-full sm:w-auto flex-1 max-w-xs">
+                    <span className="text-[11px] font-medium text-muted-foreground shrink-0">
+                      {isBn ? "অগ্রগতি" : "Progress"}:
+                    </span>
+                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-emerald-500 dark:bg-emerald-400 rounded-full transition-all duration-500 ease-out"
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                    <span className="text-[11px] font-mono font-medium text-muted-foreground shrink-0">
+                      {progressPercent}%
+                    </span>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2 shrink-0 self-start sm:self-center">
                     {!isLessonDone ? (
                       <button
                         type="button"
@@ -566,41 +597,32 @@ export function LessonShell({
                           markLesson(subjectSlug, lesson.slug, "COMPLETED");
                           setIsMilestoneOpen(true);
                         }}
-                        className="group relative inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg hover:from-emerald-500 hover:to-blue-500 transition-all shadow-emerald-500/25 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                        className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white px-4 h-8 text-xs font-semibold shadow-xs hover:shadow-sm transition-all cursor-pointer"
                       >
-                        <CheckCircle2 className="h-4 w-4" />
+                        <CheckCircle2 className="h-3.5 w-3.5" />
                         <span>{isBn ? "পাঠ সম্পন্ন করুন" : "Mark as Completed"}</span>
-                        <Sparkles className="h-3.5 w-3.5 text-amber-300 transition-transform group-hover:rotate-12" />
                       </button>
                     ) : (
                       <>
                         <button
                           type="button"
                           onClick={() => setIsMilestoneOpen(true)}
-                          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 px-4 py-2.5 text-xs font-black text-white shadow-md hover:from-amber-400 hover:to-yellow-500 transition-all shadow-amber-500/25 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-border/80 bg-background/80 hover:bg-muted/80 text-foreground px-3 h-8 text-xs font-medium transition-colors cursor-pointer"
                         >
-                          <Trophy className="h-4 w-4 text-white" />
-                          <span>{isBn ? "মাইলস্টোন উদযাপন" : "View Celebration"}</span>
+                          <Trophy className="h-3.5 w-3.5 text-amber-500" />
+                          <span>{isBn ? "মাইলস্টোন" : "Milestone"}</span>
                         </button>
-
                         {nextLesson && (
                           <Link
                             href={`/subjects/${subjectSlug}/${nextLesson.slug}`}
-                            className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-muted/60 px-4 py-2.5 text-xs font-bold text-foreground hover:bg-muted hover:border-border transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground px-3.5 h-8 text-xs font-semibold shadow-xs transition-all cursor-pointer"
                           >
-                            <span>{isBn ? "পরবর্তী পাঠ" : "Next Lesson"}</span>
-                            <ArrowRight className="h-3.5 w-3.5 text-blue-500" />
+                            <span>{isBn ? "পরবর্তী পাঠ" : "Next Topic"}</span>
+                            <ArrowRight className="h-3.5 w-3.5" />
                           </Link>
                         )}
                       </>
                     )}
-
-                    <ModuleProgressSelector
-                      subjectSlug={subjectSlug}
-                      lessonSlug={lesson.slug}
-                      displayLang={displayLang}
-                      onStatusChange={handleStatusChange}
-                    />
                   </div>
                 </div>
               </div>

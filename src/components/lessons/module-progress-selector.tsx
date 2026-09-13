@@ -18,6 +18,7 @@ interface ModuleProgressSelectorProps {
   lessonSlug: string;
   className?: string;
   displayLang?: "en" | "bn";
+  size?: "sm" | "md";
   onStatusChange?: (newStatus: LessonStatus, oldStatus: LessonStatus) => void;
 }
 
@@ -33,9 +34,10 @@ const STATUS_CONFIG: Record<
 > = {
   NOT_STARTED: {
     labelEn: "Not Started",
-    labelBn: "শুরু হয়নি",
+    labelBn: "শুরু হয়নি",
     icon: Circle,
-    badgeStyle: "bg-muted/60 text-muted-foreground border-border hover:bg-muted",
+    badgeStyle:
+      "bg-background/80 hover:bg-muted/70 text-muted-foreground hover:text-foreground border-border/80 shadow-2xs",
     iconStyle: "text-muted-foreground",
   },
   IN_PROGRESS: {
@@ -43,7 +45,7 @@ const STATUS_CONFIG: Record<
     labelBn: "চলমান",
     icon: Clock,
     badgeStyle:
-      "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30 hover:bg-amber-500/20",
+      "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30 hover:bg-amber-500/20 shadow-2xs",
     iconStyle: "text-amber-600 dark:text-amber-400",
   },
   COMPLETED: {
@@ -51,16 +53,16 @@ const STATUS_CONFIG: Record<
     labelBn: "সম্পন্ন",
     icon: CheckCircle2,
     badgeStyle:
-      "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/25",
+      "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20 shadow-2xs",
     iconStyle: "text-emerald-600 dark:text-emerald-400",
   },
   SKIPPED: {
     labelEn: "Skipped",
-    labelBn: "বাদ দেওয়া",
+    labelBn: "বাদ দেওয়া",
     icon: MinusCircle,
     badgeStyle:
-      "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30 hover:bg-slate-500/20",
-    iconStyle: "text-slate-500",
+      "bg-muted/60 text-muted-foreground border-border/70 hover:bg-muted shadow-2xs",
+    iconStyle: "text-muted-foreground",
   },
 };
 
@@ -69,6 +71,7 @@ export function ModuleProgressSelector({
   lessonSlug,
   className = "",
   displayLang,
+  size = "md",
   onStatusChange,
 }: ModuleProgressSelectorProps) {
   const { language } = useLanguage();
@@ -81,6 +84,11 @@ export function ModuleProgressSelector({
   const currentStatus: LessonStatus = getLessonStatus(subjectSlug, lessonSlug);
   const currentConfig = STATUS_CONFIG[currentStatus];
   const CurrentIcon = currentConfig.icon;
+
+  const sizeClasses =
+    size === "sm"
+      ? "h-8 px-2.5 text-[11px] gap-1.5"
+      : "h-9 px-3 text-xs gap-2";
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -113,7 +121,7 @@ export function ModuleProgressSelector({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all shadow-2xs ${currentConfig.badgeStyle}`}
+        className={`inline-flex items-center rounded-lg border font-medium transition-all ${sizeClasses} ${currentConfig.badgeStyle}`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
@@ -125,8 +133,8 @@ export function ModuleProgressSelector({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-1.5 w-44 rounded-xl border border-border bg-card p-1 shadow-lg backdrop-blur-md animate-in fade-in-80 zoom-in-95">
-          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground border-b border-border/60 mb-1">
+        <div className="absolute right-0 z-50 mt-1.5 w-48 rounded-xl border border-border/80 bg-popover/95 p-1.5 shadow-xl backdrop-blur-md animate-in fade-in-80 zoom-in-95">
+          <div className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground border-b border-border/60 mb-1">
             {isBn ? "মডিউল সমাপ্তি অবস্থা" : "Module Progress"}
           </div>
           {(["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "SKIPPED"] as LessonStatus[]).map(
@@ -140,10 +148,10 @@ export function ModuleProgressSelector({
                   key={status}
                   type="button"
                   onClick={() => handleSelect(status)}
-                  className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                  className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium transition-colors ${
                     isSelected
                       ? "bg-accent text-accent-foreground font-semibold"
-                      : "text-foreground hover:bg-muted"
+                      : "text-foreground hover:bg-muted/70"
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -151,7 +159,7 @@ export function ModuleProgressSelector({
                     <span>{isBn ? cfg.labelBn : cfg.labelEn}</span>
                   </div>
                   {isSelected && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                   )}
                 </button>
               );
