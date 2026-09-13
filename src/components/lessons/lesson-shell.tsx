@@ -76,6 +76,7 @@ export function LessonShell({
   const [isSuggestOpen, setIsSuggestOpen] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isBlinking, setIsBlinking] = useState(false);
+  const [isPageShaking, setIsPageShaking] = useState(false);
   const [confettiKey, setConfettiKey] = useState(0);
 
   // User progress tracking & stats
@@ -98,9 +99,13 @@ export function LessonShell({
     setConfettiKey((k) => k + 1);
     setShowConfetti(true);
     setIsBlinking(true);
+    setIsPageShaking(true);
+    setTimeout(() => {
+      setIsPageShaking(false);
+    }, 450);
     setTimeout(() => {
       setIsBlinking(false);
-    }, 3200);
+    }, 3600);
   }, []);
 
   const handleStatusChange = useCallback((newStatus: LessonStatus, oldStatus: LessonStatus) => {
@@ -224,7 +229,11 @@ export function LessonShell({
   );
 
   return (
-    <div className="relative flex min-h-screen w-full bg-background text-foreground">
+    <div
+      className={`relative flex min-h-screen w-full bg-background text-foreground transition-transform duration-150 ${
+        isPageShaking ? "animate-celebration-bounce" : ""
+      }`}
+    >
       {/* ─────────────────────────────────────────────────────────────
           1. DESKTOP RESIZABLE SIDEBAR (lg and up)
       ───────────────────────────────────────────────────────────── */}
