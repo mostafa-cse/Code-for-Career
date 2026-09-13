@@ -33,7 +33,7 @@ export async function generateMetadata({
   if (!subject || !lesson) return {};
   return {
     title: `${lesson.titleEn} — ${subject.nameEn} | ${SITE_NAME}`,
-    description: `${lesson.titleEn}: A structured lesson for BD software job preparation covering ${subject.nameEn}.`,
+    description: `${lesson.titleEn}: A structured lesson for software job preparation on ${SITE_NAME} covering ${subject.nameEn}.`,
   };
 }
 

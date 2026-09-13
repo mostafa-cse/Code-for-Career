@@ -123,11 +123,11 @@ export interface RoadmapTrack {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. BD Software Engineering Career Roadmap (12 Core Subjects)
+// 1. Software Engineering Career Roadmap (12 Core Subjects)
 // ─────────────────────────────────────────────────────────────────────────────
 export const BD_SWE_ROADMAP: RoadmapTrack = {
   id: "bd-swe",
-  titleEn: "BD Software Engineering Career",
+  titleEn: "Software Engineering Career",
   titleBn: "বাংলাদেশ সফটওয়্যার ক্যারিয়ার রোডম্যাপ",
   descriptionEn: "Complete 12-subject path for Bangladesh tech interviews from C# syntax to System Design.",
   descriptionBn: "C# ভাষার শুরু থেকে সিস্টেম ডিজাইন পর্যন্ত ১২টি মূল বিষয়ের পূর্ণাঙ্গ প্রস্তুতি রোডম্যাপ।",

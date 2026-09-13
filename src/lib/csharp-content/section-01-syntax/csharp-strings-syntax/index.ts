@@ -188,7 +188,7 @@ string lastName  = "Hossain";
 string full = $"{firstName} {lastName}";
 
 // Verbatim path
-string path = @"C:\\Projects\\bd-software-prep";
+string path = @"C:\\Projects\\Code-for-Career";
 
 // Common operations
 Console.WriteLine(full.Length);              // 14

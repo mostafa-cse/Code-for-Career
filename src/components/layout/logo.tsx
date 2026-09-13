@@ -17,7 +17,7 @@ export function LogoIcon({ size = 36, className = "" }: LogoIconProps) {
   return (
     <Image
       src="/logo.png"
-      alt="BD Software Prep"
+      alt="Code For Career"
       width={size}
       height={size}
       className={`rounded-lg ${className}`}
@@ -76,7 +76,7 @@ export function LogoBrand({
         <span
           className={`${titleClass} tracking-tight bg-gradient-to-r from-green-500 via-emerald-400 to-green-600 bg-clip-text text-transparent`}
         >
-          BD Software Prep
+          Code For Career
         </span>
         {showSubtitle && (
           <span className="hidden text-[10px] font-medium text-muted-foreground sm:inline-block">

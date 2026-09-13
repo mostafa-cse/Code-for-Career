@@ -284,7 +284,7 @@ export function LessonMilestoneModal({
   }
 
   function handleShare() {
-    const text = `🎉 I just completed "${lesson.titleEn}" in ${subjectNameEn} on BD Software Prep! Progress: ${completedCount}/${totalCount} lessons (${percentage}%) towards top tech interviews. 🚀`;
+    const text = `🎉 I just completed "${lesson.titleEn}" in ${subjectNameEn} on Code For Career! Progress: ${completedCount}/${totalCount} lessons (${percentage}%) towards top tech interviews. 🚀`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text);
       setCopied(true);

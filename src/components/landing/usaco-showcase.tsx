@@ -29,8 +29,8 @@ export function UsacoShowcase() {
           </h2>
           <p className="mt-6 text-lg md:text-xl font-medium leading-relaxed text-gray-700 dark:text-gray-400">
             {t(
-              "Stop wasting time searching for random problems and tutorials. BD Software Prep provides a comprehensive, organized roadmap carefully designed and crafted for Bangladeshi software engineering candidates – available to everyone, for free.",
-              "বিক্ষিপ্ত টিউটোরিয়াল ও সমস্যা খুঁজে সময় অপচয় করবেন না। BD Software Prep বাংলাদেশের সফটওয়্যার প্রকৌশলী প্রার্থীদের জন্য একটি সুবিন্যস্ত রোডম্যাপ তৈরি করেছে — সম্পূর্ণ বিনামূল্যে।"
+              "Stop wasting time searching for random problems and tutorials. Code For Career provides a comprehensive, organized roadmap carefully designed and crafted for Bangladeshi software engineering candidates – available to everyone, for free.",
+              "বিক্ষিপ্ত টিউটোরিয়াল ও সমস্যা খুঁজে সময় অপচয় করবেন না। Code For Career বাংলাদেশের সফটওয়্যার প্রকৌশলী প্রার্থীদের জন্য একটি সুবিন্যস্ত রোডম্যাপ তৈরি করেছে — সম্পূর্ণ বিনামূল্যে।"
             )}
           </p>
         </div>

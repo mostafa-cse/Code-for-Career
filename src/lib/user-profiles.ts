@@ -568,8 +568,8 @@ export function createProfileFromUserData(user: {
     recentActivity: [
       {
         id: "act-init-1",
-        titleEn: "Joined BD Software Prep Community",
-        titleBn: "বিডি সফটওয়্যার প্রিপ কমিউনিটিতে যোগদান",
+        titleEn: "Joined Code For Career Community",
+        titleBn: "Code For Career কমিউনিটিতে যোগদান",
         trackNameEn: "Community",
         trackNameBn: "কমিউনিটি",
         timestamp: "Recently",

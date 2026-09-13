@@ -133,7 +133,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <p>© {new Date().getFullYear()} BD Software Prep. {t("All rights reserved.", "সর্বস্বত্ব সংরক্ষিত।")}</p>
+          <p>© {new Date().getFullYear()} Code For Career. {t("All rights reserved.", "সর্বস্বত্ব সংরক্ষিত।")}</p>
           <p className="flex items-center gap-4">
             <span>{t("Community Driven", "কমিউনিটি চালিত")}</span>
             <span>•</span>

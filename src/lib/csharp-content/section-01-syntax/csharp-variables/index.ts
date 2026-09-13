@@ -72,7 +72,7 @@ var ratio       = 3.14;              // System.Double
 \`\`\`csharp
 const double Pi       = 3.14159265359;
 const int    MaxRetry  = 3;
-const string AppName   = "BD Software Prep";
+const string AppName   = "Code For Career";
 
 // Accessing const: no object needed
 Console.WriteLine(Pi);
@@ -308,7 +308,7 @@ var shonkha     = 50;                 // System.Int32
 \`\`\`csharp
 const double Pi       = 3.14159265359;
 const int    MaxRetry  = 3;
-const string AppName   = "BD Software Prep";
+const string AppName   = "Code For Career";
 \`\`\`
 
 ### \`readonly\` — রানটাইম ধ্রুবক (Java-র \`final\`-এর সমতুল্য)

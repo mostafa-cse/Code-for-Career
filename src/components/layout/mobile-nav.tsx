@@ -64,7 +64,7 @@ export function MobileNav() {
               <div className="flex items-center gap-2">
                 <LogoIcon size={24} />
                 <span className="text-base font-bold bg-gradient-to-r from-green-500 via-emerald-400 to-green-600 bg-clip-text text-transparent">
-                  BD Software Prep
+                  Code For Career
                 </span>
               </div>
               <button

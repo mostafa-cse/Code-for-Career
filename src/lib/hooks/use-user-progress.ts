@@ -13,7 +13,8 @@ export interface ProgressData {
   skippedProblems?: string[]; // problemId
 }
 
-const STORAGE_KEY = "bd-software-prep:user-progress";
+const STORAGE_KEY = "code-for-career:user-progress";
+const LEGACY_STORAGE_KEY = "bd-software-prep:user-progress";
 
 const DEFAULT_PROGRESS: ProgressData = {
   completedLessons: [],
@@ -43,7 +44,16 @@ function emitChange() {
 
 function getSnapshot(): string {
   if (typeof window === "undefined") return JSON.stringify(DEFAULT_PROGRESS);
-  const data = localStorage.getItem(STORAGE_KEY);
+  let data = localStorage.getItem(STORAGE_KEY);
+  if (!data) {
+    const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (legacy) {
+      data = legacy;
+      try {
+        localStorage.setItem(STORAGE_KEY, legacy);
+      } catch {}
+    }
+  }
   if (!data) return JSON.stringify(DEFAULT_PROGRESS);
   return data;
 }

@@ -17,7 +17,8 @@ type LanguageContextValue = {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-const STORAGE_KEY = "bd-software-prep:language";
+const STORAGE_KEY = "code-for-career:language";
+const LEGACY_STORAGE_KEY = "bd-software-prep:language";
 
 const listeners = new Set<() => void>();
 
@@ -32,7 +33,16 @@ function subscribe(callback: () => void) {
 
 function getSnapshot(): Language {
   if (typeof window === "undefined") return "en";
-  const stored = localStorage.getItem(STORAGE_KEY);
+  let stored = localStorage.getItem(STORAGE_KEY);
+  if (!stored) {
+    const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (legacy) {
+      stored = legacy;
+      try {
+        localStorage.setItem(STORAGE_KEY, legacy);
+      } catch {}
+    }
+  }
   return stored === "bn" ? "bn" : "en";
 }
 

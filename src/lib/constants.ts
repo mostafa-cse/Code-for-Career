@@ -106,7 +106,7 @@ export const SUBJECTS: readonly SubjectMeta[] = [
   },
 ] as const;
 
-export const SITE_NAME = "BD Software Prep";
+export const SITE_NAME = "Code For Career";
 export const SITE_DESCRIPTION =
-  "A free, bilingual learning platform for Bangladesh software job preparation. Curated resources, practice problems, and structured roadmaps.";
-export const SITE_URL = "https://bd-software-prep.vercel.app";
+  "A free, bilingual learning platform for software engineering job preparation. Curated resources, practice problems, and structured roadmaps.";
+export const SITE_URL = "https://code-for-career.vercel.app";

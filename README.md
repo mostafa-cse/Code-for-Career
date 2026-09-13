@@ -1,6 +1,6 @@
-# Code-for-Career
+# Code For Career
 
-A structured curriculum and platform for software engineering job preparation in Bangladesh (BD Software Prep).
+A structured curriculum and platform for software engineering job preparation (Code For Career).
 
 ## Getting Started
 

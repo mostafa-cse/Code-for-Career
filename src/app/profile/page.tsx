@@ -6,7 +6,7 @@ import { SITE_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `My Candidate Profile — ${SITE_NAME}`,
-  description: "Manage your BD Software Prep profile, username, interview readiness, and search peer candidates.",
+  description: `Manage your ${SITE_NAME} profile, username, interview readiness, and search peer candidates.`,
 };
 
 export default async function ProfilePage() {

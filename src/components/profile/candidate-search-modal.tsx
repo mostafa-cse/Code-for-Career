@@ -294,7 +294,7 @@ export function CandidateSearchModal({
               {t("Press ESC to close", "বন্ধ করতে ESC চাপুন")}
             </span>
             <span className="text-foreground font-semibold">
-              BD Software Engineering Community
+              Code For Career Community
             </span>
           </div>
         </div>

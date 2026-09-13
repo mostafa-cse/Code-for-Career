@@ -26,7 +26,7 @@ export async function generateMetadata({
   if (profile) {
     return {
       title: `${profile.name} (@${profile.username}) — Candidate Profile | ${SITE_NAME}`,
-      description: `${profile.name} is preparing for software engineering interviews at ${profile.targetCompanies.join(", ")} on BD Software Prep.`,
+      description: `${profile.name} is preparing for software engineering interviews at ${profile.targetCompanies.join(", ")} on ${SITE_NAME}.`,
       openGraph: {
         title: `${profile.name} (@${profile.username}) — ${profile.targetRole}`,
         description: profile.bio,
