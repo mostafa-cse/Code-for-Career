@@ -6,6 +6,7 @@ import type { SubjectMeta } from "@/lib/constants";
 import { type LocalLesson, type SubjectCategory } from "@/lib/lessons-data";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
 import { useLanguage } from "@/components/providers/language-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 import {
   CheckCircle2,
   Clock,
@@ -37,6 +38,7 @@ export function UsacoSubjectView({
 }: UsacoSubjectViewProps) {
   const { language } = useLanguage();
   const isBn = language === "bn";
+  const { user, openAuthModal } = useAuth();
 
   const {
     getLessonStatus,
@@ -399,6 +401,14 @@ export function UsacoSubjectView({
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
+                              if (!user) {
+                                openAuthModal(
+                                  isBn
+                                    ? "পাঠের অগ্রগতি পরিবর্তন করতে অনুগ্রহ করে সাইন ইন করুন।"
+                                    : "Please sign in to track your learning progress and mark lessons as completed."
+                                );
+                                return;
+                              }
                               cycleLessonStatus(subject.slug, lesson.slug);
                             }}
                             className="mt-0.5 shrink-0 rounded-full focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer p-0.5"

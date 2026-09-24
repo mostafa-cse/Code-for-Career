@@ -11,6 +11,7 @@ import { RoadmapStepsView } from "./roadmap-steps-view";
 import { RoadmapDrawer } from "./roadmap-drawer";
 import { RoadmapSidebar } from "./roadmap-sidebar";
 import { useLanguage } from "@/components/providers/language-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 import {
   Network,
   ListOrdered,
@@ -23,6 +24,7 @@ import {
 
 export function RoadmapView() {
   const { language, t } = useLanguage();
+  const { user, openAuthModal } = useAuth();
 
   // The website's flagship career roadmap
   const currentTrack: RoadmapTrack = BD_SWE_ROADMAP;
@@ -104,6 +106,15 @@ export function RoadmapView() {
   }
 
   function handleToggleProblem(problemId: string) {
+    if (!user) {
+      openAuthModal(
+        language === "bn"
+          ? "রোডম্যাপে প্রবলেমের অগ্রগতি ট্র্যাক করতে অনুগ্রহ করে সাইন ইন করুন।"
+          : "Please sign in to track your roadmap problem progress across devices."
+      );
+      return;
+    }
+
     setCompletedProblemIds((prev) => {
       const next = new Set(prev);
       if (next.has(problemId)) {
@@ -124,6 +135,15 @@ export function RoadmapView() {
   }
 
   function handleToggleStar(problemId: string) {
+    if (!user) {
+      openAuthModal(
+        language === "bn"
+          ? "প্রবলেম ফেভারিট বা বুকমার্ক করতে অনুগ্রহ করে সাইন ইন করুন।"
+          : "Please sign in to bookmark roadmap problems."
+      );
+      return;
+    }
+
     setStarredProblemIds((prev) => {
       const next = new Set(prev);
       if (next.has(problemId)) {
@@ -156,6 +176,15 @@ export function RoadmapView() {
   }
 
   function handleResetProgress() {
+    if (!user) {
+      openAuthModal(
+        language === "bn"
+          ? "অগ্রগতি পরিবর্তন করতে অনুগ্রহ করে সাইন ইন করুন।"
+          : "Please sign in to manage and reset your progress."
+      );
+      return;
+    }
+
     if (
       window.confirm(
         language === "bn"

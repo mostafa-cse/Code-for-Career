@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
 import { useLanguage } from "@/components/providers/language-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 
 export type LessonStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" | "SKIPPED";
 
@@ -80,6 +81,7 @@ export function ModuleProgressSelector({
   const activeLang = displayLang || language;
   const isBn = activeLang === "bn";
   const { getLessonStatus, markLesson } = useUserProgress();
+  const { user, openAuthModal } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [openUpward, setOpenUpward] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -126,10 +128,19 @@ export function ModuleProgressSelector({
   }, [isOpen]);
 
   function handleSelect(status: LessonStatus) {
+    if (!user) {
+      setIsOpen(false);
+      openAuthModal(
+        isBn
+          ? "পাঠের অগ্রগতি (Status) পরিবর্তন করতে অনুগ্রহ করে সাইন ইন করুন।"
+          : "Please sign in to update your lesson progress and track your learning journey."
+      );
+      return;
+    }
     const oldStatus = currentStatus;
-    markLesson(subjectSlug, lessonSlug, status);
+    const ok = markLesson(subjectSlug, lessonSlug, status);
     setIsOpen(false);
-    if (status !== oldStatus && onStatusChange) {
+    if (ok && status !== oldStatus && onStatusChange) {
       onStatusChange(status, oldStatus);
     }
   }

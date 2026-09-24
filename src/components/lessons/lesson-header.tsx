@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CheckCircle2, ChevronRight, Clock, Edit3 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
+import { useAuth } from "@/components/providers/auth-provider";
 import { SubjectIcon, SUBJECT_COLOR_STYLES } from "@/components/layout/icons";
 import { SuggestionModal } from "@/components/suggestions/suggestion-modal";
 import type { LocalLesson } from "@/lib/lessons-data";
@@ -38,6 +39,7 @@ export function LessonHeader({
   onLanguageToggle,
 }: LessonHeaderProps) {
   const { t } = useLanguage();
+  const { user, openAuthModal } = useAuth();
   const { isLessonCompleted, markLesson } = useUserProgress();
   const [isSuggestOpen, setIsSuggestOpen] = useState(false);
 
@@ -45,6 +47,14 @@ export function LessonHeader({
   const styles = SUBJECT_COLOR_STYLES[subjectColor] ?? SUBJECT_COLOR_STYLES.blue;
 
   function handleMarkComplete() {
+    if (!user) {
+      openAuthModal(
+        language === "bn"
+          ? "পাঠ সম্পন্ন হিসেবে চিহ্নিত করতে অনুগ্রহ করে সাইন ইন করুন।"
+          : "Please sign in to mark this lesson as completed and track your roadmap."
+      );
+      return;
+    }
     markLesson(
       subjectSlug,
       lesson.slug,

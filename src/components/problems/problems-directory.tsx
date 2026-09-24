@@ -28,6 +28,7 @@ import {
   Check,
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
 import {
   ALL_PROBLEMS,
@@ -43,6 +44,7 @@ const DIFFICULTY_STYLES = {
 
 export function ProblemsDirectory() {
   const { language, t } = useLanguage();
+  const { user, openAuthModal } = useAuth();
   const { markProblem } = useUserProgress();
 
   // Local state for completed and starred problem IDs (hydrated from localStorage)
@@ -108,6 +110,15 @@ export function ProblemsDirectory() {
 
   // Sync completion toggle
   function handleToggleCompleted(id: string) {
+    if (!user) {
+      openAuthModal(
+        language === "bn"
+          ? "প্রবলেম সমাধান সংরক্ষণ করতে অনুগ্রহ করে সাইন ইন করুন।"
+          : "Please sign in to track your solved problems across devices."
+      );
+      return;
+    }
+
     setCompletedIds((prev) => {
       const next = new Set(prev);
       const isNowDone = !next.has(id);
@@ -129,6 +140,15 @@ export function ProblemsDirectory() {
 
   // Sync star toggle
   function handleToggleStarred(id: string) {
+    if (!user) {
+      openAuthModal(
+        language === "bn"
+          ? "প্রবলেম ফেভারিট বা বুকমার্ক করতে অনুগ্রহ করে সাইন ইন করুন।"
+          : "Please sign in to bookmark and favorite problems."
+      );
+      return;
+    }
+
     setStarredIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {

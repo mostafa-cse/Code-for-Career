@@ -82,9 +82,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
         <ThemeProvider>
-          <AuthProvider>
-            <SearchProvider>
-              <LanguageProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <SearchProvider>
                 <Suspense fallback={null}>
                   <RouteTransitionLoader />
                 </Suspense>
@@ -92,9 +92,9 @@ export default function RootLayout({
                 <div className="flex-1 flex flex-col">{children}</div>
                 <Footer />
                 <SearchModal />
-              </LanguageProvider>
-            </SearchProvider>
-          </AuthProvider>
+              </SearchProvider>
+            </AuthProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

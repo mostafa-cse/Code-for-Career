@@ -16,6 +16,7 @@ import {
   ChevronRight,
   Palette,
 } from "lucide-react";
+import { useAuth } from "@/components/providers/auth-provider";
 
 export type HighlightColor = "yellow" | "green" | "blue" | "purple" | "orange";
 
@@ -280,6 +281,7 @@ export function LessonContentHighlighter({
   onCloseDrawer,
   onHighlightsCountChange,
 }: LessonContentHighlighterProps) {
+  const { user, openAuthModal } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const storageKey = `c4c_hl_${subjectSlug}_${lessonSlug}_${displayLang}`;
 
@@ -490,6 +492,16 @@ export function LessonContentHighlighter({
   // Apply highlight from color swatch click
   const applyColor = useCallback(
     (color: HighlightColor) => {
+      if (!user) {
+        setPopover((prev) => ({ ...prev, isOpen: false }));
+        openAuthModal(
+          displayLang === "bn"
+            ? "পড়ার অংশ হাইলাইট এবং নোট সংরক্ষণ করতে সাইন ইন প্রয়োজন।"
+            : "Sign in to highlight text and save study notes across all your devices."
+        );
+        return;
+      }
+
       if (popover.mode === "new_selection" && popover.range && containerRef.current) {
         const range = popover.range;
         const text = range.toString().trim();
@@ -541,12 +553,18 @@ export function LessonContentHighlighter({
         setPopover((prev) => ({ ...prev, isOpen: false }));
       }
     },
-    [popover, highlights, persistHighlights]
+    [user, openAuthModal, displayLang, popover, highlights, persistHighlights]
   );
 
   // Remove single highlight
   const removeHighlight = useCallback(
     (id: string) => {
+      if (!user) {
+        setPopover((prev) => ({ ...prev, isOpen: false }));
+        openAuthModal();
+        return;
+      }
+
       const updated = highlights.filter((h) => h.id !== id);
       persistHighlights(updated);
 
@@ -566,11 +584,16 @@ export function LessonContentHighlighter({
 
       setPopover((prev) => ({ ...prev, isOpen: false }));
     },
-    [highlights, persistHighlights]
+    [user, openAuthModal, highlights, persistHighlights]
   );
 
   // Clear all highlights in current lesson
   const clearAllHighlights = useCallback(() => {
+    if (!user) {
+      openAuthModal();
+      return;
+    }
+
     persistHighlights([]);
     if (containerRef.current) {
       const marks = containerRef.current.querySelectorAll(
@@ -585,7 +608,7 @@ export function LessonContentHighlighter({
         parent?.normalize();
       });
     }
-  }, [persistHighlights]);
+  }, [user, openAuthModal, persistHighlights]);
 
   // Jump to highlight in content
   const jumpToHighlight = useCallback((id: string) => {

@@ -83,10 +83,15 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   );
 }
 
+const fallbackContext: LanguageContextValue = {
+  language: "en",
+  setLanguage: () => {},
+  t: function <T>(en: T): T {
+    return en;
+  },
+};
+
 export function useLanguage(): LanguageContextValue {
   const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
-  }
-  return context;
+  return context ?? fallbackContext;
 }

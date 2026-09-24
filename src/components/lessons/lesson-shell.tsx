@@ -20,6 +20,7 @@ import {
   Highlighter,
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 import { useSearchModal } from "@/components/providers/search-provider";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { FullscreenToggle } from "@/components/layout/fullscreen-toggle";
@@ -83,6 +84,9 @@ export function LessonShell({
   const [confettiKey, setConfettiKey] = useState(0);
   const [isHighlightsDrawerOpen, setIsHighlightsDrawerOpen] = useState(false);
   const [highlightsCount, setHighlightsCount] = useState(0);
+
+  // Authentication
+  const { user, openAuthModal } = useAuth();
 
   // User progress tracking & stats
   const { getLessonStatus, markLesson, subjectStats, overallStats } = useUserProgress();
@@ -665,6 +669,14 @@ export function LessonShell({
                       <button
                         type="button"
                         onClick={() => {
+                          if (!user) {
+                            openAuthModal(
+                              isBn
+                                ? "পাঠ সম্পন্ন হিসেবে চিহ্নিত করতে অনুগ্রহ করে সাইন ইন করুন।"
+                                : "Please sign in to mark this lesson as completed and update your candidate roadmap."
+                            );
+                            return;
+                          }
                           markLesson(subjectSlug, lesson.slug, "COMPLETED");
                           triggerCompletionCelebration();
                         }}

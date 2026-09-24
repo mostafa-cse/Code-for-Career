@@ -3,6 +3,7 @@
 import { useSyncExternalStore, useMemo } from "react";
 import { CURRICULUM_SUBJECTS, CURRICULUM_TRACKS } from "@/lib/curriculum-data";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/components/providers/auth-provider";
 
 export interface ProgressData {
   completedLessons: string[]; // key: `${subjectSlug}:${lessonSlug}`
@@ -63,6 +64,8 @@ function getServerSnapshot(): string {
 }
 
 export function useUserProgress() {
+  const { user, openAuthModal } = useAuth();
+
   const rawData = useSyncExternalStore(
     subscribe,
     getSnapshot,
@@ -105,7 +108,14 @@ export function useUserProgress() {
     subjectSlug: string,
     lessonSlug: string,
     status: "COMPLETED" | "IN_PROGRESS" | "SKIPPED" | "NOT_STARTED"
-  ) {
+  ): boolean {
+    if (!user) {
+      openAuthModal(
+        "You must be signed in to mark topics as completed and update your candidate roadmap."
+      );
+      return false;
+    }
+
     const key = `${subjectSlug}:${lessonSlug}`;
     const newCompleted = (progress.completedLessons || []).filter((k) => k !== key);
     const newInProgress = (progress.inProgressLessons || []).filter((k) => k !== key);
@@ -161,9 +171,11 @@ export function useUserProgress() {
         }
       })();
     }
+
+    return true;
   }
 
-  function cycleLessonStatus(subjectSlug: string, lessonSlug: string) {
+  function cycleLessonStatus(subjectSlug: string, lessonSlug: string): boolean {
     const current = getLessonStatus(subjectSlug, lessonSlug);
     const nextMap: Record<
       "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" | "SKIPPED",
@@ -174,7 +186,7 @@ export function useUserProgress() {
       COMPLETED: "SKIPPED",
       SKIPPED: "NOT_STARTED",
     };
-    markLesson(subjectSlug, lessonSlug, nextMap[current]);
+    return markLesson(subjectSlug, lessonSlug, nextMap[current]);
   }
 
   function getProblemStatus(
@@ -189,7 +201,14 @@ export function useUserProgress() {
   function markProblem(
     problemId: string,
     status: "COMPLETED" | "IN_PROGRESS" | "SKIPPED" | "NOT_STARTED"
-  ) {
+  ): boolean {
+    if (!user) {
+      openAuthModal(
+        "You must be signed in to mark practice problems as completed."
+      );
+      return false;
+    }
+
     const newCompleted = (progress.completedProblems || []).filter((k) => k !== problemId);
     const newInProgress = (progress.inProgressProblems || []).filter((k) => k !== problemId);
     const newSkipped = (progress.skippedProblems || []).filter((k) => k !== problemId);
@@ -208,9 +227,11 @@ export function useUserProgress() {
       inProgressProblems: newInProgress,
       skippedProblems: newSkipped,
     });
+
+    return true;
   }
 
-  function cycleProblemStatus(problemId: string) {
+  function cycleProblemStatus(problemId: string): boolean {
     const current = getProblemStatus(problemId);
     const nextMap: Record<
       "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" | "SKIPPED",
@@ -221,7 +242,7 @@ export function useUserProgress() {
       COMPLETED: "SKIPPED",
       SKIPPED: "NOT_STARTED",
     };
-    markProblem(problemId, nextMap[current]);
+    return markProblem(problemId, nextMap[current]);
   }
 
   async function syncWithCloud() {

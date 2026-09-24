@@ -14,6 +14,7 @@ import {
   Building2,
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 import type { LocalProblem } from "@/lib/lessons-data";
 
 type ProblemStatus = "NOT_ATTEMPTED" | "SOLVING" | "SOLVED" | "REVIEWING";
@@ -32,6 +33,7 @@ interface ProblemListProps {
 
 export function ProblemList({ problems, displayLang }: ProblemListProps) {
   const { language } = useLanguage();
+  const { user, openAuthModal } = useAuth();
   const activeLang = displayLang || language;
   const isBn = activeLang === "bn";
 
@@ -61,6 +63,15 @@ export function ProblemList({ problems, displayLang }: ProblemListProps) {
 
   // Cycle status on click (USACO Guide behavior)
   const cycleStatus = (problemName: string) => {
+    if (!user) {
+      openAuthModal(
+        isBn
+          ? "প্রবলেম সমাধান স্ট্যাটাস ট্র্যাক করতে অনুগ্রহ করে সাইন ইন করুন।"
+          : "Please sign in to track your problem-solving progress and practice history."
+      );
+      return;
+    }
+
     setStatuses((prev) => {
       const current = prev[problemName] || "NOT_ATTEMPTED";
       let next: ProblemStatus = "SOLVED";
