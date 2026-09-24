@@ -88,16 +88,12 @@ Git was created in **2005 by Linus Torvalds**, the creator of the Linux operatin
 
 ### The Problem: Life Without Version Control
 Without version control, developers resorted to saving chaotic file copies on their desktops:
-\`\`\`
-Final_Project/
-├── app_v1.cs
-├── app_v2_working.cs
-├── app_final.cs
-├── app_final_edited.cs
-├── app_final_REAL_final.cs
-└── app_final_submitted_by_rahim_FINAL.cs  <-- Which one is the real code?!
-\`\`\`
-If two developers edit \`app_final.cs\` at the same time, whoever saves last accidentally overwrites and deletes the other developer's work!
+
+<FileChaosComparison lang="en" />
+
+If two developers edit files at the same time, whoever saves last accidentally overwrites and permanently destroys the other developer's work!
+
+<div id="the-solution-a-version-control-system-vcs" className="scroll-mt-20" />
 
 ### The Solution: A Version Control System (VCS)
 A Version Control System solves all of these problems automatically:
@@ -116,17 +112,7 @@ Many beginners mistakenly use the words "Git" and "GitHub" interchangeably. They
 * **Git is like a Camera**: It is a physical tool installed on your computer. You use it locally to take photos (snapshots) of your code. You do **not** need the internet to use your camera.
 * **GitHub is like Instagram**: It is a website in the cloud. You upload the photos you took with your camera to Instagram so your friends can view, comment, and collaborate on them.
 
-\`\`\`
-+------------------------------------+               +------------------------------------+
-| GIT (Local) | | GITHUB (Cloud) |
-+------------------------------------+               +------------------------------------+
-| • A command-line software tool | git push | • A website / cloud platform |
-| • Runs entirely on your computer | ============> | • Owned by Microsoft |
-| • 100% offline (no internet needed)| | • Requires internet connection |
-| • Tracks history, commits, branches| git pull | • Remote backup, Pull Requests, |
-| • Open-source & completely free | <============ | code reviews, CI/CD Actions |
-+------------------------------------+               +------------------------------------+
-\`\`\`
+<GitVsGitHubCard lang="en" />
 
 > [!NOTE]
 > There are alternatives to GitHub that also work with Git! Examples include **GitLab**, **Bitbucket**, and self-hosted **Gitea**. Git is the open standard; GitHub is just the most popular online hosting service.
@@ -240,16 +226,7 @@ This will show your name, email, and config file location (usually \`~/.gitconfi
 
 To use Git effectively, you must understand the journey a file takes from when you type code to when it is safely stored in the cloud.
 
-\`\`\`
-+-------------------------+             +-------------------------+             +-------------------------+             +-------------------------+
-| WORKING DIRECTORY | git add | STAGING AREA | git commit | LOCAL REPOSITORY | git push | REMOTE REPOSITORY |
-| (Your Project Desk) | ==========> | (The Packing Box) | ==========> | (The Storage Vault) | ==========> | (GitHub Cloud) |
-| | | | | | | |
-| • You write & edit code | | • Ready for next commit | | • Permanent history | | • Backed up online |
-| • Files are "Modified" | restore | • Manifest index file | | • Saved in .git/ folder | git pull | • Shared with team |
-| • Files are "Untracked" | <---------- | • Staged snapshot draft | | • Immutable commit hash | <---------- | • Pull Requests & CI/CD |
-+-------------------------+             +-------------------------+             +-------------------------+             +-------------------------+
-\`\`\`
+<GitWorkflowPipeline lang="en" />
 
 ### The 3 Local Tiers:
 1. **Working Directory (Your Desk)**:
@@ -303,15 +280,12 @@ Your local repository is safe on your laptop, but what if your laptop is lost or
 
 ### ভার্সন কন্ট্রোল ছাড়া জীবনের চিত্র
 ভার্সন কন্ট্রোল ব্যবহার না করলে ডেভেলপাররা কী করতেন? ডেস্কটপে ফাইলের শত শত বিশৃঙ্খল কপি জমাতেন:
-\`\`\`
-My_Project/
-├── app_v1.cs
-├── app_v2_final.cs
-├── app_final_edited.cs
-├── app_final_REAL_final.cs
-└── app_final_approved_by_boss_FINAL.cs  <-- এর মধ্যে কোনটা আসল কোড?!
-\`\`\`
+
+<FileChaosComparison lang="bn" />
+
 যদি দুজন ডেভেলপার একই সাথে ফাইলে কাজ করেন, তবে যিনি পরে সেভ করবেন তিনি অজান্তেই আগের জনের পুরো কোড মুছে ফেলবেন!
+
+<div id="the-solution-a-version-control-system-vcs" className="scroll-mt-20" />
 
 ### ভার্সন কন্ট্রোল সিস্টেম (VCS) কীভাবে সমাধান করে?
 ১. **একটি মাত্র পরিচ্ছন্ন ফোল্ডার**: আপনার স্ক্রিনে ফাইলের একাধিক বিভ্রান্তিকর কপি থাকবে না। সমস্ত অতীত ইতিহাস ব্যাকগ্রাউন্ডে হিডেন ডেটাবেজে (\`.git\` ফোল্ডারে) সুরক্ষিত থাকে।
@@ -329,17 +303,10 @@ My_Project/
 * **গিট (Git) হলো একটি ক্যামেরা**: এটি একটি টুল যা আপনার কম্পিউটারে ইনস্টল থাকে। আপনি ছবি (কোডের স্ন্যাপশট) তোলার জন্য এটি ব্যবহার করেন। ছবি তুলতে আপনার কোনো ইন্টারনেটের প্রয়োজন হয় না।
 * **গিটহাব (GitHub) হলো ইনস্টাগ্রাম বা গুগল ফটোজ**: এটি ইন্টারনেটে থাকা একটি ক্লাউড প্ল্যাটফর্ম। আপনি আপনার ক্যামেরায় তোলা ছবিগুলো ব্যাকআপ রাখতে এবং বন্ধুদের সাথে শেয়ার করতে সেখানে আপলোড করেন।
 
-\`\`\`
-+------------------------------------+               +------------------------------------+
-| গিট (Git - লোকাল) | | গিটহাব (GitHub - ক্লাউড) |
-+------------------------------------+               +------------------------------------+
-| • একটি কমান্ড-লাইন সফটওয়্যার টুল | git push | • একটি ওয়েবসাইট / ক্লাউড প্ল্যাটফর্ম|
-| • আপনার নিজের কম্পিউটারে চলে | ============> | • মাইক্রোসফটের মালিকানাধীন |
-| • শতভাগ অফলাইনে কাজ করে (নেট লাগে না)| | • ইন্টারনেট সংযোগ প্রয়োজন |
-| • কোডের হিস্ট্রি ও ব্রাঞ্চ ট্র্যাক করে| git pull | • রিমোট ব্যাকআপ, পুল রিকোয়েস্ট, |
-| • ফ্রি ও ওপেন সোর্স | <============ | কোড রিভিউ ও অটোমেশন (Actions) |
-+------------------------------------+               +------------------------------------+
-\`\`\`
+<GitVsGitHubCard lang="bn" />
+
+> [!NOTE]
+> গিটহাবের মতো আরও চমৎকার প্ল্যাটফর্ম রয়েছে যা গিটের সাথে কাজ করে! যেমন **GitLab**, **Bitbucket**, এবং সেলফ-হোস্টেড **Gitea**। গিট হলো উন্মুক্ত আন্তর্জাতিক স্ট্যান্ডার্ড; গিটহাব হলো সবচেয়ে জনপ্রিয় অনলাইন ক্লাউড হোস্টিং সেবা।
 
 ---
 
@@ -358,6 +325,13 @@ My_Project/
 * **পুরো প্রজেক্টের শুরু থেকে শেষ পর্যন্ত সমস্ত ইতিহাস এবং সম্পূর্ণ ডেটাবেজ আপনার কম্পিউটারে ক্লোন হয়ে আসে।**
 * ফলে ইন্টারনেটের কোনো সংযোগ ছাড়াই আপনি প্লেনে বা প্রত্যন্ত অঞ্চলে বসেও সম্পূর্ণ অফলাইনে কমিট, ব্রাঞ্চিং ও হিস্ট্রি রিভিউ করতে পারেন।
 * প্রতিটি ডেভেলপারের ল্যাপটপই প্রজেক্টের একটি স্বয়ংসম্পূর্ণ ও সুরক্ষিত ব্যাকআপ।
+
+| বৈশিষ্ট্য | সেন্ট্রালাইজড VCS (যেমন SVN) | ডিস্ট্রিবিউটেড VCS (যেমন Git) |
+| :--- | :--- | :--- |
+| **হিস্ট্রি সংরক্ষণের স্থান** | শুধুমাত্র কেন্দ্রীয় সার্ভারে | প্রতিটি ডেভেলপারের ল্যাপটপে সম্পূর্ণ কপি |
+| **অফলাইনে কাজ** | অসম্ভব (ইন্টারনেট বাধ্যতামূলক) | ১০০% কার্যক্ষম (নেট ছাড়াই সব সম্ভব) |
+| **কাজের গতি (Speed)** | ধীরগতির (প্রতি কাজের জন্য নেটওয়ার্ক কল) | বিদ্যুৎ গতিসম্পন্ন (লোকাল ডিস্ক অপারেশন) |
+| **ব্যাকআপের নিরাপত্তা** | Single Point of Failure (SPOF) | অত্যন্ত নিরাপদ (প্রত্যেক কর্মীর কাছে ব্যাকআপ) |
 
 ---
 
@@ -424,10 +398,7 @@ git config --global core.autocrlf input
 
 গিটের কাজ বোঝার সবচেয়ে সহজ উপায় হলো এর ৩টি লোকাল স্তর এবং ১টি ক্লাউড স্তর বোঝা:
 
-\`\`\`
-ওয়ার্কিং ডিরেক্টরি  ====(git add)===>  স্টেজিং এরিয়া  ====(git commit)===>  লোকাল রিপোজিটরি  ====(git push)===>  গিটহাব ক্লাউড
- (আপনার ডেস্ক)                         (প্যাকিং বক্স)                           (সুরক্ষিত সিন্দুক)                     (অনলাইন ব্যাকআপ)
-\`\`\`
+<GitWorkflowPipeline lang="bn" />
 
 ১. **ওয়ার্কিং ডিরেক্টরি (Working Directory)**: আপনার কম্পিউটারের যে ফোল্ডারে আপনি কোড লিখছেন বা এডিট করছেন।
 ২. **স্টেজিং এরিয়া (Staging Area)**: একটি প্যাকিং বক্সের মতো। আপনি ৫টি ফাইলে কাজ করেছেন, কিন্তু পরবর্তী সেভে মাত্র ২টি ফাইল অন্তর্ভুক্ত করতে চান। \`git add\` দিয়ে সেই নির্দিষ্ট ফাইলগুলোকে আপনি এই বক্সে সাজিয়ে রাখেন।
@@ -437,8 +408,9 @@ git config --global core.autocrlf input
 ---
 
 ## শিক্ষানবিসদের জন্য সারসংক্ষেপ
-* গিট লোকাল টুল, আর গিটহাব ক্লাউড প্ল্যাটফর্ম।
-* গিট সম্পূর্ণ অফলাইনে কাজ করে।
-* প্রতিদিনের সাধারণ কাজের ছন্দ: **কোড লিখুন -> \`git add\` (স্টেজ) -> \`git commit\` (সেভ) -> \`git push\` (শেয়ার)**।
+* [x] **গিট** হলো লোকাল টুল; **গিটহাব** হলো ক্লাউড প্ল্যাটফর্ম।
+* [x] গিট **ডিস্ট্রিবিউটেড**: প্রত্যেক ডেভেলপারের ল্যাপটপে পুরো প্রজেক্টের সম্পূর্ণ ইতিহাস থাকে।
+* [x] নতুন মেশিনে শুরুতে \`user.name\`, \`user.email\`, এবং \`init.defaultBranch main\` কনফিগার করে নিন।
+* [x] প্রতিদিনের সাধারণ কাজের ছন্দ: **কোড লিখুন -> \`git add\` (স্টেজ) -> \`git commit\` (সেভ) -> \`git push\` (শেয়ার)**।
 `,
   };

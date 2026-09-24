@@ -17,13 +17,16 @@ import {
   Trophy,
   ArrowRight,
   Sparkles,
+  Highlighter,
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import { useSearchModal } from "@/components/providers/search-provider";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { FullscreenToggle } from "@/components/layout/fullscreen-toggle";
 import { useUserProgress } from "@/lib/hooks/use-user-progress";
 import { UsacoSidebar } from "@/components/lessons/usaco-sidebar";
 import { TableOfContents } from "@/components/lessons/table-of-contents";
+import { LessonContentHighlighter } from "@/components/lessons/text-highlighter";
 import {
   ModuleProgressSelector,
   type LessonStatus,
@@ -78,6 +81,8 @@ export function LessonShell({
   const [isBlinking, setIsBlinking] = useState(false);
   const [isPageShaking, setIsPageShaking] = useState(false);
   const [confettiKey, setConfettiKey] = useState(0);
+  const [isHighlightsDrawerOpen, setIsHighlightsDrawerOpen] = useState(false);
+  const [highlightsCount, setHighlightsCount] = useState(0);
 
   // User progress tracking & stats
   const { getLessonStatus, markLesson, subjectStats, overallStats } = useUserProgress();
@@ -402,6 +407,26 @@ export function LessonShell({
               <span className="hidden md:inline text-[10px] font-mono opacity-70">⌘K</span>
             </button>
 
+            {/* Highlights Drawer Button */}
+            <button
+              type="button"
+              onClick={() => setIsHighlightsDrawerOpen((prev) => !prev)}
+              className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-all cursor-pointer ${
+                highlightsCount > 0
+                  ? "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20 shadow-xs"
+                  : "border-border text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+              title={isBn ? "চিহ্নিত নোট ও হাইলাইটস" : "Marked Highlights & Notes"}
+            >
+              <Highlighter className="h-3.5 w-3.5 text-amber-500" />
+              <span className="hidden sm:inline">{isBn ? "হাইলাইটস" : "Highlights"}</span>
+              {highlightsCount > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white px-1">
+                  {highlightsCount}
+                </span>
+              )}
+            </button>
+
             {/* Language Switcher */}
             <button
               type="button"
@@ -412,6 +437,9 @@ export function LessonShell({
               <Languages className="h-3.5 w-3.5 text-muted-foreground" />
               <span>{isBn ? "English" : "বাংলা"}</span>
             </button>
+
+            {/* Full Page Screen (Fullscreen Mode Toggle) */}
+            <FullscreenToggle size="sm" />
 
             {/* Theme Toggle */}
             <ThemeToggle />
@@ -508,14 +536,23 @@ export function LessonShell({
               </div>
 
               {/* ── MDX Lesson Content ── */}
-              <div className="prose prose-neutral dark:prose-invert max-w-none">
-                <div className={displayLang === "en" ? "block" : "hidden"}>
-                  {contentEn}
+              <LessonContentHighlighter
+                subjectSlug={subjectSlug}
+                lessonSlug={lesson.slug}
+                displayLang={displayLang}
+                isDrawerOpen={isHighlightsDrawerOpen}
+                onCloseDrawer={() => setIsHighlightsDrawerOpen(false)}
+                onHighlightsCountChange={setHighlightsCount}
+              >
+                <div className="prose prose-neutral dark:prose-invert max-w-none">
+                  <div className={displayLang === "en" ? "block" : "hidden"}>
+                    {contentEn}
+                  </div>
+                  <div className={displayLang === "bn" ? "block" : "hidden"}>
+                    {contentBn}
+                  </div>
                 </div>
-                <div className={displayLang === "bn" ? "block" : "hidden"}>
-                  {contentBn}
-                </div>
-              </div>
+              </LessonContentHighlighter>
 
 
 
@@ -700,8 +737,31 @@ export function LessonShell({
 
             {/* ── Right Column: Table of Contents (xl and up) ── */}
             <aside className="hidden xl:block w-60 shrink-0">
-              <div className="sticky top-16">
+              <div className="sticky top-16 space-y-4">
                 <TableOfContents displayLang={displayLang} />
+
+                {highlightsCount > 0 && (
+                  <div className="pt-3 border-t border-border/60">
+                    <button
+                      type="button"
+                      onClick={() => setIsHighlightsDrawerOpen(true)}
+                      className="w-full flex items-center justify-between p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/15 text-foreground transition-all cursor-pointer text-left group"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Highlighter className="h-4 w-4 text-amber-500 shrink-0" />
+                        <div>
+                          <p className="text-xs font-semibold">
+                            {isBn ? "চিহ্নিত নোট" : "Marked Notes"}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground">
+                            {highlightsCount} {isBn ? "টি অংশ সংরক্ষিত" : "highlights saved"}
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-3.5 w-3.5 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                  </div>
+                )}
               </div>
             </aside>
           </div>

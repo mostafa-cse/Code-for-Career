@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LanguageProvider } from "@/components/providers/language-provider";
@@ -6,6 +7,7 @@ import { SearchProvider } from "@/components/providers/search-provider";
 import { SearchModal } from "@/components/search/search-modal";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { RouteTransitionLoader } from "@/components/layout/route-transition-loader";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
@@ -83,6 +85,9 @@ export default function RootLayout({
           <AuthProvider>
             <SearchProvider>
               <LanguageProvider>
+                <Suspense fallback={null}>
+                  <RouteTransitionLoader />
+                </Suspense>
                 <Navbar />
                 <div className="flex-1 flex flex-col">{children}</div>
                 <Footer />

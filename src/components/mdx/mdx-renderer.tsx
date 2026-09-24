@@ -7,10 +7,16 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { codeToHtml } from "shiki";
 import { Callout } from "./callout";
 import { CodeBlock } from "./code-block";
+import { FileChaosComparison } from "./git-visuals/file-chaos-comparison";
+import { GitVsGitHubCard } from "./git-visuals/git-vs-github-card";
+import { GitWorkflowPipeline } from "./git-visuals/git-workflow-pipeline";
 
 // Custom components available in MDX content
 const MDX_COMPONENTS = {
   Callout,
+  FileChaosComparison,
+  GitVsGitHubCard,
+  GitWorkflowPipeline,
   // Override pre to render our CodeBlock with syntax highlighting
   pre: async (props: React.ComponentPropsWithoutRef<"pre">) => {
     const child = props.children as React.ReactElement<{
@@ -77,7 +83,7 @@ function escapeMdxGenerics(source: string): string {
         if (tagName) {
           const lower = tagName.toLowerCase();
           const isKnown =
-            /^(callout|div|span|p|a|b|i|strong|em|pre|code|table|tr|td|th|thead|tbody|ul|ol|li|h[1-6]|hr|br|img|svg|path|blockquote)$/.test(
+            /^(callout|filechaoscomparison|gitvsgithubcard|gitworkflowpipeline|div|span|p|a|b|i|strong|em|pre|code|table|tr|td|th|thead|tbody|ul|ol|li|h[1-6]|hr|br|img|svg|path|blockquote)$/i.test(
               lower
             );
           if (isKnown) {

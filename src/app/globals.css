@@ -419,5 +419,60 @@ body {
   animation: celebration-bounce 0.45s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* ------------------------------------------------------------------ */
+/* Shimmer & Glow Effects for Loading States                           */
+/* ------------------------------------------------------------------ */
+@keyframes shimmer-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
 
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
 
+.animate-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 20%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.08) 80%,
+    transparent 100%
+  );
+  animation: shimmer-slide 1.8s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.dark .animate-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.03) 80%,
+    transparent 100%
+  );
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
