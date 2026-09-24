@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, Loader2, CheckCircle2 } from "lucide-react";
+import { Mail, Loader2, CheckCircle2, ExternalLink, KeyRound, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/components/providers/language-provider";
 import { SITE_NAME } from "@/lib/constants";
@@ -49,6 +49,7 @@ export default function LoginPage() {
   const [view, setView] = useState<LoginView>("options");
   const [email, setEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
+  const [showOtpInput, setShowOtpInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -178,57 +179,109 @@ export default function LoginPage() {
         {/* Card */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
           {view === "magic-link-sent" ? (
-            /* Success state with 6-digit OTP verification fallback */
+            /* Success state: direct confirmation link is primary */
             <div className="flex flex-col gap-4 text-center">
               <div className="flex flex-col items-center gap-2">
-                <CheckCircle2 className="h-9 w-9 text-emerald-500" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/20">
+                  <CheckCircle2 className="h-6 w-6" />
+                </div>
                 <h2 className="text-base font-bold text-foreground">
                   {t("Check your email", "আপনার ইমেইল চেক করুন")}
                 </h2>
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   {t(
-                    `We sent an email to ${email}. You can either click the magic link or enter the 6-digit code below:`,
-                    `${email} এ একটি ইমেইল পাঠানো হয়েছে। লিংকে ক্লিক করুন অথবা নিচের ৬ ডিজিটের কোডটি লিখুন:`
+                    "We sent a sign-in link to: ",
+                    "আমরা একটি লগইন লিংক পাঠিয়েছি: "
+                  )}
+                  <strong className="text-foreground font-semibold break-all">{email}</strong>
+                </p>
+              </div>
+
+              {/* Primary Callout: Click the Link in Email */}
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3.5 text-left text-xs leading-relaxed text-muted-foreground space-y-1.5">
+                <div className="flex items-start gap-2 text-foreground font-medium">
+                  <Sparkles className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
+                  <span>
+                    {t(
+                      "Click the 'Confirm email address' button inside your email to sign in instantly.",
+                      "ইমেইলে থাকা 'Confirm email address' লিংকে ক্লিক করলেই সাথে সাথে লগইন হয়ে যাবে।"
+                    )}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground pl-6">
+                  {t(
+                    "No password or 6-digit code needed. The confirmation link logs you in automatically across devices.",
+                    "কোন পাসওয়ার্ড বা কোডের প্রয়োজন নেই। লিংকে ক্লিক করলেই স্বয়ংক্রিয়ভাবে লগইন হয়ে যাবে।"
                   )}
                 </p>
               </div>
 
-              <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3 text-left">
-                <div>
-                  <label
-                    htmlFor="otp"
-                    className="mb-1 block text-xs font-semibold text-foreground"
-                  >
-                    {t("6-Digit Code (from email)", "৬ ডিজিটের কোড (ইমেইল থেকে)")}
-                  </label>
-                  <input
-                    id="otp"
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={6}
-                    autoFocus
-                    value={otpCode}
-                    onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                    placeholder="123456"
-                    className="w-full text-center tracking-widest font-mono text-lg rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  />
-                </div>
-
-                {error && (
-                  <p className="text-xs text-rose-500 text-center leading-relaxed">
-                    {error}
-                  </p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading || otpCode.length < 6}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background shadow-xs transition-opacity hover:opacity-90 disabled:opacity-50"
+              {/* Direct Gmail button if applicable */}
+              {email.includes("@gmail.com") && (
+                <a
+                  href="https://mail.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background shadow-xs transition-opacity hover:opacity-90 cursor-pointer"
                 >
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                  {t("Verify Code & Sign In", "কোড যাচাই করে প্রবেশ করুন")}
+                  <span>{t("Open Gmail Inbox", "Gmail ইনবক্স ওপেন করুন")}</span>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )}
+
+              {/* Optional 6-digit Code verification (expandable) */}
+              {!showOtpInput ? (
+                <button
+                  type="button"
+                  onClick={() => setShowOtpInput(true)}
+                  className="inline-flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer py-1"
+                >
+                  <KeyRound className="h-3.5 w-3.5" />
+                  <span>
+                    {t(
+                      "Have a 6-digit code? Enter code here",
+                      "৬ ডিজিটের কোড পেয়েছেন? এখানে লিখুন"
+                    )}
+                  </span>
                 </button>
-              </form>
+              ) : (
+                <form onSubmit={handleVerifyOtp} className="mt-1 flex flex-col gap-3 text-left border-t border-border pt-3">
+                  <div>
+                    <label
+                      htmlFor="otp"
+                      className="mb-1 block text-xs font-semibold text-foreground"
+                    >
+                      {t("6-Digit Code (from email)", "৬ ডিজিটের কোড (ইমেইল থেকে)")}
+                    </label>
+                    <input
+                      id="otp"
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      autoFocus
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                      placeholder="123456"
+                      className="w-full text-center tracking-widest font-mono text-lg rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+
+                  {error && (
+                    <p className="text-xs text-rose-500 text-center leading-relaxed">
+                      {error}
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading || otpCode.length < 6}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background shadow-xs transition-opacity hover:opacity-90 disabled:opacity-50"
+                  >
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    {t("Verify Code & Sign In", "কোড যাচাই করে প্রবেশ করুন")}
+                  </button>
+                </form>
+              )}
 
               <button
                 type="button"
@@ -236,6 +289,7 @@ export default function LoginPage() {
                   setView("options");
                   setError(null);
                   setOtpCode("");
+                  setShowOtpInput(false);
                 }}
                 className="text-xs font-medium text-muted-foreground underline hover:text-foreground"
               >
@@ -278,7 +332,7 @@ export default function LoginPage() {
                 ) : (
                   <Mail className="h-4 w-4" />
                 )}
-                {t("Send Magic Link & Code", "ম্যাজিক লিংক ও কোড পাঠান")}
+                {t("Send Sign-In Link", "লগইন লিংক পাঠান")}
               </button>
 
               <button
