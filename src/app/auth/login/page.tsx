@@ -58,15 +58,31 @@ export default function LoginPage() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const err = params.get("error");
+      const errDesc = params.get("error_description");
+
       if (err === "link_expired") {
         setError(
           t(
-            "Your email link has expired or was already consumed by an email scanner. Please enter the 6-digit code from the email below, or sign in with Google/GitHub.",
-            "ইমেইল লিংকটির মেয়াদ শেষ বা ব্যবহৃত হয়েছে। অনুগ্রহ করে ইমেইলের ৬ ডিজিটের কোডটি ব্যবহার করুন, অথবা Google/GitHub দিয়ে লগইন করুন।"
+            "Your email link has expired or was already consumed. Please enter the 6-digit code from your email below, or request a new link.",
+            "ইমেইল লিংকটির মেয়াদ শেষ বা ব্যবহৃত হয়েছে। অনুগ্রহ করে ইমেইলের ৬ ডিজিটের কোডটি ব্যবহার করুন, অথবা নতুন লিংক রিকোয়েস্ট করুন।"
           )
         );
-      } else if (err) {
-        setError(err);
+      } else if (err === "auth_callback_failed") {
+        setError(
+          t(
+            "Authentication failed. Please verify that third-party provider login is enabled in your Supabase Dashboard.",
+            "লগইন সম্পন্ন করা যায়নি। অনুগ্রহ করে Supabase ড্যাশবোর্ডে প্রোভাইডার কনফিগারেশন চেক করুন।"
+          )
+        );
+      } else if (err === "access_denied") {
+        setError(
+          t(
+            "Access was denied or cancelled during sign in.",
+            "লগইন করার সময় অনুমোদন বাতিল করা হয়েছে।"
+          )
+        );
+      } else if (errDesc || err) {
+        setError(errDesc || err);
       }
     }
   }, [t]);
